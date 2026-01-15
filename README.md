@@ -6,32 +6,22 @@
 Vitest
 </h1>
 <p align="center">
-由 Vite 提供支持的极速单元测试框架
+Błyskawiczny framework do testów jednostkowych napędzany przez Vite
 </p>
 
 <p align="center">
-<a href="https://cn.vitest.dev">中文文档</a> ｜ <a href="https://vitest.dev">英文文档</a>
+<a href="https://vitest.dev">Dokumentacja angielska</a> ｜ <a href="https://pl.vitest.dev">Dokumentacja polska</a>
 </p>
 
 <br>
 
 <p align="center">
-<a href="https://github.com/vitest-dev/vitest">代码仓库</a>
+<a href="https://github.com/vitest-dev/vitest">Repozytorium kodu</a>
 </p>
 
 <br>
 <br>
 
-### 感谢
+### Podziękowania
 
-[@elonehoo](https://github.com/elonehoo) - 发起与维护该文档翻译
-
-[@watonyweng](https://github.com/watonyweng)
-
-[@thinkasany](https://github.com/thinkasany)
-
-[@XieZongChen](https://github.com/XieZongChen)
-
-[@lxKylin](https://github.com/lxKylin)
-
-[@NoiseFan](https://github.com/NoiseFan)
+[@szymcode](https://github.com/szymcode) - Inicjator i opiekun polskiego tłumaczenia dokumentacji
