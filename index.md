@@ -3,40 +3,40 @@ layout: home
 sidebar: false
 
 title: Vitest
-titleTemplate: Next Generation testing framework
+titleTemplate: Framework testowy nowej generacji
 
 hero:
   name: Vitest
-  text: Next Generation Testing Framework
-  tagline: A Vite-native testing framework. It's fast!
+  text: Framework Testowy Nowej Generacji
+  tagline: Natywny framework testowy dla Vite. Jest szybki!
   image:
     src: /logo-shadow.svg
     alt: Vitest
   actions:
     - theme: brand
-      text: Get Started
+      text: Rozpocznij
       link: /guide/
     - theme: alt
-      text: Features
+      text: Funkcje
       link: /guide/features
     - theme: alt
-      text: Why Vitest?
+      text: Dlaczego Vitest?
       link: /guide/why
     - theme: alt
-      text: View on GitHub
+      text: Zobacz na GitHub
       link: https://github.com/vitest-dev/vitest
 
 features:
-  - title: Vite Powered
+  - title: Napędzany przez Vite
     icon: <span class="i-logos:vitejs"></span>
-    details: Reuse Vite's config and plugins - consistent across your app and tests. But it's not required to use Vitest!
-  - title: Jest Compatible
+    details: Wykorzystuj konfigurację i wtyczki Vite - spójność między aplikacją a testami. Ale Vite nie jest wymagany do używania Vitest!
+  - title: Kompatybilny z Jest
     icon: <span class="i-logos:jest"></span>
-    details: Expect, snapshot, coverage, and more - migrating from Jest is straightforward.
-  - title: Smart & instant watch mode
+    details: Expect, snapshot, coverage i więcej - migracja z Jest jest prosta.
+  - title: Inteligentny i natychmiastowy tryb obserwacji
     icon: ⚡
-    details: Only rerun the related changes, just like HMR for tests!
+    details: Uruchamiaj ponownie tylko powiązane zmiany, jak HMR dla testów!
   - title: ESM, TypeScript, JSX
     icon: <span class="i-logos:typescript-icon"></span>
-    details: Out-of-box ESM, TypeScript and JSX support powered by esbuild.
+    details: Wbudowana obsługa ESM, TypeScript i JSX dzięki esbuild.
 ---
