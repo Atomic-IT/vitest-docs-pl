@@ -37,6 +37,10 @@ export default ({ mode }: { mode: string }) => {
     ],
     locales: {
       root: {
+        label: 'Polski',
+        lang: 'pl',
+      },
+      en: {
         label: 'English',
         lang: 'en-US',
       },
