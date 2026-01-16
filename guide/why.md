@@ -1,25 +1,25 @@
 ---
-title: Why Vitest | Guide
+title: Dlaczego Vitest | Przewodnik
 ---
 
-# Why Vitest
+# Dlaczego Vitest
 
-:::tip NOTE
-This guide assumes that you are familiar with Vite. A good way to start learning more is to read the [Why Vite Guide](https://vitejs.dev/guide/why.html), and [Next generation frontend tooling with ViteJS](https://www.youtube.com/watch?v=UJypSr8IhKY), a stream where [Evan You](https://bsky.app/profile/evanyou.me) did a demo explaining the main concepts.
+:::tip UWAGA
+Ten przewodnik zakłada, że znasz Vite. Dobrym sposobem na rozpoczęcie nauki jest przeczytanie [Przewodnika Dlaczego Vite](https://vitejs.dev/guide/why.html) oraz obejrzenie [Next generation frontend tooling with ViteJS](https://www.youtube.com/watch?v=UJypSr8IhKY), streamu, na którym [Evan You](https://bsky.app/profile/evanyou.me) zrobił demo wyjaśniające główne koncepcje.
 :::
 
-## The Need for a Vite Native Test Runner
+## Potrzeba Natywnego Runnera Testowego dla Vite
 
-Vite's out-of-the-box support for common web patterns, features like glob imports and SSR primitives, and its many plugins and integrations are fostering a vibrant ecosystem. Its dev and build story are key to its success. For docs, there are several SSG-based alternatives powered by Vite. Vite's Unit Testing story hasn't been clear though. Existing options like [Jest](https://jestjs.io/) were created in a different context. There is a lot of duplication between Jest and Vite, forcing users to configure two different pipelines.
+Wbudowane wsparcie Vite dla powszechnych wzorców webowych, funkcje takie jak importy glob i prymitywy SSR, oraz liczne wtyczki i integracje tworzą dynamiczny ekosystem. Historia developmentu i budowania to klucz do jego sukcesu. Dla dokumentacji istnieje kilka alternatyw opartych na SSG napędzanych przez Vite. Jednak historia testów jednostkowych Vite nie była jasna. Istniejące opcje jak [Jest](https://jestjs.io/) zostały stworzone w innym kontekście. Istnieje wiele duplikacji między Jest a Vite, zmuszając użytkowników do konfigurowania dwóch różnych pipeline'ów.
 
-Using Vite dev server to transform your files during testing, enables the creation of a simple runner that doesn't need to deal with the complexity of transforming source files and can solely focus on providing the best DX during testing. A test runner that uses the same configuration of your App (through `vite.config.js`), sharing a common transformation pipeline during dev, build, and test time. That is extensible with the same plugin API that lets you and the maintainers of your tools provide first-class integration with Vite. A tool that is built with Vite in mind from the start, taking advantage of its improvements in DX, like its instant Hot Module Reload (HMR). This is Vitest, a next generation testing framework powered by Vite.
+Używanie serwera deweloperskiego Vite do transformacji plików podczas testowania umożliwia stworzenie prostego runnera, który nie musi zajmować się złożonością transformacji plików źródłowych i może skupić się wyłącznie na zapewnieniu najlepszego DX podczas testowania. Runner testowy, który używa tej samej konfiguracji co Twoja aplikacja (przez `vite.config.js`), dzieląc wspólny pipeline transformacji podczas developmentu, budowania i testowania. Rozszerzalny tym samym API wtyczek, które pozwala Tobie i opiekunom Twoich narzędzi zapewnić pierwszorzędną integrację z Vite. Narzędzie, które od początku zostało zbudowane z myślą o Vite, wykorzystując jego ulepszenia w DX, takie jak natychmiastowy Hot Module Reload (HMR). To jest Vitest, framework testowy nowej generacji napędzany przez Vite.
 
-Given Jest's massive adoption, Vitest provides a compatible API that allows you to use it as a drop-in replacement in most projects. It also includes the most common features required when setting up your unit tests (mocking, snapshots, coverage). Vitest cares a lot about performance and uses Worker threads to run as much as possible in parallel. Some ports have seen test running an order of magnitude faster. Watch mode is enabled by default, aligning itself with the way Vite pushes for a dev first experience. Even with all these improvements in DX, Vitest stays lightweight by carefully choosing its dependencies (or directly inlining needed pieces).
+Biorąc pod uwagę masową adopcję Jest, Vitest zapewnia kompatybilne API, które pozwala używać go jako bezpośredniego zamiennika w większości projektów. Zawiera również najczęściej wymagane funkcje podczas konfigurowania testów jednostkowych (mockowanie, snapshoty, pokrycie kodu). Vitest bardzo dba o wydajność i używa wątków Worker do uruchamiania jak największej ilości testów równolegle. Niektóre porty odnotowały uruchamianie testów o rząd wielkości szybciej. Tryb obserwacji jest domyślnie włączony, dostosowując się do sposobu, w jaki Vite promuje doświadczenie "najpierw development". Pomimo wszystkich tych ulepszeń w DX, Vitest pozostaje lekki, starannie dobierając swoje zależności (lub bezpośrednio włączając potrzebne fragmenty).
 
-**Vitest aims to position itself as the Test Runner of choice for Vite projects, and as a solid alternative even for projects not using Vite.**
+**Vitest ma na celu pozycjonowanie się jako Runner Testowy z wyboru dla projektów Vite i jako solidna alternatywa nawet dla projektów nieużywających Vite.**
 
-Continue reading in the [Getting Started Guide](./index)
+Kontynuuj czytanie w [Przewodniku Rozpoczęcie Pracy](./index)
 
-## How is Vitest Different from X?
+## Czym Vitest Różni się od X?
 
-You can check out the [Comparisons](./comparisons) section for more details on how Vitest differs from other similar tools.
+Możesz sprawdzić sekcję [Porównania](./comparisons), aby uzyskać więcej szczegółów na temat tego, jak Vitest różni się od innych podobnych narzędzi.
