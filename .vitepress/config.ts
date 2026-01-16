@@ -117,7 +117,7 @@ export default ({ mode }: { mode: string }) => {
 
       editLink: {
         pattern: 'https://github.com/vitest-dev/vitest/edit/main/docs/:path',
-        text: 'Suggest changes to this page',
+        text: 'Zaproponuj zmiany na tej stronie',
       },
 
       search: {
@@ -146,14 +146,14 @@ export default ({ mode }: { mode: string }) => {
       ],
 
       footer: {
-        message: 'Released under the MIT License.',
-        copyright: 'Copyright © 2021-PRESENT VoidZero Inc. and Vitest contributors',
+        message: 'Wydane na licencji MIT.',
+        copyright: 'Copyright © 2021-PRESENT VoidZero Inc. i współtwórcy Vitest',
       },
 
       nav: [
-        { text: 'Guides', link: '/guide/', activeMatch: '^/guide/' },
+        { text: 'Przewodniki', link: '/guide/', activeMatch: '^/guide/' },
         { text: 'API', link: '/api/', activeMatch: '^/api/' },
-        { text: 'Config', link: '/config/', activeMatch: '^/config/' },
+        { text: 'Konfiguracja', link: '/config/', activeMatch: '^/config/' },
         {
           text: 'Blog',
           link: '/blog',
@@ -168,15 +168,15 @@ export default ({ mode }: { mode: string }) => {
                   link: `https://github.com/vitest-dev/vitest/releases/tag/v${version}`,
                 },
                 {
-                  text: 'Releases Notes',
+                  text: 'Informacje o wydaniach',
                   link: releases,
                 },
                 {
-                  text: 'Contributing',
+                  text: 'Współtworzenie',
                   link: contributing,
                 },
                 {
-                  text: 'Team',
+                  text: 'Zespół',
                   link: '/team',
                 },
               ],
@@ -184,7 +184,7 @@ export default ({ mode }: { mode: string }) => {
             {
               items: [
                 {
-                  text: 'unreleased',
+                  text: 'niewydane',
                   link: 'https://main.vitest.dev/',
                 },
                 {
@@ -212,11 +212,11 @@ export default ({ mode }: { mode: string }) => {
       sidebar: {
         '/config': [
           {
-            text: 'Config Reference',
+            text: 'Referencja konfiguracji',
             collapsed: false,
             items: [
               {
-                text: 'Config File',
+                text: 'Plik konfiguracyjny',
                 link: '/config/',
               },
               {
@@ -522,11 +522,11 @@ export default ({ mode }: { mode: string }) => {
             ],
           },
           {
-            text: 'Browser Mode',
+            text: 'Tryb Przeglądarki',
             collapsed: false,
             items: [
               {
-                text: 'Providers',
+                text: 'Dostawcy',
                 collapsed: false,
                 items: [
                   {
@@ -661,61 +661,61 @@ export default ({ mode }: { mode: string }) => {
         ],
         '/guide': [
           {
-            text: 'Introduction',
+            text: 'Wprowadzenie',
             collapsed: false,
             items: [
               {
-                text: 'Why Vitest',
+                text: 'Dlaczego Vitest',
                 link: '/guide/why',
               },
               {
-                text: 'Getting Started',
+                text: 'Rozpoczęcie pracy',
                 link: '/guide/',
               },
               {
-                text: 'Features',
+                text: 'Funkcje',
                 link: '/guide/features',
               },
             ],
           },
           {
-            text: 'Browser Mode',
+            text: 'Tryb Przeglądarki',
             collapsed: false,
             items: [
               {
-                text: 'Why Browser Mode',
+                text: 'Dlaczego Tryb Przeglądarki',
                 link: '/guide/browser/why',
-                docFooterText: 'Why Browser Mode | Browser Mode',
+                docFooterText: 'Dlaczego Tryb Przeglądarki | Tryb Przeglądarki',
               },
               {
-                text: 'Getting Started',
+                text: 'Rozpoczęcie pracy',
                 link: '/guide/browser/',
-                docFooterText: 'Getting Started | Browser Mode',
+                docFooterText: 'Rozpoczęcie pracy | Tryb Przeglądarki',
               },
               {
-                text: 'Multiple Setups',
+                text: 'Wiele konfiguracji',
                 link: '/guide/browser/multiple-setups',
-                docFooterText: 'Multiple Setups | Browser Mode',
+                docFooterText: 'Wiele konfiguracji | Tryb Przeglądarki',
               },
               {
-                text: 'Component Testing',
+                text: 'Testowanie komponentów',
                 link: '/guide/browser/component-testing',
-                docFooterText: 'Component Testing | Browser Mode',
+                docFooterText: 'Testowanie komponentów | Tryb Przeglądarki',
               },
               {
-                text: 'Visual Regression Testing',
+                text: 'Testowanie regresji wizualnej',
                 link: '/guide/browser/visual-regression-testing',
-                docFooterText: 'Visual Regression Testing | Browser Mode',
+                docFooterText: 'Testowanie regresji wizualnej | Tryb Przeglądarki',
               },
               {
-                text: 'Trace View',
+                text: 'Widok śledzenia',
                 link: '/guide/browser/trace-view',
-                docFooterText: 'Trace View | Browser Mode',
+                docFooterText: 'Widok śledzenia | Tryb Przeglądarki',
               },
             ],
           },
           {
-            text: 'Guides',
+            text: 'Przewodniki',
             collapsed: false,
             items: [
               {
@@ -723,19 +723,19 @@ export default ({ mode }: { mode: string }) => {
                 link: '/guide/cli',
               },
               {
-                text: 'Test Filtering',
+                text: 'Filtrowanie testów',
                 link: '/guide/filtering',
               },
               {
-                text: 'Test Context',
+                text: 'Kontekst testu',
                 link: '/guide/test-context',
               },
               {
-                text: 'Test Environment',
+                text: 'Środowisko testowe',
                 link: '/guide/environment',
               },
               {
-                text: 'Test Run Lifecycle',
+                text: 'Cykl życia testu',
                 link: '/guide/lifecycle',
               },
               {
@@ -743,62 +743,62 @@ export default ({ mode }: { mode: string }) => {
                 link: '/guide/snapshot',
               },
               {
-                text: 'Mocking',
+                text: 'Mockowanie',
                 link: '/guide/mocking',
                 collapsed: true,
                 items: [
                   {
-                    text: 'Mocking Dates',
+                    text: 'Mockowanie dat',
                     link: '/guide/mocking/dates',
                   },
                   {
-                    text: 'Mocking Functions',
+                    text: 'Mockowanie funkcji',
                     link: '/guide/mocking/functions',
                   },
                   {
-                    text: 'Mocking Globals',
+                    text: 'Mockowanie zmiennych globalnych',
                     link: '/guide/mocking/globals',
                   },
                   {
-                    text: 'Mocking Modules',
+                    text: 'Mockowanie modułów',
                     link: '/guide/mocking/modules',
                   },
                   {
-                    text: 'Mocking the File System',
+                    text: 'Mockowanie systemu plików',
                     link: '/guide/mocking/file-system',
                   },
                   {
-                    text: 'Mocking Requests',
+                    text: 'Mockowanie żądań',
                     link: '/guide/mocking/requests',
                   },
                   {
-                    text: 'Mocking Timers',
+                    text: 'Mockowanie timerów',
                     link: '/guide/mocking/timers',
                   },
                   {
-                    text: 'Mocking Classes',
+                    text: 'Mockowanie klas',
                     link: '/guide/mocking/classes',
                   },
                 ],
               },
               {
-                text: 'Parallelism',
+                text: 'Równoległość',
                 link: '/guide/parallelism',
               },
               {
-                text: 'Test Projects',
+                text: 'Projekty testowe',
                 link: '/guide/projects',
               },
               {
-                text: 'Reporters',
+                text: 'Reportery',
                 link: '/guide/reporters',
               },
               {
-                text: 'Coverage',
+                text: 'Pokrycie kodu',
                 link: '/guide/coverage',
               },
               {
-                text: 'Testing Types',
+                text: 'Testowanie typów',
                 link: '/guide/testing-types',
               },
               {
@@ -806,54 +806,54 @@ export default ({ mode }: { mode: string }) => {
                 link: '/guide/ui',
               },
               {
-                text: 'In-Source Testing',
+                text: 'Testowanie w kodzie źródłowym',
                 link: '/guide/in-source',
               },
               {
-                text: 'Test Annotations',
+                text: 'Adnotacje testów',
                 link: '/guide/test-annotations',
               },
               {
-                text: 'Extending Matchers',
+                text: 'Rozszerzanie matcherów',
                 link: '/guide/extending-matchers',
               },
               {
-                text: 'IDE Integration',
+                text: 'Integracja z IDE',
                 link: '/guide/ide',
               },
               {
-                text: 'Debugging',
+                text: 'Debugowanie',
                 link: '/guide/debugging',
               },
               {
-                text: 'Common Errors',
+                text: 'Częste błędy',
                 link: '/guide/common-errors',
               },
               {
-                text: 'Migration Guide',
+                text: 'Przewodnik migracji',
                 link: '/guide/migration',
                 collapsed: false,
                 items: [
                   {
-                    text: 'Migrating to Vitest 4.0',
+                    text: 'Migracja do Vitest 4.0',
                     link: '/guide/migration#vitest-4',
                   },
                   {
-                    text: 'Migrating from Jest',
+                    text: 'Migracja z Jest',
                     link: '/guide/migration#jest',
                   },
                 ],
               },
               {
-                text: 'Performance',
+                text: 'Wydajność',
                 collapsed: false,
                 items: [
                   {
-                    text: 'Profiling Test Performance',
+                    text: 'Profilowanie wydajności testów',
                     link: '/guide/profiling-test-performance',
                   },
                   {
-                    text: 'Improving Performance',
+                    text: 'Poprawa wydajności',
                     link: '/guide/improving-performance',
                   },
                 ],
@@ -865,23 +865,23 @@ export default ({ mode }: { mode: string }) => {
             ],
           },
           {
-            text: 'Advanced',
+            text: 'Zaawansowane',
             collapsed: false,
             items: [
               {
-                text: 'Getting Started',
+                text: 'Rozpoczęcie pracy',
                 link: '/guide/advanced/',
               },
               {
-                text: 'Running Tests via API',
+                text: 'Uruchamianie testów przez API',
                 link: '/guide/advanced/tests',
               },
               {
-                text: 'Extending Reporters',
+                text: 'Rozszerzanie reporterów',
                 link: '/guide/advanced/reporters',
               },
               {
-                text: 'Custom Pool',
+                text: 'Własna pula',
                 link: '/guide/advanced/pool',
               },
             ],
@@ -889,11 +889,11 @@ export default ({ mode }: { mode: string }) => {
           {
             items: [
               {
-                text: 'Recipes',
+                text: 'Przepisy',
                 link: '/guide/recipes',
               },
               {
-                text: 'Comparisons',
+                text: 'Porównania',
                 link: '/guide/comparisons',
               },
             ],
@@ -901,15 +901,15 @@ export default ({ mode }: { mode: string }) => {
         ],
         '/api': [
           {
-            text: 'Test API Reference',
+            text: 'Referencja API Testów',
             link: '/api/',
           },
           {
-            text: 'Mocks',
+            text: 'Mocki',
             link: '/api/mock',
           },
           {
-            text: 'Vi Utility',
+            text: 'Narzędzie Vi',
             link: '/api/vi',
           },
           {
@@ -929,32 +929,32 @@ export default ({ mode }: { mode: string }) => {
             link: '/api/assert-type',
           },
           {
-            text: 'Browser Mode',
+            text: 'Tryb Przeglądarki',
             items: [
               {
-                text: 'Context',
+                text: 'Kontekst',
                 link: '/api/browser/context',
               },
               {
-                text: 'Interactivity',
+                text: 'Interaktywność',
                 link: '/api/browser/interactivity',
               },
               {
-                text: 'Locators',
+                text: 'Lokatory',
                 link: '/api/browser/locators',
               },
               {
-                text: 'Assertions',
+                text: 'Asercje',
                 link: '/api/browser/assertions',
               },
               {
-                text: 'Commands',
+                text: 'Komendy',
                 link: '/api/browser/commands',
               },
             ],
           },
           {
-            text: 'Advanced',
+            text: 'Zaawansowane',
             collapsed: false,
             items: [
               {
