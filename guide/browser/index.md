@@ -1,22 +1,22 @@
 ---
-title: Browser Mode | Guide
+title: Tryb Przeglądarki | Przewodnik
 outline: deep
 ---
 
-# Browser Mode {#browser-mode}
+# Tryb Przeglądarki {#browser-mode}
 
-This page provides information about the browser mode feature in the Vitest API, which allows you to run your tests in the browser natively, providing access to browser globals like window and document.
+Ta strona zawiera informacje o funkcji trybu przeglądarki w API Vitest, która pozwala uruchamiać testy natywnie w przeglądarce, zapewniając dostęp do globalnych obiektów przeglądarki, takich jak window i document.
 
 ::: tip
-If you are looking for documentation for `expect`, `vi` or any general API like test projects or type testing, refer to the ["Getting Started" guide](/guide/).
+Jeśli szukasz dokumentacji dla `expect`, `vi` lub jakiegokolwiek ogólnego API, takiego jak projekty testowe lub testowanie typów, zapoznaj się z przewodnikiem ["Rozpoczęcie pracy"](/guide/).
 :::
 
 <img alt="Vitest UI" img-light src="/ui-browser-1-light.png">
 <img alt="Vitest UI" img-dark src="/ui-browser-1-dark.png">
 
-## Installation
+## Instalacja
 
-For easier setup, you can use `vitest init browser` command to install required dependencies and create browser configuration.
+Dla łatwiejszej konfiguracji możesz użyć komendy `vitest init browser`, aby zainstalować wymagane zależności i utworzyć konfigurację przeglądarki.
 
 ::: code-group
 ```bash [npm]
@@ -33,11 +33,11 @@ bunx vitest init browser
 ```
 :::
 
-### Manual Installation
+### Ręczna instalacja
 
-You can also install packages manually. Vitest always requires a provider to be defined. You can chose either [`preview`](/config/browser/preview), [`playwright`](/config/browser/playwright) or [`webdriverio`](/config/browser/webdriverio).
+Możesz również zainstalować pakiety ręcznie. Vitest zawsze wymaga zdefiniowania dostawcy. Możesz wybrać [`preview`](/config/browser/preview), [`playwright`](/config/browser/playwright) lub [`webdriverio`](/config/browser/webdriverio).
 
-If you want to just preview how your tests look, you can use the `preview` provider:
+Jeśli chcesz tylko podejrzeć, jak wyglądają Twoje testy, możesz użyć dostawcy `preview`:
 
 ::: code-group
 ```bash [npm]
@@ -55,13 +55,13 @@ bun add -D vitest @vitest/browser-preview
 :::
 
 ::: warning
-However, to run tests in CI you need to install either [`playwright`](https://npmjs.com/package/playwright) or [`webdriverio`](https://www.npmjs.com/package/webdriverio). We also recommend switching to either one of them for testing locally instead of using the default `preview` provider since it relies on simulating events instead of using Chrome DevTools Protocol.
+Jednak do uruchamiania testów w CI musisz zainstalować [`playwright`](https://npmjs.com/package/playwright) lub [`webdriverio`](https://www.npmjs.com/package/webdriverio). Zalecamy również przejście na jeden z nich do testowania lokalnego zamiast używania domyślnego dostawcy `preview`, ponieważ opiera się on na symulowaniu zdarzeń zamiast używania Chrome DevTools Protocol.
 
-If you don't already use one of these tools, we recommend starting with Playwright because it supports parallel execution, which makes your tests run faster.
+Jeśli jeszcze nie używasz żadnego z tych narzędzi, zalecamy rozpoczęcie od Playwright, ponieważ obsługuje równoległe wykonywanie, co sprawia, że Twoje testy działają szybciej.
 
 ::: tabs key:provider
 == Playwright
-[Playwright](https://npmjs.com/package/playwright) is a framework for Web Testing and Automation.
+[Playwright](https://npmjs.com/package/playwright) to framework do testowania i automatyzacji stron internetowych.
 
 ::: code-group
 ```bash [npm]
@@ -78,7 +78,7 @@ bun add -D vitest @vitest/browser-playwright
 ```
 == WebdriverIO
 
-[WebdriverIO](https://www.npmjs.com/package/webdriverio) allows you to run tests locally using the WebDriver protocol.
+[WebdriverIO](https://www.npmjs.com/package/webdriverio) pozwala uruchamiać testy lokalnie używając protokołu WebDriver.
 
 ::: code-group
 ```bash [npm]
@@ -95,9 +95,9 @@ bun add -D vitest @vitest/browser-webdriverio
 ```
 :::
 
-## Configuration
+## Konfiguracja
 
-To activate browser mode in your Vitest configuration, set the `browser.enabled` field to `true` in your Vitest configuration file. Here is an example configuration using the browser field:
+Aby aktywować tryb przeglądarki w konfiguracji Vitest, ustaw pole `browser.enabled` na `true` w pliku konfiguracyjnym Vitest. Oto przykładowa konfiguracja używająca pola browser:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -108,7 +108,7 @@ export default defineConfig({
     browser: {
       provider: playwright(),
       enabled: true,
-      // at least one instance is required
+      // wymagana jest co najmniej jedna instancja
       instances: [
         { browser: 'chromium' },
       ],
@@ -118,12 +118,12 @@ export default defineConfig({
 ```
 
 ::: info
-Vitest assigns port `63315` to avoid conflicts with the development server, allowing you to run both in parallel. You can change that with the [`browser.api`](/config/#browser-api) option.
+Vitest przypisuje port `63315`, aby uniknąć konfliktów z serwerem deweloperskim, pozwalając na uruchamianie obu równolegle. Możesz to zmienić za pomocą opcji [`browser.api`](/config/#browser-api).
 
-The CLI does not print the Vite server URL automatically. You can press "b" to print the URL when running in watch mode.
+CLI nie wyświetla automatycznie URL serwera Vite. Możesz nacisnąć "b", aby wyświetlić URL podczas działania w trybie obserwacji.
 :::
 
-If you have not used Vite before, make sure you have your framework's plugin installed and specified in the config. Some frameworks might require extra configuration to work - check their Vite related documentation to be sure.
+Jeśli wcześniej nie używałeś Vite, upewnij się, że masz zainstalowaną i określoną w konfiguracji wtyczkę swojego frameworka. Niektóre frameworki mogą wymagać dodatkowej konfiguracji - sprawdź ich dokumentację związaną z Vite, aby się upewnić.
 
 ::: code-group
 ```ts [react]
@@ -237,7 +237,7 @@ export default defineConfig({
 ```
 :::
 
-If you need to run some tests using Node-based runner, you can define a [`projects`](/guide/projects) option with separate configurations for different testing strategies:
+Jeśli musisz uruchomić niektóre testy używając runnera opartego na Node, możesz zdefiniować opcję [`projects`](/guide/projects) z oddzielnymi konfiguracjami dla różnych strategii testowania:
 
 {#projects-config}
 
@@ -250,8 +250,8 @@ export default defineConfig({
     projects: [
       {
         test: {
-          // an example of file based convention,
-          // you don't have to follow it
+          // przykład konwencji opartej na plikach,
+          // nie musisz jej przestrzegać
           include: [
             'tests/unit/**/*.{test,spec}.ts',
             'tests/**/*.unit.{test,spec}.ts',
@@ -262,8 +262,8 @@ export default defineConfig({
       },
       {
         test: {
-          // an example of file based convention,
-          // you don't have to follow it
+          // przykład konwencji opartej na plikach,
+          // nie musisz jej przestrzegać
           include: [
             'tests/browser/**/*.{test,spec}.ts',
             'tests/**/*.browser.{test,spec}.ts',
@@ -283,60 +283,60 @@ export default defineConfig({
 })
 ```
 
-## Browser Option Types
+## Typy opcji przeglądarki
 
-The browser option in Vitest depends on the provider. Vitest will fail, if you pass `--browser` and don't specify its name in the config file. Available options:
+Opcja browser w Vitest zależy od dostawcy. Vitest zakończy się niepowodzeniem, jeśli przekażesz `--browser` i nie określisz jej nazwy w pliku konfiguracyjnym. Dostępne opcje:
 
-- `webdriverio` supports these browsers:
+- `webdriverio` obsługuje te przeglądarki:
   - `firefox`
   - `chrome`
   - `edge`
   - `safari`
-- `playwright` supports these browsers:
+- `playwright` obsługuje te przeglądarki:
   - `firefox`
   - `webkit`
   - `chromium`
 
-## Browser Compatibility
+## Kompatybilność przeglądarek
 
-Vitest uses [Vite dev server](https://vitejs.dev/guide/#browser-support) to run your tests, so we only support features specified in the [`esbuild.target`](https://vitejs.dev/config/shared-options.html#esbuild) option (`esnext` by default).
+Vitest używa [serwera deweloperskiego Vite](https://vitejs.dev/guide/#browser-support) do uruchamiania testów, więc obsługujemy tylko funkcje określone w opcji [`esbuild.target`](https://vitejs.dev/config/shared-options.html#esbuild) (domyślnie `esnext`).
 
-By default, Vite targets browsers which support the native [ES Modules](https://caniuse.com/es6-module), native [ESM dynamic import](https://caniuse.com/es6-module-dynamic-import), and [`import.meta`](https://caniuse.com/mdn-javascript_operators_import_meta). On top of that, we utilize [`BroadcastChannel`](https://caniuse.com/?search=BroadcastChannel) to communicate between iframes:
+Domyślnie Vite celuje w przeglądarki obsługujące natywne [ES Modules](https://caniuse.com/es6-module), natywny [dynamiczny import ESM](https://caniuse.com/es6-module-dynamic-import) i [`import.meta`](https://caniuse.com/mdn-javascript_operators_import_meta). Dodatkowo wykorzystujemy [`BroadcastChannel`](https://caniuse.com/?search=BroadcastChannel) do komunikacji między iframe'ami:
 
 - Chrome >=87
 - Firefox >=78
 - Safari >=15.4
 - Edge >=88
 
-## Running Tests
+## Uruchamianie testów
 
-When you specify a browser name in the browser option, Vitest will try to run the specified browser using `preview` by default, and then run the tests there. If you don't want to use `preview`, you can configure the custom browser provider by using `browser.provider` option.
+Gdy określisz nazwę przeglądarki w opcji browser, Vitest spróbuje uruchomić określoną przeglądarkę domyślnie używając `preview`, a następnie uruchomi tam testy. Jeśli nie chcesz używać `preview`, możesz skonfigurować niestandardowego dostawcę przeglądarki używając opcji `browser.provider`.
 
-To specify a browser using the CLI, use the `--browser` flag followed by the browser name, like this:
+Aby określić przeglądarkę za pomocą CLI, użyj flagi `--browser` z nazwą przeglądarki, na przykład:
 
 ```sh
 npx vitest --browser=chromium
 ```
 
-Or you can provide browser options to CLI with dot notation:
+Możesz również przekazać opcje przeglądarki do CLI za pomocą notacji kropkowej:
 
 ```sh
 npx vitest --browser.headless
 ```
 
 ::: warning
-Since Vitest 3.2, if you don't have the `browser` option in your config but specify the `--browser` flag, Vitest will fail because it can't assume that config is meant for the browser and not Node.js tests.
+Od Vitest 3.2, jeśli nie masz opcji `browser` w konfiguracji, ale określisz flagę `--browser`, Vitest zakończy się niepowodzeniem, ponieważ nie może założyć, że konfiguracja jest przeznaczona dla przeglądarki, a nie testów Node.js.
 :::
 
-By default, Vitest will automatically open the browser UI for development. Your tests will run inside an iframe in the center. You can configure the viewport by selecting the preferred dimensions, calling `page.viewport` inside the test, or setting default values in [the config](/config/#browser-viewport).
+Domyślnie Vitest automatycznie otworzy UI przeglądarki do developmentu. Twoje testy będą uruchamiane wewnątrz iframe'a na środku. Możesz skonfigurować viewport, wybierając preferowane wymiary, wywołując `page.viewport` wewnątrz testu lub ustawiając domyślne wartości w [konfiguracji](/config/#browser-viewport).
 
-## Headless
+## Tryb headless
 
-Headless mode is another option available in the browser mode. In headless mode, the browser runs in the background without a user interface, which makes it useful for running automated tests. The headless option in Vitest can be set to a boolean value to enable or disable headless mode.
+Tryb headless to kolejna opcja dostępna w trybie przeglądarki. W trybie headless przeglądarka działa w tle bez interfejsu użytkownika, co czyni go użytecznym do uruchamiania zautomatyzowanych testów. Opcję headless w Vitest można ustawić na wartość boolean, aby włączyć lub wyłączyć tryb headless.
 
-When using headless mode, Vitest won't open the UI automatically. If you want to continue using the UI but have tests run headlessly, you can install the [`@vitest/ui`](/guide/ui) package and pass the `--ui` flag when running Vitest.
+Podczas używania trybu headless Vitest nie otworzy automatycznie UI. Jeśli chcesz kontynuować używanie UI, ale testy mają działać w trybie headless, możesz zainstalować pakiet [`@vitest/ui`](/guide/ui) i przekazać flagę `--ui` podczas uruchamiania Vitest.
 
-Here's an example configuration enabling headless mode:
+Oto przykładowa konfiguracja włączająca tryb headless:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -353,21 +353,21 @@ export default defineConfig({
 })
 ```
 
-You can also set headless mode using the `--browser.headless` flag in the CLI, like this:
+Możesz również ustawić tryb headless używając flagi `--browser.headless` w CLI, na przykład:
 
 ```sh
 npx vitest --browser.headless
 ```
 
-In this case, Vitest will run in headless mode using the Chrome browser.
+W tym przypadku Vitest uruchomi się w trybie headless używając przeglądarki Chrome.
 
 ::: warning
-Headless mode is not available by default. You need to use either [`playwright`](https://npmjs.com/package/playwright) or [`webdriverio`](https://www.npmjs.com/package/webdriverio) providers to enable this feature.
+Tryb headless nie jest domyślnie dostępny. Musisz użyć dostawcy [`playwright`](https://npmjs.com/package/playwright) lub [`webdriverio`](https://www.npmjs.com/package/webdriverio), aby włączyć tę funkcję.
 :::
 
-## Examples
+## Przykłady
 
-By default, you don't need any external packages to work with the Browser Mode:
+Domyślnie nie potrzebujesz żadnych zewnętrznych pakietów do pracy z Trybem Przeglądarki:
 
 ```js [example.test.js]
 import { expect, test } from 'vitest'
@@ -375,51 +375,51 @@ import { page } from 'vitest/browser'
 import { render } from './my-render-function.js'
 
 test('properly handles form inputs', async () => {
-  render() // mount DOM elements
+  render() // montuje elementy DOM
 
-  // Asserts initial state.
+  // Sprawdza stan początkowy.
   await expect.element(page.getByText('Hi, my name is Alice')).toBeInTheDocument()
 
-  // Get the input DOM node by querying the associated label.
+  // Pobiera węzeł DOM inputa przez zapytanie o powiązaną etykietę.
   const usernameInput = page.getByLabelText(/username/i)
 
-  // Type the name into the input. This already validates that the input
-  // is filled correctly, no need to check the value manually.
+  // Wpisuje imię do inputa. To już waliduje, że input
+  // jest wypełniony poprawnie, nie trzeba ręcznie sprawdzać wartości.
   await usernameInput.fill('Bob')
 
   await expect.element(page.getByText('Hi, my name is Bob')).toBeInTheDocument()
 })
 ```
 
-However, Vitest also provides packages to render components for several popular frameworks out of the box:
+Jednak Vitest zapewnia również pakiety do renderowania komponentów dla kilku popularnych frameworków od razu:
 
-- [`vitest-browser-vue`](https://github.com/vitest-dev/vitest-browser-vue) to render [vue](https://vuejs.org) components
-- [`vitest-browser-svelte`](https://github.com/vitest-dev/vitest-browser-svelte) to render [svelte](https://svelte.dev) components
-- [`vitest-browser-react`](https://github.com/vitest-dev/vitest-browser-react) to render [react](https://react.dev) components
+- [`vitest-browser-vue`](https://github.com/vitest-dev/vitest-browser-vue) do renderowania komponentów [vue](https://vuejs.org)
+- [`vitest-browser-svelte`](https://github.com/vitest-dev/vitest-browser-svelte) do renderowania komponentów [svelte](https://svelte.dev)
+- [`vitest-browser-react`](https://github.com/vitest-dev/vitest-browser-react) do renderowania komponentów [react](https://react.dev)
 
-Community packages are available for other frameworks:
+Pakiety społeczności są dostępne dla innych frameworków:
 
-- [`vitest-browser-lit`](https://github.com/EskiMojo14/vitest-browser-lit) to render [lit](https://lit.dev) components
-- [`vitest-browser-preact`](https://github.com/JoviDeCroock/vitest-browser-preact) to render [preact](https://preactjs.com) components
-- [`vitest-browser-qwik`](https://github.com/kunai-consulting/vitest-browser-qwik) to render [qwik](https://qwik.dev) components
+- [`vitest-browser-lit`](https://github.com/EskiMojo14/vitest-browser-lit) do renderowania komponentów [lit](https://lit.dev)
+- [`vitest-browser-preact`](https://github.com/JoviDeCroock/vitest-browser-preact) do renderowania komponentów [preact](https://preactjs.com)
+- [`vitest-browser-qwik`](https://github.com/kunai-consulting/vitest-browser-qwik) do renderowania komponentów [qwik](https://qwik.dev)
 
-If your framework is not represented, feel free to create your own package - it is a simple wrapper around the framework renderer and `page.elementLocator` API. We will add a link to it on this page. Make sure it has a name starting with `vitest-browser-`.
+Jeśli Twój framework nie jest reprezentowany, możesz stworzyć własny pakiet - to prosta nakładka na renderer frameworka i API `page.elementLocator`. Dodamy link do niego na tej stronie. Upewnij się, że ma nazwę zaczynającą się od `vitest-browser-`.
 
-Besides rendering components and locating elements, you will also need to make assertions. Vitest forks the [`@testing-library/jest-dom`](https://github.com/testing-library/jest-dom) library to provide a wide range of DOM assertions out of the box. Read more at the [Assertions API](/api/browser/assertions).
+Oprócz renderowania komponentów i lokalizowania elementów, będziesz również musiał wykonywać asercje. Vitest forkuje bibliotekę [`@testing-library/jest-dom`](https://github.com/testing-library/jest-dom), aby zapewnić szeroki zakres asercji DOM od razu. Przeczytaj więcej w [API Asercji](/api/browser/assertions).
 
 ```ts
 import { expect } from 'vitest'
 import { page } from 'vitest/browser'
-// element is rendered correctly
+// element jest poprawnie wyrenderowany
 await expect.element(page.getByText('Hello World')).toBeInTheDocument()
 ```
 
-Vitest exposes a [Context API](/api/browser/context) with a small set of utilities that might be useful to you in tests. For example, if you need to make an interaction, like clicking an element or typing text into an input, you can use `userEvent` from `vitest/browser`. Read more at the [Interactivity API](/api/browser/interactivity).
+Vitest udostępnia [Context API](/api/browser/context) z małym zestawem narzędzi, które mogą być przydatne w testach. Na przykład, jeśli musisz wykonać interakcję, taką jak kliknięcie elementu lub wpisanie tekstu do inputa, możesz użyć `userEvent` z `vitest/browser`. Przeczytaj więcej w [API Interaktywności](/api/browser/interactivity).
 
 ```ts
 import { page, userEvent } from 'vitest/browser'
 await userEvent.fill(page.getByLabelText(/username/i), 'Alice')
-// or just locator.fill
+// lub po prostu locator.fill
 await page.getByLabelText(/username/i).fill('Alice')
 ```
 
@@ -431,14 +431,14 @@ import Component from './Component.vue'
 test('properly handles v-model', async () => {
   const screen = render(Component)
 
-  // Asserts initial state.
+  // Sprawdza stan początkowy.
   await expect.element(screen.getByText('Hi, my name is Alice')).toBeInTheDocument()
 
-  // Get the input DOM node by querying the associated label.
+  // Pobiera węzeł DOM inputa przez zapytanie o powiązaną etykietę.
   const usernameInput = screen.getByLabelText(/username/i)
 
-  // Type the name into the input. This already validates that the input
-  // is filled correctly, no need to check the value manually.
+  // Wpisuje imię do inputa. To już waliduje, że input
+  // jest wypełniony poprawnie, nie trzeba ręcznie sprawdzać wartości.
   await usernameInput.fill('Bob')
 
   await expect.element(screen.getByText('Hi, my name is Bob')).toBeInTheDocument()
@@ -465,14 +465,14 @@ import { render } from 'vitest-browser-react'
 import Fetch from './fetch'
 
 test('loads and displays greeting', async () => {
-  // Render a React element into the DOM
+  // Renderuje element React do DOM
   const screen = render(<Fetch url="/greeting" />)
 
   await screen.getByText('Load Greeting').click()
-  // wait before throwing an error if it cannot find an element
+  // czeka przed rzuceniem błędu, jeśli nie może znaleźć elementu
   const heading = screen.getByRole('heading')
 
-  // assert that the alert message is correct
+  // sprawdza, czy wiadomość alertu jest poprawna
   await expect.element(heading).toHaveTextContent('hello there')
   await expect.element(screen.getByRole('button')).toBeDisabled()
 })
@@ -512,7 +512,7 @@ import { render } from 'vitest-browser-qwik'
 import Greeting from './greeting'
 
 test('greeting appears on click', async () => {
-  // renderSSR and renderHook are also available
+  // renderSSR i renderHook są również dostępne
   const screen = render(<Greeting />)
 
   const button = screen.getByRole('button')
@@ -524,22 +524,22 @@ test('greeting appears on click', async () => {
 ```
 :::
 
-Vitest doesn't support all frameworks out of the box, but you can use external tools to run tests with these frameworks. We also encourage the community to create their own `vitest-browser` wrappers - if you have one, feel free to add it to the examples above.
+Vitest nie obsługuje wszystkich frameworków od razu, ale możesz użyć zewnętrznych narzędzi do uruchamiania testów z tymi frameworkami. Zachęcamy również społeczność do tworzenia własnych wrapperów `vitest-browser` - jeśli masz taki, możesz dodać go do powyższych przykładów.
 
-For unsupported frameworks, we recommend using `testing-library` packages:
+Dla nieobsługiwanych frameworków zalecamy używanie pakietów `testing-library`:
 
-- [`@solidjs/testing-library`](https://testing-library.com/docs/solid-testing-library/intro) to render [solid](https://www.solidjs.com) components
-- [`@marko/testing-library`](https://testing-library.com/docs/marko-testing-library/intro) to render [marko](https://markojs.com) components
+- [`@solidjs/testing-library`](https://testing-library.com/docs/solid-testing-library/intro) do renderowania komponentów [solid](https://www.solidjs.com)
+- [`@marko/testing-library`](https://testing-library.com/docs/marko-testing-library/intro) do renderowania komponentów [marko](https://markojs.com)
 
-You can also see more examples in [`browser-examples`](https://github.com/vitest-tests/browser-examples) repository.
+Możesz również zobaczyć więcej przykładów w repozytorium [`browser-examples`](https://github.com/vitest-tests/browser-examples).
 
 ::: warning
-`testing-library` provides a package `@testing-library/user-event`. We do not recommend using it directly because it simulates events instead of actually triggering them - instead, use [`userEvent`](/api/browser/interactivity) imported from `vitest/browser` that uses Chrome DevTools Protocol or Webdriver (depending on the provider) under the hood.
+`testing-library` dostarcza pakiet `@testing-library/user-event`. Nie zalecamy używania go bezpośrednio, ponieważ symuluje zdarzenia zamiast faktycznie je wyzwalać - zamiast tego użyj [`userEvent`](/api/browser/interactivity) importowanego z `vitest/browser`, który używa Chrome DevTools Protocol lub Webdriver (w zależności od dostawcy) pod maską.
 :::
 
 ::: code-group
 ```tsx [solid]
-// based on @testing-library/solid API
+// oparte na API @testing-library/solid
 // https://testing-library.com/docs/solid-testing-library/api
 
 import { render } from '@testing-library/solid'
@@ -566,7 +566,7 @@ it('uses params', async () => {
 })
 ```
 ```ts [marko]
-// based on @testing-library/marko API
+// oparte na API @testing-library/marko
 // https://testing-library.com/docs/marko-testing-library/api
 
 import { render, screen } from '@marko/testing-library'
@@ -583,26 +583,26 @@ test('renders a message', async () => {
 ```
 :::
 
-## Limitations
+## Ograniczenia
 
-### Thread Blocking Dialogs
+### Dialogi blokujące wątek
 
-When using Vitest Browser, it's important to note that thread blocking dialogs like `alert` or `confirm` cannot be used natively. This is because they block the web page, which means Vitest cannot continue communicating with the page, causing the execution to hang.
+Podczas używania Vitest Browser ważne jest, aby pamiętać, że dialogi blokujące wątek, takie jak `alert` lub `confirm`, nie mogą być używane natywnie. Dzieje się tak, ponieważ blokują stronę internetową, co oznacza, że Vitest nie może kontynuować komunikacji ze stroną, powodując zawieszenie wykonania.
 
-In such situations, Vitest provides default mocks with default returned values for these APIs. This ensures that if the user accidentally uses synchronous popup web APIs, the execution would not hang. However, it's still recommended for the user to mock these web APIs for a better experience. Read more in [Mocking](/guide/mocking).
+W takich sytuacjach Vitest zapewnia domyślne mocki z domyślnymi zwracanymi wartościami dla tych API. Zapewnia to, że jeśli użytkownik przypadkowo użyje synchronicznych popup web API, wykonanie się nie zawiesi. Jednak nadal zaleca się, aby użytkownik mockował te web API dla lepszego doświadczenia. Przeczytaj więcej w [Mockowanie](/guide/mocking).
 
-### Spying on Module Exports
+### Szpiegowanie eksportów modułów
 
-Browser Mode uses the browser's native ESM support to serve modules. The module namespace object is sealed and can't be reconfigured, unlike in Node.js tests where Vitest can patch the Module Runner. This means you can't call `vi.spyOn` on an imported object:
+Tryb Przeglądarki używa natywnego wsparcia ESM przeglądarki do serwowania modułów. Obiekt przestrzeni nazw modułu jest zapieczętowany i nie może być rekonfigurowany, w przeciwieństwie do testów Node.js, gdzie Vitest może łatać Module Runner. Oznacza to, że nie możesz wywołać `vi.spyOn` na zaimportowanym obiekcie:
 
 ```ts
 import { vi } from 'vitest'
 import * as module from './module.js'
 
-vi.spyOn(module, 'method') // ❌ throws an error
+vi.spyOn(module, 'method') // ❌ rzuca błąd
 ```
 
-To bypass this limitation, Vitest supports `{ spy: true }` option in `vi.mock('./module.js')`. This will automatically spy on every export in the module without replacing them with fake ones.
+Aby obejść to ograniczenie, Vitest obsługuje opcję `{ spy: true }` w `vi.mock('./module.js')`. Spowoduje to automatyczne szpiegowanie każdego eksportu w module bez zastępowania ich fałszywymi.
 
 ```ts
 import { vi } from 'vitest'
@@ -615,7 +615,7 @@ vi.mocked(module.method).mockImplementation(() => {
 })
 ```
 
-However, the only way to mock exported _variables_ is to export a method that will change the internal value:
+Jednak jedynym sposobem na mockowanie eksportowanych _zmiennych_ jest wyeksportowanie metody, która zmieni wewnętrzną wartość:
 
 ::: code-group
 ```js [module.js]
