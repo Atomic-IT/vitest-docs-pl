@@ -1,12 +1,12 @@
-# Multiple Setups
+# Wiele konfiguracji
 
-You can specify several different browser setups using the [`browser.instances`](/config/browser/instances) option.
+Możesz określić kilka różnych konfiguracji przeglądarki używając opcji [`browser.instances`](/config/browser/instances).
 
-The main advantage of using the `browser.instances` over the [test projects](/guide/projects) is improved caching. Every project will use the same Vite server meaning the file transform and [dependency pre-bundling](https://vite.dev/guide/dep-pre-bundling.html) has to happen only once.
+Główną zaletą używania `browser.instances` zamiast [projektów testowych](/guide/projects) jest ulepszone buforowanie. Każdy projekt będzie używał tego samego serwera Vite, co oznacza, że transformacja plików i [wstępne pakowanie zależności](https://vite.dev/guide/dep-pre-bundling.html) musi nastąpić tylko raz.
 
-## Several Browsers
+## Kilka przeglądarek
 
-You can use the `browser.instances` field to specify options for different browsers. For example, if you want to run the same tests in different browsers, the minimal configuration will look like this:
+Możesz użyć pola `browser.instances` do określenia opcji dla różnych przeglądarek. Na przykład, jeśli chcesz uruchomić te same testy w różnych przeglądarkach, minimalna konfiguracja będzie wyglądać tak:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -28,9 +28,9 @@ export default defineConfig({
 })
 ```
 
-## Different Setups
+## Różne konfiguracje
 
-You can also specify different config options independently from the browser (although, the instances _can_ also have `browser` fields):
+Możesz również określić różne opcje konfiguracji niezależnie od przeglądarki (chociaż instancje _mogą_ również mieć pola `browser`):
 
 ::: code-group
 ```ts [vitest.config.ts]
@@ -74,15 +74,15 @@ test('ratio works', () => {
 ```
 :::
 
-In this example Vitest will run all tests in `chromium` browser, but execute a `'./ratio-setup.ts'` file only in the first configuration and inject a different `ratio` value depending on the [`provide` field](/config/#provide).
+W tym przykładzie Vitest uruchomi wszystkie testy w przeglądarce `chromium`, ale wykona plik `'./ratio-setup.ts'` tylko w pierwszej konfiguracji i wstrzyknie inną wartość `ratio` w zależności od [pola `provide`](/config/#provide).
 
 ::: warning
-Note that you need to define the custom `name` value if you are using the same browser name because Vitest will assign the `browser` as the project name otherwise.
+Zauważ, że musisz zdefiniować niestandardową wartość `name`, jeśli używasz tej samej nazwy przeglądarki, ponieważ w przeciwnym razie Vitest przypisze `browser` jako nazwę projektu.
 :::
 
-## Filtering
+## Filtrowanie
 
-You can filter what projects to run with the [`--project` flag](/guide/cli#project). Vitest will automatically assign the browser name as a project name if it is not assigned manually. If the root config already has a name, Vitest will merge them: `custom` -> `custom (browser)`.
+Możesz filtrować, które projekty uruchomić, za pomocą [flagi `--project`](/guide/cli#project). Vitest automatycznie przypisze nazwę przeglądarki jako nazwę projektu, jeśli nie została przypisana ręcznie. Jeśli główna konfiguracja ma już nazwę, Vitest je połączy: `custom` -> `custom (browser)`.
 
 ```shell
 $ vitest --project=chromium
