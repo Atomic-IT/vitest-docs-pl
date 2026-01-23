@@ -1,20 +1,20 @@
 ---
-title: Test Filtering | Guide
+title: Filtrowanie testów | Przewodnik
 ---
 
-# Test Filtering
+# Filtrowanie testów
 
-Filtering, timeouts, concurrent for suite and tests
+Filtrowanie, limity czasu, współbieżność dla zestawów i testów
 
 ## CLI
 
-You can use CLI to filter test files by name:
+Możesz użyć CLI do filtrowania plików testowych według nazwy:
 
 ```bash
 $ vitest basic
 ```
 
-Will only execute test files that contain `basic`, e.g.
+Wykona tylko pliki testowe zawierające `basic`, np.
 
 ```
 basic.test.ts
@@ -22,16 +22,16 @@ basic-foo.test.ts
 basic/foo.test.ts
 ```
 
-You can also use the `-t, --testNamePattern <pattern>` option to filter tests by full name. This can be helpful when you want to filter by the name defined within a file rather than the filename itself.
+Możesz również użyć opcji `-t, --testNamePattern <pattern>`, aby filtrować testy według pełnej nazwy. Może to być pomocne, gdy chcesz filtrować według nazwy zdefiniowanej w pliku, a nie według samej nazwy pliku.
 
-Since Vitest 3, you can also specify the test by filename and line number:
+Od Vitest 3 możesz również określić test według nazwy pliku i numeru linii:
 
 ```bash
 $ vitest basic/foo.test.ts:10
 ```
 
 ::: warning
-Note that Vitest requires the full filename for this feature to work. It can be relative to the current working directory or an absolute file path.
+Zauważ, że Vitest wymaga pełnej nazwy pliku, aby ta funkcja działała. Może być względna do bieżącego katalogu roboczego lub absolutną ścieżką do pliku.
 
 ```bash
 $ vitest basic/foo.js:10 # ✅
@@ -41,7 +41,7 @@ $ vitest foo:10 # ❌
 $ vitest ./basic/foo:10 # ❌
 ```
 
-At the moment Vitest also doesn't support ranges:
+W tej chwili Vitest również nie obsługuje zakresów:
 
 ```bash
 $ vitest basic/foo.test.ts:10, basic/foo.test.ts:25 # ✅
@@ -49,9 +49,9 @@ $ vitest basic/foo.test.ts:10-25 # ❌
 ```
 :::
 
-## Specifying a Timeout
+## Określanie limitu czasu
 
-You can optionally pass a timeout in milliseconds as a third argument to tests. The default is [5 seconds](/config/#testtimeout).
+Możesz opcjonalnie przekazać limit czasu w milisekundach jako trzeci argument do testów. Domyślna wartość to [5 sekund](/config/#testtimeout).
 
 ```ts
 import { test } from 'vitest'
@@ -59,7 +59,7 @@ import { test } from 'vitest'
 test('name', async () => { /* ... */ }, 1000)
 ```
 
-Hooks also can receive a timeout, with the same 5 seconds default.
+Hooki również mogą otrzymać limit czasu, z tym samym domyślnym limitem 5 sekund.
 
 ```ts
 import { beforeAll } from 'vitest'
@@ -67,56 +67,56 @@ import { beforeAll } from 'vitest'
 beforeAll(async () => { /* ... */ }, 1000)
 ```
 
-## Skipping Suites and Tests
+## Pomijanie zestawów i testów
 
-Use `.skip` to avoid running certain suites or tests
+Użyj `.skip`, aby uniknąć uruchamiania określonych zestawów lub testów
 
 ```ts
 import { assert, describe, it } from 'vitest'
 
-describe.skip('skipped suite', () => {
+describe.skip('pominięty zestaw', () => {
   it('test', () => {
-    // Suite skipped, no error
+    // Zestaw pominięty, brak błędu
     assert.equal(Math.sqrt(4), 3)
   })
 })
 
-describe('suite', () => {
-  it.skip('skipped test', () => {
-    // Test skipped, no error
+describe('zestaw', () => {
+  it.skip('pominięty test', () => {
+    // Test pominięty, brak błędu
     assert.equal(Math.sqrt(4), 3)
   })
 })
 ```
 
-## Selecting Suites and Tests to Run
+## Wybieranie zestawów i testów do uruchomienia
 
-Use `.only` to only run certain suites or tests
+Użyj `.only`, aby uruchomić tylko określone zestawy lub testy
 
 ```ts
 import { assert, describe, it } from 'vitest'
 
-// Only this suite (and others marked with only) are run
-describe.only('suite', () => {
+// Tylko ten zestaw (i inne oznaczone only) są uruchamiane
+describe.only('zestaw', () => {
   it('test', () => {
     assert.equal(Math.sqrt(4), 3)
   })
 })
 
-describe('another suite', () => {
-  it('skipped test', () => {
-    // Test skipped, as tests are running in Only mode
+describe('inny zestaw', () => {
+  it('pominięty test', () => {
+    // Test pominięty, ponieważ testy działają w trybie Only
     assert.equal(Math.sqrt(4), 3)
   })
 
   it.only('test', () => {
-    // Only this test (and others marked with only) are run
+    // Tylko ten test (i inne oznaczone only) są uruchamiane
     assert.equal(Math.sqrt(4), 2)
   })
 })
 ```
 
-Run Vitest with a file filter and a line number:
+Uruchom Vitest z filtrem pliku i numerem linii:
 
 ```shell
 vitest ./test/example.test.ts:5
@@ -125,26 +125,26 @@ vitest ./test/example.test.ts:5
 ```ts:line-numbers
 import { assert, describe, it } from 'vitest'
 
-describe('suite', () => {
-  // Run only this test
+describe('zestaw', () => {
+  // Uruchom tylko ten test
   it('test', () => {
     assert.equal(Math.sqrt(4), 3)
   })
 })
 ```
 
-## Unimplemented Suites and Tests
+## Niezaimplementowane zestawy i testy
 
-Use `.todo` to stub suites and tests that should be implemented
+Użyj `.todo`, aby oznaczyć zestawy i testy, które powinny być zaimplementowane
 
 ```ts
 import { describe, it } from 'vitest'
 
-// An entry will be shown in the report for this suite
-describe.todo('unimplemented suite')
+// W raporcie pojawi się wpis dla tego zestawu
+describe.todo('niezaimplementowany zestaw')
 
-// An entry will be shown in the report for this test
-describe('suite', () => {
-  it.todo('unimplemented test')
+// W raporcie pojawi się wpis dla tego testu
+describe('zestaw', () => {
+  it.todo('niezaimplementowany test')
 })
 ```
