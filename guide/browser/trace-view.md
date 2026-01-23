@@ -1,9 +1,9 @@
-# Trace View
+# Widok śledzenia
 
-Vitest Browser Mode supports generating Playwright's [trace files](https://playwright.dev/docs/trace-viewer#viewing-remote-traces). To enable tracing, you need to set the [`trace`](/config/browser/trace) option in the `test.browser` configuration.
+Tryb Przeglądarki Vitest obsługuje generowanie [plików trace](https://playwright.dev/docs/trace-viewer#viewing-remote-traces) Playwright. Aby włączyć śledzenie, musisz ustawić opcję [`trace`](/config/browser/trace) w konfiguracji `test.browser`.
 
 ::: warning
-Generating trace files is only available when using the [Playwright provider](/config/browser/playwright).
+Generowanie plików trace jest dostępne tylko przy użyciu [dostawcy Playwright](/config/browser/playwright).
 :::
 
 ::: code-group
@@ -25,17 +25,17 @@ vitest --browser.trace=on
 ```
 :::
 
-By default, Vitest will generate a trace file for each test. You can also configure it to only generate traces on test failures by setting `trace` to `'on-first-retry'`, `'on-all-retries'` or `'retain-on-failure'`. The files will be saved in `__traces__` folder next to your test files. The name of the trace includes the project name, the test name, the [`repeats` count and `retry` count](/api/#test-api-reference):
+Domyślnie Vitest wygeneruje plik trace dla każdego testu. Możesz również skonfigurować go, aby generował ślady tylko przy niepowodzeniach testów, ustawiając `trace` na `'on-first-retry'`, `'on-all-retries'` lub `'retain-on-failure'`. Pliki zostaną zapisane w folderze `__traces__` obok Twoich plików testowych. Nazwa trace zawiera nazwę projektu, nazwę testu, [liczbę `repeats` i liczbę `retry`](/api/#test-api-reference):
 
 ```
 chromium-my-test-0-0.trace.zip
-^^^^^^^^ project name
-         ^^^^^^ test name
-                ^ repeat count
-                  ^ retry count
+^^^^^^^^ nazwa projektu
+         ^^^^^^ nazwa testu
+                ^ liczba powtórzeń
+                  ^ liczba ponowień
 ```
 
-To change the output directory, you can set the `tracesDir` option in the `test.browser.trace` configuration. This way all traces will be stored in the same directory, grouped by the test file.
+Aby zmienić katalog wyjściowy, możesz ustawić opcję `tracesDir` w konfiguracji `test.browser.trace`. W ten sposób wszystkie trace będą przechowywane w tym samym katalogu, pogrupowane według pliku testowego.
 
 ```ts [vitest.config.js]
 import { defineConfig } from 'vitest/config'
@@ -47,7 +47,7 @@ export default defineConfig({
       provider: playwright(),
       trace: {
         mode: 'on',
-        // the path is relative to the root of the project
+        // ścieżka jest względna do katalogu głównego projektu
         tracesDir: './playwright-traces',
       },
     },
@@ -55,20 +55,20 @@ export default defineConfig({
 })
 ```
 
-The traces are available in reporters as [annotations](/guide/test-annotations). For example, in the HTML reporter, you can find the link to the trace file in the test details.
+Ślady są dostępne w reporterach jako [adnotacje](/guide/test-annotations). Na przykład w reporterze HTML możesz znaleźć link do pliku trace w szczegółach testu.
 
-## Preview
+## Podgląd
 
-To open the trace file, you can use the Playwright Trace Viewer. Run the following command in your terminal:
+Aby otworzyć plik trace, możesz użyć Playwright Trace Viewer. Uruchom następującą komendę w terminalu:
 
 ```bash
-npx playwright show-trace "path-to-trace-file"
+npx playwright show-trace "ścieżka-do-pliku-trace"
 ```
 
-This will start the Trace Viewer and load the specified trace file.
+Spowoduje to uruchomienie Trace Viewer i załadowanie określonego pliku trace.
 
-Alternatively, you can open the Trace Viewer in your browser at https://trace.playwright.dev and upload the trace file there.
+Alternatywnie możesz otworzyć Trace Viewer w przeglądarce pod adresem https://trace.playwright.dev i przesłać tam plik trace.
 
-## Limitations
+## Ograniczenia
 
-At the moment, Vitest cannot populate the "Sources" tab in the Trace Viewer. This means that while you can see the actions and screenshots captured during the test, you won't be able to view the source code of your tests directly within the Trace Viewer. You will need to refer back to your code editor to see the test implementation.
+W tej chwili Vitest nie może wypełnić zakładki "Sources" w Trace Viewer. Oznacza to, że chociaż możesz zobaczyć akcje i zrzuty ekranu przechwycone podczas testu, nie będziesz mógł zobaczyć kodu źródłowego swoich testów bezpośrednio w Trace Viewer. Będziesz musiał wrócić do edytora kodu, aby zobaczyć implementację testu.
