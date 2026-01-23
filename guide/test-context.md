@@ -1,34 +1,34 @@
 ---
-title: Test Context | Guide
+title: Kontekst testu | Przewodnik
 outline: deep
 ---
 
-# Test Context
+# Kontekst testu
 
-Inspired by [Playwright Fixtures](https://playwright.dev/docs/test-fixtures), Vitest's test context allows you to define utils, states, and fixtures that can be used in your tests.
+Zainspirowany [Playwright Fixtures](https://playwright.dev/docs/test-fixtures), kontekst testu Vitest pozwala definiować narzędzia, stany i fixtures, które mogą być używane w Twoich testach.
 
-## Usage
+## Użycie
 
-The first argument for each test callback is a test context.
+Pierwszym argumentem dla każdego callbacku testu jest kontekst testu.
 
 ```ts
 import { it } from 'vitest'
 
 it('should work', ({ task }) => {
-  // prints name of the test
+  // wyświetla nazwę testu
   console.log(task.name)
 })
 ```
 
-## Built-in Test Context
+## Wbudowany kontekst testu
 
 #### `task`
 
-A readonly object containing metadata about the test.
+Obiekt tylko do odczytu zawierający metadane o teście.
 
 #### `expect`
 
-The `expect` API bound to the current test:
+API `expect` powiązane z bieżącym testem:
 
 ```ts
 import { it } from 'vitest'
@@ -38,7 +38,7 @@ it('math is easy', ({ expect }) => {
 })
 ```
 
-This API is useful for running snapshot tests concurrently because global expect cannot track them:
+To API jest przydatne do uruchamiania testów snapshot współbieżnie, ponieważ globalny expect nie może ich śledzić:
 
 ```ts
 import { it } from 'vitest'
@@ -59,7 +59,7 @@ function skip(note?: string): never
 function skip(condition: boolean, note?: string): void
 ```
 
-Skips subsequent test execution and marks test as skipped:
+Pomija dalsze wykonywanie testu i oznacza test jako pominięty:
 
 ```ts
 import { expect, it } from 'vitest'
@@ -70,7 +70,7 @@ it('math is hard', ({ skip }) => {
 })
 ```
 
-Since Vitest 3.1, it accepts a boolean parameter to skip the test conditionally:
+Od Vitest 3.1 akceptuje parametr logiczny do warunkowego pomijania testu:
 
 ```ts
 it('math is hard', ({ skip, mind }) => {
@@ -94,7 +94,7 @@ function annotate(
 ): Promise<TestAnnotation>
 ```
 
-Add a [test annotation](/guide/test-annotations) that will be displayed by your [reporter](/config/#reporters).
+Dodaje [adnotację testu](/guide/test-annotations), która będzie wyświetlana przez Twój [reporter](/config/#reporters).
 
 ```ts
 test('annotations API', async ({ annotate }) => {
@@ -104,12 +104,12 @@ test('annotations API', async ({ annotate }) => {
 
 #### `signal` <Version>3.2.0</Version> {#signal}
 
-An [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) that can be aborted by Vitest. The signal is aborted in these situations:
+[`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal), który może być przerwany przez Vitest. Sygnał jest przerywany w następujących sytuacjach:
 
-- Test times out
-- User manually cancelled the test run with Ctrl+C
-- [`vitest.cancelCurrentRun`](/api/advanced/vitest#cancelcurrentrun) was called programmatically
-- Another test failed in parallel and the [`bail`](/config/#bail) flag is set
+- Test przekroczy limit czasu
+- Użytkownik ręcznie anulował uruchomienie testu za pomocą Ctrl+C
+- [`vitest.cancelCurrentRun`](/api/advanced/vitest#cancelcurrentrun) został wywołany programowo
+- Inny test równoległy zakończył się niepowodzeniem i ustawiona jest flaga [`bail`](/config/#bail)
 
 ```ts
 it('stop request when test times out', async ({ signal }) => {
@@ -119,21 +119,21 @@ it('stop request when test times out', async ({ signal }) => {
 
 #### `onTestFailed`
 
-The [`onTestFailed`](/api/#ontestfailed) hook bound to the current test. This API is useful if you are running tests concurrently and need to have a special handling only for this specific test.
+Hook [`onTestFailed`](/api/#ontestfailed) powiązany z bieżącym testem. To API jest przydatne, jeśli uruchamiasz testy współbieżnie i potrzebujesz specjalnej obsługi tylko dla tego konkretnego testu.
 
 #### `onTestFinished`
 
-The [`onTestFinished`](/api/#ontestfailed) hook bound to the current test. This API is useful if you are running tests concurrently and need to have a special handling only for this specific test.
+Hook [`onTestFinished`](/api/#ontestfailed) powiązany z bieżącym testem. To API jest przydatne, jeśli uruchamiasz testy współbieżnie i potrzebujesz specjalnej obsługi tylko dla tego konkretnego testu.
 
-## Extend Test Context
+## Rozszerzanie kontekstu testu
 
-Vitest provides two different ways to help you extend the test context.
+Vitest zapewnia dwa różne sposoby rozszerzania kontekstu testu.
 
 ### `test.extend`
 
-Like [Playwright](https://playwright.dev/docs/api/class-test#test-extend), you can use this method to define your own `test` API with custom fixtures and reuse it anywhere.
+Podobnie jak [Playwright](https://playwright.dev/docs/api/class-test#test-extend), możesz użyć tej metody do zdefiniowania własnego API `test` z niestandardowymi fixtures i używać go wszędzie.
 
-For example, we first create the `test` collector with two fixtures: `todos` and `archive`.
+Na przykład, najpierw tworzymy kolektor `test` z dwoma fixtures: `todos` i `archive`.
 
 ```ts [my-test.ts]
 import { test as baseTest } from 'vitest'
@@ -143,20 +143,20 @@ const archive = []
 
 export const test = baseTest.extend({
   todos: async ({}, use) => {
-    // setup the fixture before each test function
+    // przygotuj fixture przed każdą funkcją testu
     todos.push(1, 2, 3)
 
-    // use the fixture value
+    // użyj wartości fixture
     await use(todos)
 
-    // cleanup the fixture after each test function
+    // wyczyść fixture po każdej funkcji testu
     todos.length = 0
   },
   archive
 })
 ```
 
-Then we can import and use it.
+Następnie możemy go zaimportować i użyć.
 
 ```ts [my-test.test.ts]
 import { expect } from 'vitest'
@@ -179,7 +179,7 @@ test('move items from todos to archive', ({ todos, archive }) => {
 })
 ```
 
-We can also add more fixtures or override existing fixtures by extending our `test`.
+Możemy również dodać więcej fixtures lub nadpisać istniejące fixtures, rozszerzając nasz `test`.
 
 ```ts
 import { test as todosTest } from './my-test.js'
@@ -191,9 +191,9 @@ export const test = todosTest.extend({
 })
 ```
 
-#### Fixture initialization
+#### Inicjalizacja fixture
 
-Vitest runner will smartly initialize your fixtures and inject them into the test context based on usage.
+Runner Vitest inteligentnie zainicjalizuje Twoje fixtures i wstrzyknie je do kontekstu testu na podstawie użycia.
 
 ```ts
 import { test as baseTest } from 'vitest'
@@ -208,16 +208,16 @@ const test = baseTest.extend<{
   archive: []
 })
 
-// todos will not run
+// todos nie zostanie uruchomione
 test('skip', () => {})
 test('skip', ({ archive }) => {})
 
-// todos will run
+// todos zostanie uruchomione
 test('run', ({ todos }) => {})
 ```
 
 ::: warning
-When using `test.extend()` with fixtures, you should always use the object destructuring pattern `{ todos }` to access context both in fixture function and test function.
+Używając `test.extend()` z fixtures, zawsze powinieneś używać wzorca destrukturyzacji obiektów `{ todos }`, aby uzyskać dostęp do kontekstu zarówno w funkcji fixture, jak i w funkcji testu.
 
 ```ts
 test('context must be destructured', (context) => { // [!code --]
@@ -231,9 +231,9 @@ test('context must be destructured', ({ todos }) => { // [!code ++]
 
 :::
 
-#### Automatic fixture
+#### Automatyczne fixture
 
-Vitest also supports the tuple syntax for fixtures, allowing you to pass options for each fixture. For example, you can use it to explicitly initialize a fixture, even if it's not being used in tests.
+Vitest obsługuje również składnię krotki dla fixtures, pozwalając przekazać opcje dla każdego fixture. Na przykład możesz użyć tego do jawnej inicjalizacji fixture, nawet jeśli nie jest używane w testach.
 
 ```ts
 import { test as base } from 'vitest'
@@ -241,21 +241,21 @@ import { test as base } from 'vitest'
 const test = base.extend({
   fixture: [
     async ({}, use) => {
-      // this function will run
+      // ta funkcja zostanie uruchomiona
       setup()
       await use()
       teardown()
     },
-    { auto: true } // Mark as an automatic fixture
+    { auto: true } // Oznacz jako automatyczne fixture
   ],
 })
 
 test('works correctly')
 ```
 
-#### Default fixture
+#### Domyślne fixture
 
-Since Vitest 3, you can provide different values in different [projects](/guide/projects). To enable this feature, pass down `{ injected: true }` to the options. If the key is not specified in the [project configuration](/config/#provide), then the default value will be used.
+Od Vitest 3 możesz dostarczyć różne wartości w różnych [projektach](/guide/projects). Aby włączyć tę funkcję, przekaż `{ injected: true }` do opcji. Jeśli klucz nie jest określony w [konfiguracji projektu](/config/#provide), zostanie użyta wartość domyślna.
 
 :::code-group
 ```ts [fixtures.test.ts]
@@ -263,17 +263,17 @@ import { test as base } from 'vitest'
 
 const test = base.extend({
   url: [
-    // default value if "url" is not defined in the config
+    // wartość domyślna, jeśli "url" nie jest zdefiniowany w konfiguracji
     '/default',
-    // mark the fixture as "injected" to allow the override
+    // oznacz fixture jako "injected", aby umożliwić nadpisanie
     { injected: true },
   ],
 })
 
 test('works correctly', ({ url }) => {
-  // url is "/default" in "project-new"
-  // url is "/full" in "project-full"
-  // url is "/empty" in "project-empty"
+  // url to "/default" w "project-new"
+  // url to "/full" w "project-full"
+  // url to "/empty" w "project-empty"
 })
 ```
 ```ts [vitest.config.ts]
@@ -309,9 +309,9 @@ export default defineConfig({
 ```
 :::
 
-#### Scoping Values to Suite <Version>3.1.0</Version> {#scoping-values-to-suite}
+#### Zakres wartości dla zestawu <Version>3.1.0</Version> {#scoping-values-to-suite}
 
-Since Vitest 3.1, you can override context values per suite and its children by using the `test.scoped` API:
+Od Vitest 3.1 możesz nadpisać wartości kontekstu dla zestawu i jego dzieci, używając API `test.scoped`:
 
 ```ts
 import { test as baseTest, describe, expect } from 'vitest'
@@ -325,27 +325,27 @@ describe('use scoped values', () => {
   test.scoped({ dependency: 'new' })
 
   test('uses scoped value', ({ dependant }) => {
-    // `dependant` uses the new overridden value that is scoped
-    // to all tests in this suite
+    // `dependant` używa nowej nadpisanej wartości, która jest zakresowana
+    // do wszystkich testów w tym zestawie
     expect(dependant).toEqual({ dependency: 'new' })
   })
 
   describe('keeps using scoped value', () => {
     test('uses scoped value', ({ dependant }) => {
-      // nested suite inherited the value
+      // zagnieżdżony zestaw odziedziczył wartość
       expect(dependant).toEqual({ dependency: 'new' })
     })
   })
 })
 
 test('keep using the default values', ({ dependant }) => {
-  // the `dependency` is using the default
-  // value outside of the suite with .scoped
+  // `dependency` używa wartości domyślnej
+  // poza zestawem z .scoped
   expect(dependant).toEqual({ dependency: 'default' })
 })
 ```
 
-This API is particularly useful if you have a context value that relies on a dynamic variable like a database connection:
+To API jest szczególnie przydatne, jeśli masz wartość kontekstu, która zależy od dynamicznej zmiennej, takiej jak połączenie z bazą danych:
 
 ```ts
 const test = baseTest.extend<{
@@ -363,19 +363,19 @@ const test = baseTest.extend<{
 describe('one type of schema', () => {
   test.scoped({ schema: 'schema-1' })
 
-  // ... tests
+  // ... testy
 })
 
 describe('another type of schema', () => {
   test.scoped({ schema: 'schema-2' })
 
-  // ... tests
+  // ... testy
 })
 ```
 
-#### Per-Scope Context <Version>3.2.0</Version>
+#### Kontekst na zakres <Version>3.2.0</Version>
 
-You can define context that will be initiated once per file or a worker. It is initiated the same way as a regular fixture with an objects parameter:
+Możesz zdefiniować kontekst, który będzie inicjowany raz na plik lub worker. Jest inicjowany w ten sam sposób jak zwykłe fixture z parametrem obiektów:
 
 ```ts
 import { test as baseTest } from 'vitest'
@@ -392,7 +392,7 @@ export const test = baseTest.extend({
 })
 ```
 
-The value is initialised the first time any test has accessed it, unless the fixture options have `auto: true` - in this case the value is initialised before any test has run.
+Wartość jest inicjowana przy pierwszym dostępie dowolnego testu, chyba że opcje fixture mają `auto: true` - w takim przypadku wartość jest inicjowana przed uruchomieniem jakiegokolwiek testu.
 
 ```ts
 const test = baseTest.extend({
@@ -400,7 +400,7 @@ const test = baseTest.extend({
     ({}, use) => use([]),
     {
       scope: 'file',
-      // always run this hook before any test
+      // zawsze uruchom ten hook przed jakimkolwiek testem
       auto: true
     },
   ],
@@ -408,20 +408,20 @@ const test = baseTest.extend({
 ```
 
 ::: warning
-The built-in [`task`](#task) test context is **not available** in file-scoped or worker-scoped fixtures. These fixtures receive a different context object (file or worker context) that does not include test-specific properties like `task`.
+Wbudowany kontekst testu [`task`](#task) **nie jest dostępny** w fixtures zakresowanych na plik lub worker. Te fixtures otrzymują inny obiekt kontekstu (kontekst pliku lub workera), który nie zawiera właściwości specyficznych dla testu, takich jak `task`.
 
-If you need access to file-level metadata like the file path, use `expect.getState().testPath` instead.
+Jeśli potrzebujesz dostępu do metadanych na poziomie pliku, takich jak ścieżka pliku, użyj zamiast tego `expect.getState().testPath`.
 :::
 
-The `worker` scope will run the fixture once per worker. The number of running workers depends on various factors. By default, every file runs in a separate worker, so `file` and `worker` scopes work the same way.
+Zakres `worker` uruchomi fixture raz na worker. Liczba uruchomionych workerów zależy od różnych czynników. Domyślnie każdy plik działa w oddzielnym workerze, więc zakresy `file` i `worker` działają tak samo.
 
-However, if you disable [isolation](/config/#isolate), then the number of workers is limited by the [`maxWorkers`](/config/#maxworkers) configuration.
+Jednak jeśli wyłączysz [izolację](/config/#isolate), liczba workerów jest ograniczona przez konfigurację [`maxWorkers`](/config/#maxworkers).
 
-Note that specifying `scope: 'worker'` when running tests in `vmThreads` or `vmForks` will work the same way as `scope: 'file'`. This limitation exists because every test file has its own VM context, so if Vitest were to initiate it once, one context could leak to another and create many reference inconsistencies (instances of the same class would reference different constructors, for example).
+Zauważ, że określenie `scope: 'worker'` podczas uruchamiania testów w `vmThreads` lub `vmForks` będzie działać tak samo jak `scope: 'file'`. To ograniczenie istnieje, ponieważ każdy plik testowy ma własny kontekst VM, więc gdyby Vitest inicjował go raz, jeden kontekst mógłby przeciekać do drugiego i tworzyć wiele niespójności referencji (instancje tej samej klasy odwoływałyby się do różnych konstruktorów, na przykład).
 
 #### TypeScript
 
-To provide fixture types for all your custom contexts, you can pass the fixtures type as a generic.
+Aby dostarczyć typy fixture dla wszystkich niestandardowych kontekstów, możesz przekazać typ fixtures jako generic.
 
 ```ts
 interface MyFixtures {
@@ -440,8 +440,8 @@ test('types are defined correctly', ({ todos, archive }) => {
 })
 ```
 
-::: info Type Inferring
-Note that Vitest doesn't support infering the types when the `use` function is called. It is always preferable to pass down the whole context type as the generic type when `test.extend` is called:
+::: info Wnioskowanie typów
+Zauważ, że Vitest nie obsługuje wnioskowania typów, gdy wywoływana jest funkcja `use`. Zawsze preferowane jest przekazanie całego typu kontekstu jako typu generycznego podczas wywoływania `test.extend`:
 
 ```ts
 import { test as baseTest } from 'vitest'
@@ -464,7 +464,7 @@ test('types are correct', ({
 
 :::
 
-When using `test.extend`, the extended `test` object provides type-safe `beforeEach` and `afterEach` hooks that are aware of the new context:
+Używając `test.extend`, rozszerzony obiekt `test` zapewnia bezpieczne typowo hooki `beforeEach` i `afterEach`, które są świadome nowego kontekstu:
 
 ```ts
 const test = baseTest.extend<{
@@ -475,7 +475,7 @@ const test = baseTest.extend<{
   },
 })
 
-// Unlike global hooks, these hooks are aware of the extended context
+// W przeciwieństwie do globalnych hooków, te hooki są świadome rozszerzonego kontekstu
 test.beforeEach(({ todos }) => {
   todos.push(1)
 })
