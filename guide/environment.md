@@ -1,33 +1,33 @@
 ---
-title: Test Environment | Guide
+title: Środowisko testowe | Przewodnik
 ---
 
-# Test Environment
+# Środowisko testowe
 
-Vitest provides [`environment`](/config/#environment) option to run code inside a specific environment. You can modify how environment behaves with [`environmentOptions`](/config/#environmentoptions) option.
+Vitest zapewnia opcję [`environment`](/config/#environment) do uruchamiania kodu w określonym środowisku. Możesz modyfikować zachowanie środowiska za pomocą opcji [`environmentOptions`](/config/#environmentoptions).
 
-By default, you can use these environments:
+Domyślnie możesz używać tych środowisk:
 
-- `node` is default environment
-- `jsdom` emulates browser environment by providing Browser API, uses [`jsdom`](https://github.com/jsdom/jsdom) package
-- `happy-dom` emulates browser environment by providing Browser API, and considered to be faster than jsdom, but lacks some API, uses [`happy-dom`](https://github.com/capricorn86/happy-dom) package
-- `edge-runtime` emulates Vercel's [edge-runtime](https://edge-runtime.vercel.app/), uses [`@edge-runtime/vm`](https://www.npmjs.com/package/@edge-runtime/vm) package
+- `node` to domyślne środowisko
+- `jsdom` emuluje środowisko przeglądarki, dostarczając Browser API, używa pakietu [`jsdom`](https://github.com/jsdom/jsdom)
+- `happy-dom` emuluje środowisko przeglądarki, dostarczając Browser API, uważane za szybsze niż jsdom, ale brakuje mu niektórych API, używa pakietu [`happy-dom`](https://github.com/capricorn86/happy-dom)
+- `edge-runtime` emuluje [edge-runtime](https://edge-runtime.vercel.app/) Vercel, używa pakietu [`@edge-runtime/vm`](https://www.npmjs.com/package/@edge-runtime/vm)
 
 ::: info
-When using `jsdom` or `happy-dom` environments, Vitest follows the same rules that Vite does when importing [CSS](https://vitejs.dev/guide/features.html#css) and [assets](https://vitejs.dev/guide/features.html#static-assets). If importing external dependency fails with `unknown extension .css` error, you need to inline the whole import chain manually by adding all packages to [`server.deps.inline`](/config/#server-deps-inline). For example, if the error happens in `package-3` in this import chain: `source code -> package-1 -> package-2 -> package-3`, you need to add all three packages to `server.deps.inline`.
+Podczas używania środowisk `jsdom` lub `happy-dom`, Vitest stosuje te same zasady co Vite przy importowaniu [CSS](https://vitejs.dev/guide/features.html#css) i [zasobów](https://vitejs.dev/guide/features.html#static-assets). Jeśli importowanie zewnętrznej zależności kończy się błędem `unknown extension .css`, musisz ręcznie zinlineować cały łańcuch importów, dodając wszystkie pakiety do [`server.deps.inline`](/config/#server-deps-inline). Na przykład, jeśli błąd występuje w `package-3` w tym łańcuchu importów: `kod źródłowy -> package-1 -> package-2 -> package-3`, musisz dodać wszystkie trzy pakiety do `server.deps.inline`.
 
-The `require` of CSS and assets inside the external dependencies are resolved automatically.
+`require` CSS i zasobów wewnątrz zewnętrznych zależności jest rozwiązywane automatycznie.
 :::
 
 ::: warning
-"Environments" exist only when running tests in Node.js.
+"Środowiska" istnieją tylko podczas uruchamiania testów w Node.js.
 
-`browser` is not considered an environment in Vitest. If you wish to run part of your tests using [Browser Mode](/guide/browser/), you can create a [test project](/guide/browser/#projects-config).
+`browser` nie jest uważany za środowisko w Vitest. Jeśli chcesz uruchomić część swoich testów używając [Trybu Przeglądarki](/guide/browser/), możesz utworzyć [projekt testowy](/guide/browser/#projects-config).
 :::
 
-## Environments for Specific Files
+## Środowiska dla konkretnych plików
 
-When setting `environment` option in your config, it will apply to all the test files in your project. To have more fine-grained control, you can use control comments to specify environment for specific files. Control comments are comments that start with `@vitest-environment` and are followed by the environment name:
+Ustawiając opcję `environment` w swojej konfiguracji, będzie ona stosowana do wszystkich plików testowych w projekcie. Aby mieć bardziej szczegółową kontrolę, możesz użyć komentarzy kontrolnych do określenia środowiska dla konkretnych plików. Komentarze kontrolne to komentarze zaczynające się od `@vitest-environment`, po których następuje nazwa środowiska:
 
 ```ts
 // @vitest-environment jsdom
@@ -39,9 +39,9 @@ test('test', () => {
 })
 ```
 
-## Custom Environment
+## Niestandardowe środowisko
 
-You can create your own package to extend Vitest environment. To do so, create package with the name `vitest-environment-${name}` or specify a path to a valid JS/TS file. That package should export an object with the shape of `Environment`:
+Możesz utworzyć własny pakiet, aby rozszerzyć środowisko Vitest. Aby to zrobić, utwórz pakiet o nazwie `vitest-environment-${name}` lub określ ścieżkę do prawidłowego pliku JS/TS. Ten pakiet powinien eksportować obiekt o kształcie `Environment`:
 
 ```ts
 import type { Environment } from 'vitest/environments'
@@ -49,7 +49,7 @@ import type { Environment } from 'vitest/environments'
 export default <Environment>{
   name: 'custom',
   viteEnvironment: 'ssr',
-  // optional - only if you support "experimental-vm" pool
+  // opcjonalne - tylko jeśli obsługujesz pulę "experimental-vm"
   async setupVM() {
     const vm = await import('node:vm')
     const context = vm.createContext()
@@ -58,15 +58,15 @@ export default <Environment>{
         return context
       },
       teardown() {
-        // called after all tests with this env have been run
+        // wywoływane po uruchomieniu wszystkich testów z tym środowiskiem
       }
     }
   },
   setup() {
-    // custom setup
+    // niestandardowa konfiguracja
     return {
       teardown() {
-        // called after all tests with this env have been run
+        // wywoływane po uruchomieniu wszystkich testów z tym środowiskiem
       }
     }
   }
@@ -74,10 +74,10 @@ export default <Environment>{
 ```
 
 ::: warning
-Vitest requires `viteEnvironment` option on environment object (fallbacks to the Vitest environment name by default). It should be equal to `ssr`, `client` or any custom [Vite environment](https://vite.dev/guide/api-environment) name. This value determines which environment is used to process file.
+Vitest wymaga opcji `viteEnvironment` na obiekcie środowiska (domyślnie przechodzi na nazwę środowiska Vitest). Powinna być równa `ssr`, `client` lub dowolnej niestandardowej nazwie [środowiska Vite](https://vite.dev/guide/api-environment). Ta wartość określa, które środowisko jest używane do przetwarzania pliku.
 :::
 
-You also have access to default Vitest environments through `vitest/environments` entry:
+Masz również dostęp do domyślnych środowisk Vitest przez wpis `vitest/environments`:
 
 ```ts
 import { builtinEnvironments, populateGlobal } from 'vitest/environments'
@@ -85,19 +85,19 @@ import { builtinEnvironments, populateGlobal } from 'vitest/environments'
 console.log(builtinEnvironments) // { jsdom, happy-dom, node, edge-runtime }
 ```
 
-Vitest also provides `populateGlobal` utility function, which can be used to move properties from object into the global namespace:
+Vitest zapewnia również funkcję narzędziową `populateGlobal`, która może być używana do przenoszenia właściwości z obiektu do globalnej przestrzeni nazw:
 
 ```ts
 interface PopulateOptions {
-  // should non-class functions be bind to the global namespace
+  // czy funkcje nieklasowe powinny być powiązane z globalną przestrzenią nazw
   bindFunctions?: boolean
 }
 
 interface PopulateResult {
-  // a list of all keys that were copied, even if value doesn't exist on original object
+  // lista wszystkich kluczy, które zostały skopiowane, nawet jeśli wartość nie istnieje na oryginalnym obiekcie
   keys: Set<string>
-  // a map of original object that might have been overridden with keys
-  // you can return these values inside `teardown` function
+  // mapa oryginalnego obiektu, który mógł zostać nadpisany kluczami
+  // możesz zwrócić te wartości wewnątrz funkcji `teardown`
   originals: Map<string | symbol, any>
 }
 
