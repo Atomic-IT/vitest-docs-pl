@@ -1,73 +1,72 @@
 ---
-title: Visual Regression Testing
+title: Testowanie regresji wizualnej
 outline: [2, 3]
 ---
 
-# Visual Regression Testing
+# Testowanie regresji wizualnej
 
-Vitest can run visual regression tests out of the box. It captures screenshots
-of your UI components and pages, then compares them against reference images to
-detect unintended visual changes.
+Vitest może uruchamiać testy regresji wizualnej od razu. Przechwytuje zrzuty ekranu
+Twoich komponentów UI i stron, a następnie porównuje je z obrazami referencyjnymi,
+aby wykryć niezamierzone zmiany wizualne.
 
-Unlike functional tests that verify behavior, visual tests catch styling issues,
-layout shifts, and rendering problems that might otherwise go unnoticed without
-thorough manual testing.
+W przeciwieństwie do testów funkcjonalnych, które weryfikują zachowanie, testy wizualne
+wychwytują problemy ze stylami, przesunięcia układu i problemy z renderowaniem,
+które w przeciwnym razie mogłyby pozostać niezauważone bez dokładnego testowania ręcznego.
 
-## Why Visual Regression Testing?
+## Dlaczego testowanie regresji wizualnej?
 
-Visual bugs don’t throw errors, they just look wrong. That’s where visual
-testing comes in.
+Błędy wizualne nie rzucają wyjątków, po prostu źle wyglądają. Tu wkracza
+testowanie wizualne.
 
-- That button still submits the form... but why is it hot pink now?
-- The text fits perfectly... until someone views it on mobile
-- Everything works great... except those two containers are out of viewport
-- That careful CSS refactor works... but broke the layout on a page no one tests
+- Ten przycisk nadal wysyła formularz... ale dlaczego jest teraz różowy?
+- Tekst idealnie się mieści... dopóki ktoś nie otworzy go na telefonie
+- Wszystko działa świetnie... z wyjątkiem tych dwóch kontenerów poza viewport
+- Ten staranny refaktor CSS działa... ale zepsuł układ na stronie, której nikt nie testuje
 
-Visual regression testing acts as a safety net for your UI, automatically
-catching these visual changes before they reach production.
+Testowanie regresji wizualnej działa jako siatka bezpieczeństwa dla Twojego UI,
+automatycznie wychwytując te zmiany wizualne zanim trafią na produkcję.
 
-## Getting Started
+## Rozpoczęcie pracy
 
-::: warning Browser Rendering Differences
-Visual regression tests are **inherently unstable across different
-environments**. Screenshots will look different on different machines because
-of:
+::: warning Różnice w renderowaniu przeglądarek
+Testy regresji wizualnej są **z natury niestabilne w różnych
+środowiskach**. Zrzuty ekranu będą wyglądać inaczej na różnych maszynach z powodu:
 
-- Font rendering (the big one. Windows, macOS, Linux, they all render text
-differently)
-- GPU drivers and hardware acceleration
-- Whether you're running headless or not
-- Browser settings and versions
-- ...and honestly, sometimes just the phase of the moon
+- Renderowania czcionek (to główny problem. Windows, macOS, Linux, wszystkie renderują tekst
+inaczej)
+- Sterowników GPU i akceleracji sprzętowej
+- Tego, czy uruchamiasz w trybie headless czy nie
+- Ustawień i wersji przeglądarki
+- ...i szczerze mówiąc, czasem po prostu fazy księżyca
 
-That's why Vitest includes the browser and platform in screenshot names (like
+Dlatego Vitest uwzględnia przeglądarkę i platformę w nazwach zrzutów ekranu (jak
 `button-chromium-darwin.png`).
 
-For stable tests, use the same environment everywhere. We **strongly recommend**
-cloud services like
+Dla stabilnych testów używaj tego samego środowiska wszędzie. **Zdecydowanie zalecamy**
+usługi chmurowe takie jak
 [Azure App Testing](https://azure.microsoft.com/en-us/products/app-testing/)
-or [Docker containers](https://playwright.dev/docs/docker).
+lub [kontenery Docker](https://playwright.dev/docs/docker).
 :::
 
-Visual regression testing in Vitest can be done through the
-[`toMatchScreenshot` assertion](/api/browser/assertions.html#tomatchscreenshot):
+Testowanie regresji wizualnej w Vitest można wykonać poprzez
+[asercję `toMatchScreenshot`](/api/browser/assertions.html#tomatchscreenshot):
 
 ```ts
 import { expect, test } from 'vitest'
 import { page } from 'vitest/browser'
 
 test('hero section looks correct', async () => {
-  // ...the rest of the test
+  // ...reszta testu
 
-  // capture and compare screenshot
+  // przechwytuj i porównuj zrzut ekranu
   await expect(page.getByTestId('hero')).toMatchScreenshot('hero-section')
 })
 ```
 
-### Creating References
+### Tworzenie referencji
 
-When you run a visual test for the first time, Vitest creates a reference (also
-called baseline) screenshot and fails the test with the following error message:
+Gdy uruchamiasz test wizualny po raz pierwszy, Vitest tworzy referencyjny (zwany również
+bazowym) zrzut ekranu i kończy test niepowodzeniem z następującym komunikatem błędu:
 
 ```
 expect(element).toMatchScreenshot()
@@ -78,17 +77,17 @@ Reference screenshot:
   tests/__screenshots__/hero.test.ts/hero-section-chromium-darwin.png
 ```
 
-This is normal. Check that the screenshot looks right, then run the test again.
-Vitest will now compare future runs against this baseline.
+To normalne. Sprawdź, czy zrzut ekranu wygląda dobrze, a następnie uruchom test ponownie.
+Vitest będzie teraz porównywał przyszłe uruchomienia z tą bazą.
 
 ::: tip
-Reference screenshots live in `__screenshots__` folders next to your tests.
-**Don't forget to commit them!**
+Referencyjne zrzuty ekranu znajdują się w folderach `__screenshots__` obok Twoich testów.
+**Nie zapomnij je zacommitować!**
 :::
 
-### Screenshot Organization
+### Organizacja zrzutów ekranu
 
-By default, screenshots are organized as:
+Domyślnie zrzuty ekranu są zorganizowane jako:
 
 ```
 .
@@ -100,51 +99,51 @@ By default, screenshots are organized as:
 └── test-file.test.ts
 ```
 
-The naming convention includes:
-- **Test name**: either the first argument of the `toMatchScreenshot()` call,
-or automatically generated from the test's name.
-- **Browser name**: `chrome`, `chromium`, `firefox` or `webkit`.
-- **Platform**: `aix`, `darwin`, `freebsd`, `linux`, `openbsd`, `sunos`, or
+Konwencja nazewnictwa obejmuje:
+- **Nazwa testu**: albo pierwszy argument wywołania `toMatchScreenshot()`,
+albo automatycznie wygenerowana z nazwy testu.
+- **Nazwa przeglądarki**: `chrome`, `chromium`, `firefox` lub `webkit`.
+- **Platforma**: `aix`, `darwin`, `freebsd`, `linux`, `openbsd`, `sunos` lub
 `win32`.
 
-This ensures screenshots from different environments don't overwrite each other.
+Zapewnia to, że zrzuty ekranu z różnych środowisk nie nadpisują się nawzajem.
 
-### Updating References
+### Aktualizowanie referencji
 
-When you intentionally change your UI, you'll need to update the reference
-screenshots:
+Gdy celowo zmieniasz swój UI, będziesz musiał zaktualizować referencyjne
+zrzuty ekranu:
 
 ```bash
 $ vitest --update
 ```
 
-Review updated screenshots before committing to make sure changes are
-intentional.
+Przejrzyj zaktualizowane zrzuty ekranu przed zacommitowaniem, aby upewnić się, że zmiany są
+zamierzone.
 
-## How Visual Tests Work
+## Jak działają testy wizualne
 
-Visual regression tests need stable screenshots to compare against. But pages aren't instantly stable as images load, animations finish, fonts render, and layouts settle.
+Testy regresji wizualnej potrzebują stabilnych zrzutów ekranu do porównania. Ale strony nie są natychmiast stabilne, gdy obrazy się ładują, animacje kończą, czcionki renderują i układy się ustalają.
 
-Vitest handles this automatically through "Stable Screenshot Detection":
+Vitest obsługuje to automatycznie poprzez "Wykrywanie Stabilnego Zrzutu Ekranu":
 
-1. Vitest takes a first screenshot (or uses the reference screenshot if available) as baseline
-1. It takes another screenshot and compares it with the baseline
-    - If the screenshots match, the page is stable and testing continues
-    - If they differ, Vitest uses the newest screenshot as the baseline and repeats
-1. This continues until stability is achieved or the timeout is reached
+1. Vitest robi pierwszy zrzut ekranu (lub używa referencyjnego zrzutu ekranu, jeśli jest dostępny) jako bazę
+1. Robi kolejny zrzut ekranu i porównuje go z bazą
+    - Jeśli zrzuty ekranu się zgadzają, strona jest stabilna i testowanie kontynuuje
+    - Jeśli się różnią, Vitest używa najnowszego zrzutu ekranu jako bazy i powtarza
+1. To kontynuuje, aż stabilność zostanie osiągnięta lub timeout zostanie przekroczony
 
-This ensures that transient visual changes (like loading spinners or animations) don't cause false failures. If something never stops animating though, you'll hit the timeout, so consider [disabling animations during testing](#disable-animations).
+Zapewnia to, że przejściowe zmiany wizualne (jak wskaźniki ładowania lub animacje) nie powodują fałszywych niepowodzeń. Jeśli jednak coś nigdy nie przestaje się animować, przekroczysz timeout, więc rozważ [wyłączenie animacji podczas testowania](#disable-animations).
 
-If a stable screenshot is captured after retries (one or more) and a reference screenshot exists, Vitest performs a final comparison with the reference using `createDiff: true`. This will generate a diff image if they don't match.
+Jeśli stabilny zrzut ekranu zostanie przechwycony po ponownych próbach (jednej lub więcej) i istnieje referencyjny zrzut ekranu, Vitest wykonuje końcowe porównanie z referencją używając `createDiff: true`. Wygeneruje to obraz różnic, jeśli się nie zgadzają.
 
-During stability detection, Vitest calls comparators with `createDiff: false` since it only needs to know if screenshots match. This keeps the detection process fast.
+Podczas wykrywania stabilności Vitest wywołuje komparatory z `createDiff: false`, ponieważ musi tylko wiedzieć, czy zrzuty ekranu się zgadzają. Utrzymuje to szybki proces wykrywania.
 
-## Configuring Visual Tests
+## Konfigurowanie testów wizualnych
 
-### Global Configuration
+### Konfiguracja globalna
 
-Configure visual regression testing defaults in your
-[Vitest config](/config/browser/expect#tomatchscreenshot):
+Skonfiguruj domyślne ustawienia testowania regresji wizualnej w swojej
+[konfiguracji Vitest](/config/browser/expect#tomatchscreenshot):
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -156,9 +155,9 @@ export default defineConfig({
         toMatchScreenshot: {
           comparatorName: 'pixelmatch',
           comparatorOptions: {
-            // 0-1, how different can colors be?
+            // 0-1, jak bardzo różne mogą być kolory?
             threshold: 0.2,
-            // 1% of pixels can differ
+            // 1% pikseli może się różnić
             allowedMismatchedPixelRatio: 0.01,
           },
         },
@@ -168,42 +167,42 @@ export default defineConfig({
 })
 ```
 
-### Per-Test Configuration
+### Konfiguracja per-test
 
-Override global settings for specific tests:
+Nadpisz globalne ustawienia dla konkretnych testów:
 
 ```ts
 await expect(element).toMatchScreenshot('button-hover', {
   comparatorName: 'pixelmatch',
   comparatorOptions: {
-    // more lax comparison for text-heavy elements
+    // bardziej tolerancyjne porównanie dla elementów z dużą ilością tekstu
     allowedMismatchedPixelRatio: 0.1,
   },
 })
 ```
 
-## Best Practices
+## Najlepsze praktyki
 
-### Test Specific Elements
+### Testuj konkretne elementy
 
-Unless you explicitly want to test the whole page, prefer capturing specific
-components to reduce false positives:
+Chyba że wyraźnie chcesz testować całą stronę, preferuj przechwytywanie konkretnych
+komponentów, aby zmniejszyć fałszywe alarmy:
 
 ```ts
-// ❌ Captures entire page; prone to unrelated changes
+// ❌ Przechwytuje całą stronę; podatne na niezwiązane zmiany
 await expect(page).toMatchScreenshot()
 
-// ✅ Captures only the component under test
+// ✅ Przechwytuje tylko testowany komponent
 await expect(page.getByTestId('product-card')).toMatchScreenshot()
 ```
 
-### Handle Dynamic Content
+### Obsługuj dynamiczną zawartość
 
-Dynamic content like timestamps, user data, or random values will cause tests
-to fail. You can either mock the sources of dynamic content or mask them when
-using the Playwright provider by using the
-[`mask` option](https://playwright.dev/docs/api/class-page#page-screenshot-option-mask)
-in `screenshotOptions`.
+Dynamiczna zawartość jak znaczniki czasu, dane użytkownika lub losowe wartości spowodują
+niepowodzenie testów. Możesz albo mockować źródła dynamicznej zawartości, albo je maskować
+używając dostawcy Playwright poprzez
+[opcję `mask`](https://playwright.dev/docs/api/class-page#page-screenshot-option-mask)
+w `screenshotOptions`.
 
 ```ts
 await expect(page.getByTestId('profile')).toMatchScreenshot({
@@ -213,10 +212,10 @@ await expect(page.getByTestId('profile')).toMatchScreenshot({
 })
 ```
 
-### Disable Animations
+### Wyłącz animacje
 
-Animations can cause flaky tests. Disable them during testing by injecting
-a custom CSS snippet:
+Animacje mogą powodować niestabilne testy. Wyłącz je podczas testowania, wstrzykując
+niestandardowy snippet CSS:
 
 ```css
 *, *::before, *::after {
@@ -228,29 +227,29 @@ a custom CSS snippet:
 ```
 
 ::: tip
-When using the Playwright provider, animations are automatically disabled
-when using the assertion: the `animations` option's value in `screenshotOptions`
-is set to `"disabled"` by default.
+Używając dostawcy Playwright, animacje są automatycznie wyłączane
+podczas używania asercji: wartość opcji `animations` w `screenshotOptions`
+jest domyślnie ustawiona na `"disabled"`.
 :::
 
-### Set Appropriate Thresholds
+### Ustaw odpowiednie progi
 
-Tuning thresholds is tricky. It depends on the content, test environment,
-what's acceptable for your app, and might also change based on the test.
+Dostrajanie progów jest trudne. Zależy od zawartości, środowiska testowego,
+tego co jest akceptowalne dla Twojej aplikacji i może się również zmieniać w zależności od testu.
 
-Vitest does not set a default for the mismatching pixels, that's up for the
-user to decide based on their needs. The recommendation is to use
-`allowedMismatchedPixelRatio`, so that the threshold is computed on the size
-of the screenshot and not a fixed number.
+Vitest nie ustawia domyślnej wartości dla niedopasowanych pikseli, to użytkownik
+decyduje na podstawie swoich potrzeb. Zaleceniem jest użycie
+`allowedMismatchedPixelRatio`, aby próg był obliczany na podstawie rozmiaru
+zrzutu ekranu, a nie stałej liczby.
 
-When setting both `allowedMismatchedPixelRatio` and
-`allowedMismatchedPixels`, Vitest uses whichever limit is stricter.
+Ustawiając zarówno `allowedMismatchedPixelRatio`, jak i
+`allowedMismatchedPixels`, Vitest używa tego limitu, który jest bardziej restrykcyjny.
 
-### Set consistent viewport sizes
+### Ustaw spójne rozmiary viewport
 
-As the browser instance might have a different default size, it's best to
-set a specific viewport size, either on the test or the instance
-configuration:
+Ponieważ instancja przeglądarki może mieć inny domyślny rozmiar, najlepiej jest
+ustawić konkretny rozmiar viewport, albo w teście, albo w konfiguracji
+instancji:
 
 ```ts
 await page.viewport(1280, 720)
@@ -276,21 +275,21 @@ export default defineConfig({
 })
 ```
 
-### Use Git LFS
+### Używaj Git LFS
 
-Store reference screenshots in
-[Git LFS](https://github.com/git-lfs/git-lfs?tab=readme-ov-file) if you plan to
-have a large test suite.
+Przechowuj referencyjne zrzuty ekranu w
+[Git LFS](https://github.com/git-lfs/git-lfs?tab=readme-ov-file), jeśli planujesz
+mieć duży zestaw testów.
 
-## Debugging Failed Tests
+## Debugowanie nieudanych testów
 
-When a visual test fails, Vitest provides three images to help debug:
+Gdy test wizualny zawiedzie, Vitest dostarcza trzy obrazy, aby pomóc w debugowaniu:
 
-1. **Reference screenshot**: the expected baseline image
-1. **Actual screenshot**: what was captured during the test
-1. **Diff image**: highlights the differences, but this might not get generated
+1. **Referencyjny zrzut ekranu**: oczekiwany bazowy obraz
+1. **Aktualny zrzut ekranu**: co zostało przechwycone podczas testu
+1. **Obraz różnic**: podkreśla różnice, ale może nie zostać wygenerowany
 
-You'll see something like:
+Zobaczysz coś takiego:
 
 ```
 expect(element).toMatchScreenshot()
@@ -308,91 +307,91 @@ Diff image:
   tests/.vitest-attachments/button.test.ts/button-chromium-darwin-diff.png
 ```
 
-### Understanding the diff image
+### Zrozumienie obrazu różnic
 
-- **Red pixels** are areas that differ between reference and actual
-- **Yellow pixels** are anti-aliasing differences (when anti-alias is not ignored)
-- **Transparent/original** are unchanged areas
+- **Czerwone piksele** to obszary, które różnią się między referencją a aktualnym
+- **Żółte piksele** to różnice w anti-aliasingu (gdy anti-alias nie jest ignorowany)
+- **Przezroczyste/oryginalne** to niezmienione obszary
 
 :::tip
-If the diff is mostly red, something's really wrong. If it's speckled with a
-few red pixels around text, you probably just need to bump your threshold.
+Jeśli różnica jest głównie czerwona, coś jest naprawdę nie tak. Jeśli ma rozrzucone
+kilka czerwonych pikseli wokół tekstu, prawdopodobnie musisz tylko zwiększyć próg.
 :::
 
-## Common Issues and Solutions
+## Częste problemy i rozwiązania
 
-### False Positives from Font Rendering
+### Fałszywe alarmy z renderowania czcionek
 
-Font availability and rendering varies significantly between systems. Some
-possible solutions might be to:
+Dostępność i renderowanie czcionek znacznie różni się między systemami. Niektóre
+możliwe rozwiązania to:
 
-- Use web fonts and wait for them to load:
+- Używaj web fontów i czekaj na ich załadowanie:
 
   ```ts
-  // wait for fonts to load
+  // czekaj na załadowanie czcionek
   await document.fonts.ready
 
-  // continue with your tests
+  // kontynuuj testy
   ```
 
-- Increase comparison threshold for text-heavy areas:
+- Zwiększ próg porównania dla obszarów z dużą ilością tekstu:
 
   ```ts
   await expect(page.getByTestId('article-summary')).toMatchScreenshot({
     comparatorName: 'pixelmatch',
     comparatorOptions: {
-      // 10% of the pixels are allowed to change
+      // 10% pikseli może się zmienić
       allowedMismatchedPixelRatio: 0.1,
     },
   })
   ```
 
-- Use a cloud service or containerized environment for consistent font rendering.
+- Używaj usługi chmurowej lub skonteneryzowanego środowiska dla spójnego renderowania czcionek.
 
-### Flaky Tests or Different Screenshot Sizes
+### Niestabilne testy lub różne rozmiary zrzutów ekranu
 
-If tests pass and fail randomly, or if screenshots have different dimensions
-between runs:
+Jeśli testy przechodzą i nie przechodzą losowo, lub jeśli zrzuty ekranu mają różne wymiary
+między uruchomieniami:
 
-- Wait for everything to load, including loading indicators
-- Set explicit viewport sizes: `await page.viewport(1920, 1080)`
-- Check for responsive behavior at viewport boundaries
-- Check for unintended animations or transitions
-- Increase test timeout for large screenshots
-- Use a cloud service or containerized environment
+- Czekaj na załadowanie wszystkiego, włącznie ze wskaźnikami ładowania
+- Ustaw jawne rozmiary viewport: `await page.viewport(1920, 1080)`
+- Sprawdź zachowanie responsywne na granicach viewport
+- Sprawdź niezamierzone animacje lub przejścia
+- Zwiększ timeout testu dla dużych zrzutów ekranu
+- Używaj usługi chmurowej lub skonteneryzowanego środowiska
 
-## Visual Regression Testing for Teams
+## Testowanie regresji wizualnej dla zespołów
 
-Remember when we mentioned visual tests need a stable environment? Well, here's
-the thing: your local machine isn't it.
+Pamiętasz, gdy wspomnieliśmy, że testy wizualne potrzebują stabilnego środowiska? No cóż, oto
+problem: Twoja lokalna maszyna takim nie jest.
 
-For teams, you've basically got three options:
+Dla zespołów masz w zasadzie trzy opcje:
 
-1. **Self-hosted runners**, complex to set up, painful to maintain
-1. **GitHub Actions**, free (for open source), works with any provider
-1. **Cloud services**, like
+1. **Self-hosted runners**, skomplikowane w konfiguracji, bolesne w utrzymaniu
+1. **GitHub Actions**, darmowe (dla open source), działa z dowolnym dostawcą
+1. **Usługi chmurowe**, jak
 [Azure App Testing](https://azure.microsoft.com/en-us/products/app-testing/),
-built for this exact problem
+stworzone dokładnie do tego problemu
 
-We'll focus on options 2 and 3 since they're the quickest to get running.
+Skupimy się na opcjach 2 i 3, ponieważ najszybciej je uruchomisz.
 
-To be upfront, the main trade-offs for each are:
+Aby być szczerym, główne kompromisy dla każdej z nich to:
 
-- **GitHub Actions**: visual tests only run in CI (developers can't run them
-locally)
-- **Microsoft's service**: works everywhere but costs money and only works
-with Playwright
+- **GitHub Actions**: testy wizualne działają tylko w CI (deweloperzy nie mogą ich uruchamiać
+lokalnie)
+- **Usługa Microsoft**: działa wszędzie, ale kosztuje i działa tylko
+z Playwright
 
 :::: tabs key:vrt-for-teams
 === GitHub Actions
 
-The trick here is keeping visual tests separate from your regular tests,
-otherwise, you'll waste hours checking failing logs of screenshot mismatches.
+Sztuczka polega na trzymaniu testów wizualnych oddzielnie od zwykłych testów,
+w przeciwnym razie zmarnujesz godziny sprawdzając niepowodzenia logów z niedopasowaniami zrzutów ekranu.
 
-#### Organizing Your Tests
+#### Organizowanie testów
 
-First, isolate your visual tests. Stick them in a `visual` folder (or whatever
-makes sense for your project):
+Najpierw wyizoluj swoje testy wizualne. Umieść je w folderze `visual` (lub cokolwiek
+ma sens dla Twojego projektu):
 
 ```json [package.json]
 {
@@ -403,41 +402,41 @@ makes sense for your project):
 }
 ```
 
-Now developers can run `npm run test:unit` locally without visual tests getting
-in the way. Visual tests stay in CI where the environment is consistent.
+Teraz deweloperzy mogą uruchamiać `npm run test:unit` lokalnie bez testów wizualnych
+przeszkadzających. Testy wizualne pozostają w CI, gdzie środowisko jest spójne.
 
-::: tip Alternative
-Not a fan of glob patterns? You could also use separate
-[Test Projects](/guide/projects) instead and run them using:
+::: tip Alternatywa
+Nie lubisz wzorców glob? Możesz również użyć oddzielnych
+[Projektów testowych](/guide/projects) i uruchamiać je używając:
 
 - `vitest --project unit`
 - `vitest --project visual`
 :::
 
-#### CI Setup
+#### Konfiguracja CI
 
-Your CI needs browsers installed. How you do this depends on your provider:
+Twoje CI potrzebuje zainstalowanych przeglądarek. Sposób, w jaki to robisz, zależy od dostawcy:
 
 ::: tabs key:provider
 == Playwright
 
-[Playwright](https://npmjs.com/package/playwright) makes this easy. Just pin
-your version and add this before running tests:
+[Playwright](https://npmjs.com/package/playwright) ułatwia to. Po prostu przypnij
+swoją wersję i dodaj to przed uruchomieniem testów:
 
 ```yaml [.github/workflows/ci.yml]
-# ...the rest of the workflow
+# ...reszta workflow
 - name: Install Playwright Browsers
   run: npx --no playwright install --with-deps --only-shell
 ```
 
 == WebdriverIO
 
-[WebdriverIO](https://www.npmjs.com/package/webdriverio) expects you to bring
-your own browsers. The folks at
-[@browser-actions](https://github.com/browser-actions) have your back:
+[WebdriverIO](https://www.npmjs.com/package/webdriverio) oczekuje, że sam dostarczysz
+przeglądarki. Ludzie z
+[@browser-actions](https://github.com/browser-actions) Ci pomogą:
 
 ```yaml [.github/workflows/ci.yml]
-# ...the rest of the workflow
+# ...reszta workflow
 - uses: browser-actions/setup-chrome@v1
   with:
     chrome-version: 120
@@ -445,42 +444,42 @@ your own browsers. The folks at
 
 :::
 
-Then run your visual tests:
+Następnie uruchom swoje testy wizualne:
 
 ```yaml [.github/workflows/ci.yml]
-# ...the rest of the workflow
-# ...browser setup
+# ...reszta workflow
+# ...konfiguracja przeglądarki
 - name: Visual Regression Testing
   run: npm run test:visual
 ```
 
-#### The Update Workflow
+#### Workflow aktualizacji
 
-Here's where it gets interesting. You don't want to update screenshots on every
-PR automatically <small>*(chaos!)*</small>. Instead, create a
-manually-triggered workflow that developers can run when they intentionally
-change the UI.
+Tutaj robi się ciekawie. Nie chcesz automatycznie aktualizować zrzutów ekranu przy każdym
+PR <small>*(chaos!)*</small>. Zamiast tego stwórz
+ręcznie wyzwalany workflow, który deweloperzy mogą uruchomić, gdy celowo
+zmieniają UI.
 
-The workflow below:
-- Only runs on feature branches (never on main)
-- Credits the person who triggered it as co-author
-- Prevents concurrent runs on the same branch
-- Shows a nice summary:
-  - **When screenshots changed**, it lists what changed
+Poniższy workflow:
+- Uruchamia się tylko na gałęziach feature (nigdy na main)
+- Przypisuje osobę, która go wyzwoliła, jako współautora
+- Zapobiega równoczesnym uruchomieniom na tej samej gałęzi
+- Pokazuje ładne podsumowanie:
+  - **Gdy zrzuty ekranu się zmieniły**, wyświetla co się zmieniło
 
-    <img alt="Action summary after updates" img-light src="/vrt-gha-summary-update-light.png">
-    <img alt="Action summary after updates" img-dark src="/vrt-gha-summary-update-dark.png">
+    <img alt="Podsumowanie akcji po aktualizacjach" img-light src="/vrt-gha-summary-update-light.png">
+    <img alt="Podsumowanie akcji po aktualizacjach" img-dark src="/vrt-gha-summary-update-dark.png">
 
-  - **When nothing changed**, well, it tells you that too
+  - **Gdy nic się nie zmieniło**, no cóż, też Ci to powie
 
-    <img alt="Action summary after no updates" img-light src="/vrt-gha-summary-no-update-light.png">
-    <img alt="Action summary after no updates" img-dark src="/vrt-gha-summary-no-update-dark.png">
+    <img alt="Podsumowanie akcji bez aktualizacji" img-light src="/vrt-gha-summary-no-update-light.png">
+    <img alt="Podsumowanie akcji bez aktualizacji" img-dark src="/vrt-gha-summary-no-update-dark.png">
 
 ::: tip
-This is just one approach. Some teams prefer PR comments (`/update-screenshots`),
-others use labels. Adjust it to fit your workflow!
+To tylko jedno podejście. Niektóre zespoły preferują komentarze PR (`/update-screenshots`),
+inne używają etykiet. Dostosuj to do swojego workflow!
 
-The important part is having a controlled way to update baselines.
+Ważną częścią jest posiadanie kontrolowanego sposobu aktualizowania baz.
 :::
 
 ```yaml [.github/workflows/update-screenshots.yml]
@@ -596,15 +595,15 @@ jobs:
 
 === Azure App Testing
 
-Your tests stay local, only the browsers run in the cloud. It's Playwright's
-remote browser feature, but Microsoft handles all the infrastructure.
+Twoje testy pozostają lokalne, tylko przeglądarki działają w chmurze. To funkcja
+zdalnej przeglądarki Playwright, ale Microsoft zarządza całą infrastrukturą.
 
-#### Organizing Your Tests
+#### Organizowanie testów
 
-Keep visual tests separate to control costs. Only tests that actually take
-screenshots should use the service.
+Trzymaj testy wizualne oddzielnie, aby kontrolować koszty. Tylko testy, które faktycznie robią
+zrzuty ekranu, powinny używać usługi.
 
-The cleanest approach is using [Test Projects](/guide/projects):
+Najczystszym podejściem jest używanie [Projektów testowych](/guide/projects):
 
 <!-- eslint-disable style/quote-props -->
 ```ts [vitest.config.ts]
@@ -664,20 +663,20 @@ export default defineConfig({
 ```
 <!-- eslint-enable style/quote-props -->
 
-Follow the [official guide to create a Playwright Workspace](https://learn.microsoft.com/en-us/azure/app-testing/playwright-workspaces/quickstart-run-end-to-end-tests?tabs=playwrightcli&pivots=playwright-test-runner#create-a-workspace).
+Postępuj zgodnie z [oficjalnym przewodnikiem tworzenia Playwright Workspace](https://learn.microsoft.com/en-us/azure/app-testing/playwright-workspaces/quickstart-run-end-to-end-tests?tabs=playwrightcli&pivots=playwright-test-runner#create-a-workspace).
 
-Once your workspace is created, configure Vitest to use it:
+Gdy Twój workspace zostanie utworzony, skonfiguruj Vitest, aby go używał:
 
-1. **Set the endpoint URL**: following the [official guide](https://learn.microsoft.com/en-us/azure/app-testing/playwright-workspaces/quickstart-run-end-to-end-tests?tabs=playwrightcli&pivots=playwright-test-runner#configure-the-browser-endpoint), retrieve the URL and set it as the `PLAYWRIGHT_SERVICE_URL` environment variable.
-1. **Enable token authentication**: [enable access tokens](https://learn.microsoft.com/en-us/azure/app-testing/playwright-workspaces/how-to-manage-authentication?pivots=playwright-test-runner#enable-authentication-using-access-tokens) for your workspace, then [generate a token](https://learn.microsoft.com/en-us/azure/app-testing/playwright-workspaces/how-to-manage-access-tokens#generate-a-workspace-access-token) and set it as the `PLAYWRIGHT_SERVICE_ACCESS_TOKEN` environment variable.
+1. **Ustaw URL endpointu**: postępując zgodnie z [oficjalnym przewodnikiem](https://learn.microsoft.com/en-us/azure/app-testing/playwright-workspaces/quickstart-run-end-to-end-tests?tabs=playwrightcli&pivots=playwright-test-runner#configure-the-browser-endpoint), pobierz URL i ustaw go jako zmienną środowiskową `PLAYWRIGHT_SERVICE_URL`.
+1. **Włącz uwierzytelnianie tokenem**: [włącz tokeny dostępu](https://learn.microsoft.com/en-us/azure/app-testing/playwright-workspaces/how-to-manage-authentication?pivots=playwright-test-runner#enable-authentication-using-access-tokens) dla swojego workspace, następnie [wygeneruj token](https://learn.microsoft.com/en-us/azure/app-testing/playwright-workspaces/how-to-manage-access-tokens#generate-a-workspace-access-token) i ustaw go jako zmienną środowiskową `PLAYWRIGHT_SERVICE_ACCESS_TOKEN`.
 
-::: danger Keep that Token Secret!
-Never commit `PLAYWRIGHT_SERVICE_ACCESS_TOKEN` to your repository. Anyone with
-the token can rack up your bill. Use environment variables locally and secrets
-in CI.
+::: danger Trzymaj ten token w sekrecie!
+Nigdy nie commituj `PLAYWRIGHT_SERVICE_ACCESS_TOKEN` do swojego repozytorium. Każdy z
+tokenem może nabijać Twój rachunek. Używaj zmiennych środowiskowych lokalnie i sekretów
+w CI.
 :::
 
-Then split your `test` script like this:
+Następnie podziel swój skrypt `test` w ten sposób:
 
 ```json [package.json]
 {
@@ -688,27 +687,27 @@ Then split your `test` script like this:
 }
 ```
 
-#### Running Tests
+#### Uruchamianie testów
 
 ```bash
-# Local development
-npm run test:unit    # free, runs locally
-npm run test:visual  # uses cloud browsers
+# Lokalny development
+npm run test:unit    # darmowe, uruchamiane lokalnie
+npm run test:visual  # używa przeglądarek w chmurze
 
-# Update screenshots
+# Aktualizuj zrzuty ekranu
 npm run test:visual -- --update
 ```
 
-The best part of this approach is that it just works:
+Najlepszą częścią tego podejścia jest to, że po prostu działa:
 
-- **Consistent screenshots**, everyone uses the same cloud browsers
-- **Works locally**, developers can run and update visual tests on their machines
-- **Pay for what you use**, only visual tests consume service minutes
-- **No Docker or workflow setups needed**, nothing to manage or maintain
+- **Spójne zrzuty ekranu**, wszyscy używają tych samych przeglądarek w chmurze
+- **Działa lokalnie**, deweloperzy mogą uruchamiać i aktualizować testy wizualne na swoich maszynach
+- **Płacisz za to, co używasz**, tylko testy wizualne zużywają minuty usługi
+- **Nie potrzeba konfiguracji Docker ani workflow**, nic do zarządzania ani utrzymywania
 
-#### CI Setup
+#### Konfiguracja CI
 
-In your CI, add the secrets:
+W swoim CI dodaj sekrety:
 
 ```yaml
 env:
@@ -716,26 +715,26 @@ env:
   PLAYWRIGHT_SERVICE_ACCESS_TOKEN: ${{ secrets.PLAYWRIGHT_SERVICE_ACCESS_TOKEN }}
 ```
 
-Then run your tests like normal. The service handles the rest.
+Następnie uruchom swoje testy jak zwykle. Usługa zajmie się resztą.
 
 ::::
 
-### So Which One?
+### Więc które wybrać?
 
-Both approaches work. The real question is what pain points matter most to your
-team.
+Oba podejścia działają. Prawdziwe pytanie brzmi, jakie punkty bólu są najważniejsze dla Twojego
+zespołu.
 
-If you're already deep in the GitHub ecosystem, GitHub Actions is hard to beat.
-Free for open source, works with any browser provider, and you control
-everything.
+Jeśli jesteś już głęboko w ekosystemie GitHub, trudno pobić GitHub Actions.
+Darmowe dla open source, działa z dowolnym dostawcą przeglądarek i kontrolujesz
+wszystko.
 
-The downside? That "works on my machine" conversation when someone generates
-screenshots locally and they don't match CI expectations anymore.
+Wada? Ta rozmowa "działa na mojej maszynie", gdy ktoś generuje
+zrzuty ekranu lokalnie i nie pasują już do oczekiwań CI.
 
-A cloud service makes sense if developers need to run visual tests locally.
+Usługa chmurowa ma sens, jeśli deweloperzy muszą uruchamiać testy wizualne lokalnie.
 
-Some teams have designers checking their work or developers who prefer catching
-issues before pushing. It allows skipping the push-wait-check-fix-push cycle.
+Niektóre zespoły mają projektantów sprawdzających swoją pracę lub deweloperów, którzy wolą wychwytywać
+problemy przed pushowaniem. Pozwala to pominąć cykl push-czekaj-sprawdź-napraw-push.
 
-Still on the fence? Start with GitHub Actions. You can always add a cloud
-service later if local testing becomes a pain point.
+Nadal niezdecydowany? Zacznij od GitHub Actions. Zawsze możesz dodać usługę
+chmurową później, jeśli lokalne testowanie stanie się problemem.
