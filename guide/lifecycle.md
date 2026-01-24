@@ -1,185 +1,185 @@
 ---
-title: Test Run Lifecycle | Guide
+title: Cykl życia uruchomienia testów | Przewodnik
 outline: deep
 ---
 
-# Test Run Lifecycle
+# Cykl życia uruchomienia testów
 
-Understanding the test run lifecycle is essential for writing effective tests, debugging issues, and optimizing your test suite. This guide explains when and in what order different lifecycle phases occur in Vitest, from initialization to teardown.
+Zrozumienie cyklu życia uruchomienia testów jest kluczowe dla pisania efektywnych testów, debugowania problemów i optymalizacji zestawu testów. Ten przewodnik wyjaśnia, kiedy i w jakiej kolejności występują różne fazy cyklu życia w Vitest, od inicjalizacji po fazę czyszczenia.
 
-## Overview
+## Przegląd
 
-A typical Vitest test run goes through these main phases:
+Typowe uruchomienie testów Vitest przechodzi przez następujące główne fazy:
 
-1. **Initialization** - Configuration loading and project setup
-2. **Global Setup** - One-time setup before any tests run
-3. **Worker Creation** - Test workers are spawned based on the [pool](/config/pool) configuration
-4. **Test File Collection** - Test files are discovered and organized
-5. **Test Execution** - Tests run with their hooks and assertions
-6. **Reporting** - Results are collected and reported
-7. **Global Teardown** - Final cleanup after all tests complete
+1. **Inicjalizacja** - Ładowanie konfiguracji i przygotowanie projektu
+2. **Globalne przygotowanie** - Jednorazowe przygotowanie przed uruchomieniem jakichkolwiek testów
+3. **Tworzenie workerów** - Workery testowe są uruchamiane zgodnie z konfiguracją [pool](/config/pool)
+4. **Zbieranie plików testowych** - Pliki testowe są odkrywane i organizowane
+5. **Wykonywanie testów** - Testy są uruchamiane z ich hookami i asercjami
+6. **Raportowanie** - Wyniki są zbierane i raportowane
+7. **Globalne czyszczenie** - Końcowe czyszczenie po zakończeniu wszystkich testów
 
-Phases 4–6 run once for each test file, so across your test suite they will execute multiple times and may also run in parallel across different files when you use more than [1 worker](/config/maxworkers).
+Fazy 4–6 uruchamiają się raz dla każdego pliku testowego, więc w całym zestawie testów będą wykonywane wielokrotnie i mogą również działać równolegle w różnych plikach, gdy używasz więcej niż [1 workera](/config/maxworkers).
 
-## Detailed Lifecycle Phases
+## Szczegółowe fazy cyklu życia
 
-### 1. Initialization Phase
+### 1. Faza inicjalizacji
 
-When you run `vitest`, the framework first loads your configuration and prepares the test environment.
+Gdy uruchamiasz `vitest`, framework najpierw ładuje konfigurację i przygotowuje środowisko testowe.
 
-**What happens:**
-- [Command-line](/guide/cli) arguments are parsed
-- [Configuration file](/config/) is loaded
-- Project structure is validated
+**Co się dzieje:**
+- Argumenty [wiersza poleceń](/guide/cli) są parsowane
+- [Plik konfiguracyjny](/config/) jest ładowany
+- Struktura projektu jest walidowana
 
-This phase can run again if the config file or one of its imports changes.
+Ta faza może uruchomić się ponownie, jeśli plik konfiguracyjny lub jeden z jego importów się zmieni.
 
-**Scope:** Main process (before any test workers are created)
+**Zakres:** Główny proces (przed utworzeniem jakichkolwiek workerów testowych)
 
-### 2. Global Setup Phase
+### 2. Faza globalnego przygotowania
 
-If you have configured [`globalSetup`](/config/globalsetup) files, they run once before any test workers are created.
+Jeśli skonfigurowałeś pliki [`globalSetup`](/config/globalsetup), są one uruchamiane raz przed utworzeniem jakichkolwiek workerów testowych.
 
-**What happens:**
-- `setup()` functions (or exported `default` function) from global setup files execute sequentially
-- Multiple global setup files run in the order they are defined
+**Co się dzieje:**
+- Funkcje `setup()` (lub wyeksportowana funkcja `default`) z plików globalnego przygotowania wykonują się sekwencyjnie
+- Wiele plików globalnego przygotowania uruchamia się w kolejności, w jakiej zostały zdefiniowane
 
-**Scope:** Main process (separate from test workers)
+**Zakres:** Główny proces (oddzielony od workerów testowych)
 
-**Important notes:**
-- Global setup runs in a **different global scope** from your tests
-- Tests cannot access variables defined in global setup (use [`provide`/`inject`](/config/provide) instead)
-- Global setup only runs if there is at least one test queued
+**Ważne uwagi:**
+- Globalne przygotowanie działa w **innym zakresie globalnym** niż twoje testy
+- Testy nie mają dostępu do zmiennych zdefiniowanych w globalnym przygotowaniu (użyj zamiast tego [`provide`/`inject`](/config/provide))
+- Globalne przygotowanie uruchamia się tylko wtedy, gdy co najmniej jeden test jest w kolejce
 
 ```ts [globalSetup.ts]
 export function setup(project) {
-  // Runs once before all tests
-  console.log('Global setup')
+  // Uruchamia się raz przed wszystkimi testami
+  console.log('Globalne przygotowanie')
 
-  // Share data with tests
+  // Udostępnij dane testom
   project.provide('apiUrl', 'http://localhost:3000')
 }
 
 export function teardown() {
-  // Runs once after all tests
-  console.log('Global teardown')
+  // Uruchamia się raz po wszystkich testach
+  console.log('Globalne czyszczenie')
 }
 ```
 
-### 3. Worker Creation Phase
+### 3. Faza tworzenia workerów
 
-After global setup completes, Vitest creates test workers based on your [pool configuration](/config/pool).
+Po zakończeniu globalnego przygotowania, Vitest tworzy workery testowe na podstawie [konfiguracji pool](/config/pool).
 
-**What happens:**
-- Workers are spawned according to the `browser.enabled` or `pool` setting (`threads`, `forks`, `vmThreads`, or `vmForks`)
-- Each worker gets its own isolated environment (unless [isolation](/config/isolate) is disabled)
-- By default, workers are not reused to provide isolation. Workers are reused only if:
-  - [isolation](/config/isolate) is disabled
-  - OR pool is `vmThreads` or `vmForks` because [VM](https://nodejs.org/api/vm.html) provides enough isolation
+**Co się dzieje:**
+- Workery są uruchamiane zgodnie z ustawieniem `browser.enabled` lub `pool` (`threads`, `forks`, `vmThreads` lub `vmForks`)
+- Każdy worker otrzymuje własne izolowane środowisko (chyba że [izolacja](/config/isolate) jest wyłączona)
+- Domyślnie workery nie są ponownie używane, aby zapewnić izolację. Workery są ponownie używane tylko jeśli:
+  - [izolacja](/config/isolate) jest wyłączona
+  - LUB pool to `vmThreads` lub `vmForks`, ponieważ [VM](https://nodejs.org/api/vm.html) zapewnia wystarczającą izolację
 
-**Scope:** Worker processes/threads
+**Zakres:** Procesy/wątki workerów
 
-### 4. Test File Setup Phase
+### 4. Faza przygotowania pliku testowego
 
-Before each test file runs, [setup files](/config/setupfiles) are executed.
+Przed uruchomieniem każdego pliku testowego, wykonywane są [pliki setup](/config/setupfiles).
 
-**What happens:**
-- Setup files run in the same process as your tests
-- By default, setup files run in **parallel** (configurable via [`sequence.setupFiles`](/config/sequence#sequence-setupfiles))
-- Setup files execute before **each test file**
-- Any global _state_ or configuration can be initialized here
+**Co się dzieje:**
+- Pliki setup uruchamiają się w tym samym procesie co twoje testy
+- Domyślnie pliki setup uruchamiają się **równolegle** (konfigurowalne przez [`sequence.setupFiles`](/config/sequence#sequence-setupfiles))
+- Pliki setup wykonują się przed **każdym plikiem testowym**
+- Tutaj można zainicjalizować dowolny globalny _stan_ lub konfigurację
 
-**Scope:** Worker process (same as your tests)
+**Zakres:** Proces workera (taki sam jak twoje testy)
 
-**Important notes:**
-- If [isolation](/config/isolate) is disabled, setup files still rerun before each test file to trigger side effects, but imported modules are cached
-- Editing a setup file triggers a rerun of all tests in watch mode
+**Ważne uwagi:**
+- Jeśli [izolacja](/config/isolate) jest wyłączona, pliki setup nadal uruchamiają się ponownie przed każdym plikiem testowym, aby wywołać efekty uboczne, ale zaimportowane moduły są cachowane
+- Edycja pliku setup wywołuje ponowne uruchomienie wszystkich testów w trybie watch
 
 ```ts [setupFile.ts]
 import { afterEach } from 'vitest'
 
-// Runs before each test file
-console.log('Setup file executing')
+// Uruchamia się przed każdym plikiem testowym
+console.log('Wykonywanie pliku setup')
 
-// Register hooks that apply to all tests
+// Rejestruj hooki, które dotyczą wszystkich testów
 afterEach(() => {
   cleanup()
 })
 ```
 
-### 5. Test Collection and Execution Phase
+### 5. Faza zbierania i wykonywania testów
 
-This is the main phase where your tests actually run.
+To jest główna faza, w której twoje testy faktycznie się uruchamiają.
 
-#### Test File Execution Order
+#### Kolejność wykonywania plików testowych
 
-Test files are executed based on your configuration:
+Pliki testowe są wykonywane na podstawie twojej konfiguracji:
 
-- **Sequential by default** within a worker
-- Files will run in **parallel** across different workers, configured by [`maxWorkers`](/config/maxworkers)
-- Order can be randomized with [`sequence.shuffle`](/config/sequence#sequence-shuffle) or fine-tuned with [`sequence.sequencer`](/config/sequence#sequence-sequencer)
-- Long-running tests typically start earlier (based on cache) unless shuffle is enabled
+- **Domyślnie sekwencyjnie** w ramach jednego workera
+- Pliki będą uruchamiane **równolegle** w różnych workerach, konfigurowanych przez [`maxWorkers`](/config/maxworkers)
+- Kolejność może być losowana za pomocą [`sequence.shuffle`](/config/sequence#sequence-shuffle) lub dostrojona za pomocą [`sequence.sequencer`](/config/sequence#sequence-sequencer)
+- Długo działające testy zazwyczaj zaczynają się wcześniej (na podstawie cache), chyba że shuffle jest włączony
 
-#### Within Each Test File
+#### W ramach każdego pliku testowego
 
-The execution follows this order:
+Wykonywanie przebiega w następującej kolejności:
 
-1. **File-level code** - All code outside `describe` blocks runs immediately
-2. **Test collection** - `describe` blocks are processed, and tests are registered as side effects of importing the test file
-3. **`beforeAll` hooks** - Run once before any tests in the suite
-4. **For each test:**
-   - `beforeEach` hooks execute (in order defined, or based on [`sequence.hooks`](/config/sequence#sequence-hooks))
-   - Test function executes
-   - `afterEach` hooks execute (reverse order by default with `sequence.hooks: 'stack'`)
-   - [`onTestFinished`](/api/#ontestfinished) callbacks run (always in reverse order)
-   - If test failed: [`onTestFailed`](/api/#ontestfailed) callbacks run
-   - Note: if `repeats` or `retry` are set, all of these steps are executed again
-5. **`afterAll` hooks** - Run once after all tests in the suite complete
+1. **Kod na poziomie pliku** - Cały kod poza blokami `describe` uruchamia się natychmiast
+2. **Zbieranie testów** - Bloki `describe` są przetwarzane, a testy są rejestrowane jako efekty uboczne importowania pliku testowego
+3. **Hooki `beforeAll`** - Uruchamiają się raz przed jakimikolwiek testami w suite
+4. **Dla każdego testu:**
+   - Hooki `beforeEach` wykonują się (w zdefiniowanej kolejności lub na podstawie [`sequence.hooks`](/config/sequence#sequence-hooks))
+   - Funkcja testu wykonuje się
+   - Hooki `afterEach` wykonują się (domyślnie w odwrotnej kolejności z `sequence.hooks: 'stack'`)
+   - Callbacki [`onTestFinished`](/api/#ontestfinished) uruchamiają się (zawsze w odwrotnej kolejności)
+   - Jeśli test nie powiódł się: callbacki [`onTestFailed`](/api/#ontestfailed) uruchamiają się
+   - Uwaga: jeśli ustawiono `repeats` lub `retry`, wszystkie te kroki są wykonywane ponownie
+5. **Hooki `afterAll`** - Uruchamiają się raz po zakończeniu wszystkich testów w suite
 
-**Example execution flow:**
+**Przykładowy przebieg wykonania:**
 
 ```ts
-// This runs immediately (collection phase)
-console.log('File loaded')
+// To uruchamia się natychmiast (faza zbierania)
+console.log('Plik załadowany')
 
 describe('User API', () => {
-  // This runs immediately (collection phase)
-  console.log('Suite defined')
+  // To uruchamia się natychmiast (faza zbierania)
+  console.log('Suite zdefiniowany')
 
   beforeAll(() => {
-    // Runs once before all tests in this suite
+    // Uruchamia się raz przed wszystkimi testami w tym suite
     console.log('beforeAll')
   })
 
   beforeEach(() => {
-    // Runs before each test
+    // Uruchamia się przed każdym testem
     console.log('beforeEach')
   })
 
-  test('creates user', () => {
-    // Test executes
+  test('tworzy użytkownika', () => {
+    // Test wykonuje się
     console.log('test 1')
   })
 
-  test('updates user', () => {
-    // Test executes
+  test('aktualizuje użytkownika', () => {
+    // Test wykonuje się
     console.log('test 2')
   })
 
   afterEach(() => {
-    // Runs after each test
+    // Uruchamia się po każdym teście
     console.log('afterEach')
   })
 
   afterAll(() => {
-    // Runs once after all tests in this suite
+    // Uruchamia się raz po wszystkich testach w tym suite
     console.log('afterAll')
   })
 })
 
-// Output:
-// File loaded
-// Suite defined
+// Wyjście:
+// Plik załadowany
+// Suite zdefiniowany
 // beforeAll
 // beforeEach
 // test 1
@@ -190,131 +190,131 @@ describe('User API', () => {
 // afterAll
 ```
 
-#### Nested Suites
+#### Zagnieżdżone suite
 
-When using nested `describe` blocks, hooks follow a hierarchical pattern:
+Przy używaniu zagnieżdżonych bloków `describe`, hooki podążają za hierarchicznym wzorcem:
 
 ```ts
-describe('outer', () => {
-  beforeAll(() => console.log('outer beforeAll'))
-  beforeEach(() => console.log('outer beforeEach'))
+describe('zewnętrzny', () => {
+  beforeAll(() => console.log('zewnętrzny beforeAll'))
+  beforeEach(() => console.log('zewnętrzny beforeEach'))
 
-  test('outer test', () => console.log('outer test'))
+  test('zewnętrzny test', () => console.log('zewnętrzny test'))
 
-  describe('inner', () => {
-    beforeAll(() => console.log('inner beforeAll'))
-    beforeEach(() => console.log('inner beforeEach'))
+  describe('wewnętrzny', () => {
+    beforeAll(() => console.log('wewnętrzny beforeAll'))
+    beforeEach(() => console.log('wewnętrzny beforeEach'))
 
-    test('inner test', () => console.log('inner test'))
+    test('wewnętrzny test', () => console.log('wewnętrzny test'))
 
-    afterEach(() => console.log('inner afterEach'))
-    afterAll(() => console.log('inner afterAll'))
+    afterEach(() => console.log('wewnętrzny afterEach'))
+    afterAll(() => console.log('wewnętrzny afterAll'))
   })
 
-  afterEach(() => console.log('outer afterEach'))
-  afterAll(() => console.log('outer afterAll'))
+  afterEach(() => console.log('zewnętrzny afterEach'))
+  afterAll(() => console.log('zewnętrzny afterAll'))
 })
 
-// Output:
-// outer beforeAll
-// outer beforeEach
-// outer test
-// outer afterEach
-// inner beforeAll
-// outer beforeEach
-// inner beforeEach
-// inner test
-// inner afterEach (with stack mode)
-// outer afterEach (with stack mode)
-// inner afterAll
-// outer afterAll
+// Wyjście:
+// zewnętrzny beforeAll
+// zewnętrzny beforeEach
+// zewnętrzny test
+// zewnętrzny afterEach
+// wewnętrzny beforeAll
+// zewnętrzny beforeEach
+// wewnętrzny beforeEach
+// wewnętrzny test
+// wewnętrzny afterEach (w trybie stack)
+// zewnętrzny afterEach (w trybie stack)
+// wewnętrzny afterAll
+// zewnętrzny afterAll
 ```
 
-#### Concurrent Tests
+#### Testy współbieżne
 
-When using `test.concurrent` or [`sequence.concurrent`](/config/sequence#sequence-concurrent):
+Przy używaniu `test.concurrent` lub [`sequence.concurrent`](/config/sequence#sequence-concurrent):
 
-- Tests within the same file can run in parallel
-- Each concurrent test still runs its own `beforeEach` and `afterEach` hooks
-- Use [test context](/guide/test-context) for concurrent snapshots: `test.concurrent('name', async ({ expect }) => {})`
+- Testy w tym samym pliku mogą uruchamiać się równolegle
+- Każdy współbieżny test nadal uruchamia swoje własne hooki `beforeEach` i `afterEach`
+- Użyj [kontekstu testu](/guide/test-context) dla współbieżnych snapshotów: `test.concurrent('nazwa', async ({ expect }) => {})`
 
-### 6. Reporting Phase
+### 6. Faza raportowania
 
-Throughout the test run, reporters receive lifecycle events and display results.
+W trakcie uruchomienia testów, reportery otrzymują zdarzenia cyklu życia i wyświetlają wyniki.
 
-**What happens:**
-- Reporters receive events as tests progress
-- Results are collected and formatted
-- Test summaries are generated
-- Coverage reports are generated (if enabled)
+**Co się dzieje:**
+- Reportery otrzymują zdarzenia w miarę postępu testów
+- Wyniki są zbierane i formatowane
+- Generowane są podsumowania testów
+- Generowane są raporty pokrycia (jeśli włączone)
 
-For detailed information about the reporter lifecycle, see the [Reporters](/api/advanced/reporters) guide.
+Szczegółowe informacje o cyklu życia reporterów znajdziesz w przewodniku [Reportery](/api/advanced/reporters).
 
-### 7. Global Teardown Phase
+### 7. Faza globalnego czyszczenia
 
-After all tests complete, global teardown functions execute.
+Po zakończeniu wszystkich testów wykonywane są funkcje globalnego czyszczenia.
 
-**What happens:**
-- `teardown()` functions from [`globalSetup`](/config/globalsetup) files run
-- Multiple teardown functions run in **reverse order** of their setup
-- In watch mode, teardown runs before process exit, not between test reruns
+**Co się dzieje:**
+- Funkcje `teardown()` z plików [`globalSetup`](/config/globalsetup) uruchamiają się
+- Wiele funkcji teardown uruchamia się w **odwrotnej kolejności** niż ich setup
+- W trybie watch, teardown uruchamia się przed zakończeniem procesu, nie między ponownymi uruchomieniami testów
 
-**Scope:** Main process
+**Zakres:** Główny proces
 
 ```ts [globalSetup.ts]
 export function teardown() {
-  // Clean up global resources
-  console.log('Global teardown complete')
+  // Wyczyść globalne zasoby
+  console.log('Globalne czyszczenie zakończone')
 }
 ```
 
-## Lifecycle in Different Scopes
+## Cykl życia w różnych zakresach
 
-Understanding where code executes is crucial for avoiding common pitfalls:
+Zrozumienie, gdzie wykonuje się kod, jest kluczowe dla uniknięcia typowych pułapek:
 
-| Phase | Scope | Access to Test Context | Runs |
-|-------|-------|----------------------|------|
-| Config File | Main process | ❌ No | Once per Vitest run |
-| Global Setup | Main process | ❌ No (use `provide`/`inject`) | Once per Vitest run |
-| Setup Files | Worker (same as tests) | ✅ Yes | Before each test file |
-| File-level code | Worker | ✅ Yes | Once per test file |
-| `beforeAll` / `afterAll` | Worker | ✅ Yes | Once per suite |
-| `beforeEach` / `afterEach` | Worker | ✅ Yes | Per test |
-| Test function | Worker | ✅ Yes | Once (or more with retries/repeats) |
-| Global Teardown | Main process | ❌ No | Once per Vitest run |
+| Faza | Zakres | Dostęp do kontekstu testu | Uruchamia się |
+|------|--------|---------------------------|---------------|
+| Plik konfiguracyjny | Główny proces | ❌ Nie | Raz na uruchomienie Vitest |
+| Globalne przygotowanie | Główny proces | ❌ Nie (użyj `provide`/`inject`) | Raz na uruchomienie Vitest |
+| Pliki setup | Worker (tak samo jak testy) | ✅ Tak | Przed każdym plikiem testowym |
+| Kod na poziomie pliku | Worker | ✅ Tak | Raz na plik testowy |
+| `beforeAll` / `afterAll` | Worker | ✅ Tak | Raz na suite |
+| `beforeEach` / `afterEach` | Worker | ✅ Tak | Na test |
+| Funkcja testu | Worker | ✅ Tak | Raz (lub więcej z retry/repeats) |
+| Globalne czyszczenie | Główny proces | ❌ Nie | Raz na uruchomienie Vitest |
 
-## Watch Mode Lifecycle
+## Cykl życia w trybie watch
 
-In watch mode, the lifecycle repeats with some differences:
+W trybie watch cykl życia powtarza się z pewnymi różnicami:
 
-1. **Initial run** - Full lifecycle as described above
-2. **On file change:**
-   - New [test run](/api/advanced/reporters#ontestrunstart) starts
-   - Only affected test files are re-run
-   - [Setup files](/config/setupfiles) run again for those test files
-   - [Global setup](/config/globalsetup) does **not** re-run (use [`project.onTestsRerun`](/config/globalsetup#handling-test-reruns) for rerun-specific logic)
-3. **On exit:**
-   - Global teardown executes
-   - Process terminates
+1. **Początkowe uruchomienie** - Pełny cykl życia jak opisano powyżej
+2. **Przy zmianie pliku:**
+   - Rozpoczyna się nowe [uruchomienie testów](/api/advanced/reporters#ontestrunstart)
+   - Tylko dotknięte pliki testowe są ponownie uruchamiane
+   - [Pliki setup](/config/setupfiles) uruchamiają się ponownie dla tych plików testowych
+   - [Globalne przygotowanie](/config/globalsetup) **nie** uruchamia się ponownie (użyj [`project.onTestsRerun`](/config/globalsetup#handling-test-reruns) dla logiki specyficznej dla ponownych uruchomień)
+3. **Przy wyjściu:**
+   - Wykonuje się globalne czyszczenie
+   - Proces kończy się
 
-## Performance Considerations
+## Uwagi dotyczące wydajności
 
-Understanding the lifecycle helps optimize test performance:
+Zrozumienie cyklu życia pomaga optymalizować wydajność testów:
 
-- **Global setup** is ideal for expensive one-time operations (database seeding, server startup)
-- **Setup files** run before each test file - avoid heavy operations here if you have many test files
-- **`beforeAll`** is better than `beforeEach` for expensive setup that doesn't need isolation
-- **Disabling [isolation](/config/isolate)** improves performance, but setup files still execute before each file
-- **[Pool configuration](/config/pool)** affects parallelization and available APIs
+- **Globalne przygotowanie** jest idealne dla kosztownych jednorazowych operacji (seedowanie bazy danych, uruchamianie serwera)
+- **Pliki setup** uruchamiają się przed każdym plikiem testowym - unikaj ciężkich operacji tutaj, jeśli masz wiele plików testowych
+- **`beforeAll`** jest lepsze niż `beforeEach` dla kosztownego przygotowania, które nie wymaga izolacji
+- **Wyłączenie [izolacji](/config/isolate)** poprawia wydajność, ale pliki setup nadal wykonują się przed każdym plikiem
+- **[Konfiguracja pool](/config/pool)** wpływa na zrównoleglenie i dostępne API
 
-For tips on how to improve performance, read the [Improving Performance](/guide/improving-performance) guide.
+Wskazówki dotyczące poprawy wydajności znajdziesz w przewodniku [Poprawa wydajności](/guide/improving-performance).
 
-## Related Documentation
+## Powiązana dokumentacja
 
-- [Global Setup Configuration](/config/globalsetup)
-- [Setup Files Configuration](/config/setupfiles)
-- [Test Sequencing Options](/config/sequence)
-- [Isolation Configuration](/config/isolate)
-- [Pool Configuration](/config/pool)
-- [Extending Reporters](/guide/advanced/reporters) - for reporter lifecycle events
-- [Test API Reference](/api/) - for hook APIs and test functions
+- [Konfiguracja globalnego przygotowania](/config/globalsetup)
+- [Konfiguracja plików setup](/config/setupfiles)
+- [Opcje sekwencjonowania testów](/config/sequence)
+- [Konfiguracja izolacji](/config/isolate)
+- [Konfiguracja pool](/config/pool)
+- [Rozszerzanie reporterów](/guide/advanced/reporters) - dla zdarzeń cyklu życia reporterów
+- [Referencja API testów](/api/) - dla API hooków i funkcji testowych
