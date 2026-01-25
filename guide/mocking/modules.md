@@ -1,8 +1,8 @@
-# Mocking Modules
+# Mockowanie modułów
 
-## Defining a Module
+## Definiowanie modułu
 
-Before mocking a "module", we should define what it is. In Vitest context, the "module" is a file that exports something. Using [plugins](https://vite.dev/guide/api-plugin.html), any file can be turned into a JavaScript module. The "module object" is a namespace object that holds dynamic references to exported identifiers. Simply put, it's an object with exported methods and properties. In this example, `example.js` is a module that exports `answer` and `variable`:
+Przed mockowaniem "modułu" powinniśmy zdefiniować, czym on jest. W kontekście Vitest "moduł" to plik, który coś eksportuje. Używając [pluginów](https://vite.dev/guide/api-plugin.html), każdy plik może być przekształcony w moduł JavaScript. "Obiekt modułu" to obiekt przestrzeni nazw, który przechowuje dynamiczne referencje do eksportowanych identyfikatorów. Mówiąc prościej, to obiekt z eksportowanymi metodami i właściwościami. W tym przykładzie `example.js` to moduł, który eksportuje `answer` i `variable`:
 
 ```js [example.js]
 export function answer() {
@@ -13,37 +13,37 @@ export function answer() {
 export const variable = 'example'
 ```
 
-The `exampleObject` here is a module object:
+`exampleObject` tutaj to obiekt modułu:
 
 ```js [example.test.js]
 import * as exampleObject from './example.js'
 ```
 
-The `exampleObject` will always exist even if you imported the example using named imports:
+`exampleObject` będzie zawsze istnieć, nawet jeśli zaimportowałeś przykład używając nazwanych importów:
 
 ```js [example.test.js]
 import { answer, variable } from './example.js'
 ```
 
-You can only reference `exampleObject` outside the example module itself. For example, in a test.
+Możesz odwołać się do `exampleObject` tylko poza samym modułem przykładowym. Na przykład w teście.
 
-## Mocking a Module
+## Mockowanie modułu
 
-For the purpose of this guide, let's introduce some definitions.
+Na potrzeby tego przewodnika wprowadźmy kilka definicji.
 
-- **Mocked module** is a module that was completely replaced with another one.
-- **Spied module** is a mocked module, but its exported methods keep the original implementation. They can also be tracked.
-- **Mocked export** is a module export, which invocations can be tracked.
-- **Spied export** is a mocked export.
+- **Mockowany moduł** to moduł, który został całkowicie zastąpiony innym.
+- **Szpiegowany moduł** to mockowany moduł, ale jego eksportowane metody zachowują oryginalną implementację. Mogą być również śledzone.
+- **Mockowany eksport** to eksport modułu, którego wywołania mogą być śledzone.
+- **Szpiegowany eksport** to mockowany eksport.
 
-To mock a module completely, you can use the [`vi.mock` API](/api/vi#vi-mock). You can define a new module dynamically by providing a factory that returns a new module as a second argument:
+Aby całkowicie mockować moduł, możesz użyć [API `vi.mock`](/api/vi#vi-mock). Możesz zdefiniować nowy moduł dynamicznie, dostarczając fabrykę, która zwraca nowy moduł jako drugi argument:
 
 ```ts
 import { vi } from 'vitest'
 
-// The ./example.js module will be replaced with
-// the result of a factory function, and the
-// original ./example.js module will never be called
+// Moduł ./example.js zostanie zastąpiony
+// wynikiem funkcji fabryki, a oryginalny
+// moduł ./example.js nigdy nie zostanie wywołany
 vi.mock(import('./example.js'), () => {
   return {
     answer() {
@@ -56,14 +56,14 @@ vi.mock(import('./example.js'), () => {
 ```
 
 ::: tip
-Remember that you can call `vi.mock` in a [setup file](/config/setupfiles) to apply the module mock in every test file automatically.
+Pamiętaj, że możesz wywołać `vi.mock` w [pliku setup](/config/setupfiles), aby automatycznie zastosować mock modułu w każdym pliku testowym.
 :::
 
 ::: tip
-Note the usage of dynamic import: `import('./example.ts')`. Vitest will strip it before the code is executed, but it allows TypeScript to properly validate the string and type the `importOriginal` method in your IDE or CLI.
+Zwróć uwagę na użycie dynamicznego importu: `import('./example.ts')`. Vitest usunie go przed wykonaniem kodu, ale pozwala TypeScriptowi prawidłowo walidować string i typować metodę `importOriginal` w twoim IDE lub CLI.
 :::
 
-If your code is trying to access a method that was not returned from this factory, Vitest will throw an error with a helpful message. Note that `answer` is not mocked, i.e. it cannot be tracked. To make it trackable, use `vi.fn()` instead:
+Jeśli twój kod próbuje uzyskać dostęp do metody, która nie została zwrócona z tej fabryki, Vitest wyrzuci błąd z pomocnym komunikatem. Zauważ, że `answer` nie jest mockowany, tj. nie może być śledzony. Aby uczynić go śledzonym, użyj zamiast tego `vi.fn()`:
 
 ```ts
 import { vi } from 'vitest'
@@ -76,7 +76,7 @@ vi.mock(import('./example.js'), () => {
 })
 ```
 
-The factory method accepts an `importOriginal` function that will execute the original module and return its module object:
+Metoda fabryki przyjmuje funkcję `importOriginal`, która wykona oryginalny moduł i zwróci jego obiekt modułu:
 
 ```ts
 import { expect, vi } from 'vitest'
@@ -97,12 +97,12 @@ expect(answer).toHaveReturned(42)
 ```
 
 ::: warning
-Note that `importOriginal` is asynchronous and needs to be awaited.
+Zauważ, że `importOriginal` jest asynchroniczny i musi być oczekiwany.
 :::
 
-In the above example, we provided the original `answer` to the `vi.fn()` call so it can keep calling it while being tracked at the same time.
+W powyższym przykładzie dostarczyliśmy oryginalne `answer` do wywołania `vi.fn()`, więc może nadal je wywoływać, będąc jednocześnie śledzonym.
 
-If you require the use of `importOriginal`, consider spying on the export directly via another API: `vi.spyOn`. Instead of replacing the whole module, you can spy only on a single exported method. To do that, you need to import the module as a namespace object:
+Jeśli wymagasz użycia `importOriginal`, rozważ szpiegowanie eksportu bezpośrednio przez inne API: `vi.spyOn`. Zamiast zastępować cały moduł, możesz szpiegować tylko pojedynczą eksportowaną metodę. Aby to zrobić, musisz zaimportować moduł jako obiekt przestrzeni nazw:
 
 ```ts
 import { expect, vi } from 'vitest'
@@ -114,8 +114,8 @@ expect(exampleObject.answer()).toBe(0)
 expect(exampleObject.answer).toHaveBeenCalled()
 ```
 
-::: danger Browser Mode Support
-This will not work in the [Browser Mode](/guide/browser/) because it uses the browser's native ESM support to serve modules. The module namespace object is sealed and can't be reconfigured. To bypass this limitation, Vitest supports `{ spy: true }` option in `vi.mock('./example.js')`. This will automatically spy on every export in the module without replacing them with fake ones.
+::: danger Wsparcie trybu przeglądarki
+To nie będzie działać w [trybie przeglądarki](/guide/browser/), ponieważ używa natywnego wsparcia ESM przeglądarki do serwowania modułów. Obiekt przestrzeni nazw modułu jest zapieczętowany i nie może być rekonfigurowany. Aby obejść to ograniczenie, Vitest wspiera opcję `{ spy: true }` w `vi.mock('./example.js')`. To automatycznie zaszpieguje każdy eksport w module bez zastępowania ich fałszywymi.
 
 ```ts
 import { vi } from 'vitest'
@@ -128,24 +128,24 @@ vi.mocked(exampleObject.answer).mockReturnValue(0)
 :::
 
 ::: warning
-You only need to import the module as a namespace object in the file where you are using the `vi.spyOn` utility. If the `answer` is called in another file and is imported there as a named export, Vitest will be able to properly track it as long as the function that called it is called after `vi.spyOn`:
+Musisz zaimportować moduł jako obiekt przestrzeni nazw tylko w pliku, gdzie używasz narzędzia `vi.spyOn`. Jeśli `answer` jest wywoływane w innym pliku i jest tam importowane jako nazwany eksport, Vitest będzie w stanie prawidłowo je śledzić, o ile funkcja, która je wywołała, jest wywołana po `vi.spyOn`:
 
 ```ts [source.js]
 import { answer } from './example.js'
 
 export function question() {
   if (answer() === 42) {
-    return 'Ultimate Question of Life, the Universe, and Everything'
+    return 'Ostateczne pytanie o życie, wszechświat i wszystko'
   }
 
-  return 'Unknown Question'
+  return 'Nieznane pytanie'
 }
 ```
 :::
 
-Note that `vi.spyOn` will only spy on calls that were done after it spied on the method. So, if the function is executed at the top level during an import or it was called before the spying, `vi.spyOn` will not be able to report on it.
+Zauważ, że `vi.spyOn` będzie szpiegować tylko wywołania, które zostały wykonane po tym, jak zaczął szpiegować metodę. Więc jeśli funkcja jest wykonywana na najwyższym poziomie podczas importu lub została wywołana przed szpiegowaniem, `vi.spyOn` nie będzie w stanie tego zgłosić.
 
-To automatically mock any module before it is imported, you can call `vi.mock` with a path:
+Aby automatycznie mockować dowolny moduł przed jego zaimportowaniem, możesz wywołać `vi.mock` ze ścieżką:
 
 ```ts
 import { vi } from 'vitest'
@@ -153,18 +153,18 @@ import { vi } from 'vitest'
 vi.mock(import('./example.js'))
 ```
 
-If the file `./__mocks__/example.js` exists, then Vitest will load it instead. Otherwise, Vitest will load the original module and replace everything recursively:
+Jeśli plik `./__mocks__/example.js` istnieje, Vitest załaduje go zamiast tego. W przeciwnym razie Vitest załaduje oryginalny moduł i zastąpi wszystko rekurencyjnie:
 
 {#automocking-algorithm}
 
-- All arrays will be empty
-- All primitives will stay untouched
-- All getters will return `undefined`
-- All methods will return `undefined`
-- All objects will be deeply cloned
-- All instances of classes and their prototypes will be cloned
+- Wszystkie tablice będą puste
+- Wszystkie prymitywy pozostaną nietknięte
+- Wszystkie gettery zwrócą `undefined`
+- Wszystkie metody zwrócą `undefined`
+- Wszystkie obiekty będą głęboko sklonowane
+- Wszystkie instancje klas i ich prototypy będą sklonowane
 
-To disable this behavior, you can pass down `spy: true` as the second argument:
+Aby wyłączyć to zachowanie, możesz przekazać `spy: true` jako drugi argument:
 
 ```ts
 import { vi } from 'vitest'
@@ -172,7 +172,7 @@ import { vi } from 'vitest'
 vi.mock(import('./example.js'), { spy: true })
 ```
 
-Instead of returning `undefined`, all methods will call the original implementation, but you can still keep track of these calls:
+Zamiast zwracać `undefined`, wszystkie metody wywołają oryginalną implementację, ale nadal możesz śledzić te wywołania:
 
 ```ts
 import { expect, vi } from 'vitest'
@@ -180,13 +180,13 @@ import { answer } from './example.js'
 
 vi.mock(import('./example.js'), { spy: true })
 
-// calls the original implementation
+// wywołuje oryginalną implementację
 expect(answer()).toBe(42)
-// vitest can still track the invocations
+// vitest nadal może śledzić wywołania
 expect(answer).toHaveBeenCalled()
 ```
 
-One nice thing that mocked modules support is sharing the state between the instance and its prototype. Consider this module:
+Jedną fajną rzeczą, którą wspierają mockowane moduły, jest współdzielenie stanu między instancją a jej prototypem. Rozważ ten moduł:
 
 ```ts [answer.js]
 export class Answer {
@@ -200,7 +200,7 @@ export class Answer {
 }
 ```
 
-By mocking it, we can keep track of every invocation of `.value()` even without having access to the instance itself:
+Mockując go, możemy śledzić każde wywołanie `.value()` nawet bez dostępu do samej instancji:
 
 ```ts [answer.test.js]
 import { expect, test, vi } from 'vitest'
@@ -208,35 +208,35 @@ import { Answer } from './answer.js'
 
 vi.mock(import('./answer.js'), { spy: true })
 
-test('instance inherits the state', () => {
-  // these invocations could be private inside another function
-  // that you don't have access to in your test
+test('instancja dziedziczy stan', () => {
+  // te wywołania mogą być prywatne wewnątrz innej funkcji,
+  // do której nie masz dostępu w swoim teście
   const answer1 = new Answer(42)
   const answer2 = new Answer(0)
 
   expect(answer1.value()).toBe(42)
   expect(answer1.value).toHaveBeenCalled()
-  // note that different instances have their own states
+  // zauważ, że różne instancje mają swoje własne stany
   expect(answer2.value).not.toHaveBeenCalled()
 
   expect(answer2.value()).toBe(0)
 
-  // but the prototype state accumulates all calls
+  // ale stan prototypu akumuluje wszystkie wywołania
   expect(Answer.prototype.value).toHaveBeenCalledTimes(2)
   expect(Answer.prototype.value).toHaveReturned(42)
   expect(Answer.prototype.value).toHaveReturned(0)
 })
 ```
 
-This can be very useful to track calls to instances that are never exposed.
+To może być bardzo przydatne do śledzenia wywołań do instancji, które nigdy nie są eksponowane.
 
-## Mocking Non-existing Module
+## Mockowanie nieistniejącego modułu
 
-Vitest supports mocking virtual modules. These modules don't exist on the file system, but your code imports them. For example, this can happen when your development environment is different from production. One common example is mocking `vscode` APIs in your unit tests.
+Vitest wspiera mockowanie modułów wirtualnych. Te moduły nie istnieją w systemie plików, ale twój kod je importuje. Na przykład, może się to zdarzyć, gdy twoje środowisko deweloperskie różni się od produkcyjnego. Jednym częstym przykładem jest mockowanie API `vscode` w testach jednostkowych.
 
-By default, Vitest will fail transforming files if it cannot find the source of the import. To bypass this, you need to specify it in your config. You can either always redirect the import to a file, or just signal Vite to ignore it and use the `vi.mock` factory to define its exports.
+Domyślnie Vitest nie uda się transformować plików, jeśli nie może znaleźć źródła importu. Aby to obejść, musisz określić to w swojej konfiguracji. Możesz albo zawsze przekierować import do pliku, albo po prostu zasygnalizować Vite, aby go zignorował i użył fabryki `vi.mock` do zdefiniowania jego eksportów.
 
-To redirect the import, use [`test.alias`](/config/#alias) config option:
+Aby przekierować import, użyj opcji konfiguracji [`test.alias`](/config/#alias):
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -251,7 +251,7 @@ export default defineConfig({
 })
 ```
 
-To mark the module as always resolved, return the same string from `resolveId` hook of a plugin:
+Aby oznaczyć moduł jako zawsze rozwiązany, zwróć ten sam string z hooka `resolveId` pluginu:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -271,7 +271,7 @@ export default defineConfig({
 })
 ```
 
-Now you can use `vi.mock` as usual in your tests:
+Teraz możesz używać `vi.mock` jak zwykle w swoich testach:
 
 ```ts
 import { vi } from 'vitest'
@@ -285,9 +285,9 @@ vi.mock(import('vscode'), () => {
 })
 ```
 
-## How it Works
+## Jak to działa
 
-Vitest implements different module mocking mechanisms depending on the environment. The only feature they share is the plugin transformer. When Vitest sees that a file has `vi.mock` inside, it will transform every static import into a dynamic one and move the `vi.mock` call to the top of the file. This allows Vitest to register the mock before the import happens without breaking the ESM rule of hoisted imports.
+Vitest implementuje różne mechanizmy mockowania modułów w zależności od środowiska. Jedyną cechą, którą współdzielą, jest transformer pluginu. Gdy Vitest widzi, że plik ma wewnątrz `vi.mock`, transformuje każdy statyczny import w dynamiczny i przenosi wywołanie `vi.mock` na początek pliku. To pozwala Vitest zarejestrować mock przed importem bez łamania reguły ESM o wyniesionych importach.
 
 ::: code-group
 ```ts [example.js]
@@ -303,25 +303,25 @@ vi.mock('./answer.js')
 const __vitest_module_0__ = await __handle_mock__(
   () => import('./answer.js')
 )
-// to keep the live binding, we have to access
-// the export on the module namespace
+// aby zachować żywe wiązanie, musimy uzyskać dostęp
+// do eksportu na przestrzeni nazw modułu
 console.log(__vitest_module_0__.answer())
 ```
 :::
 
-The `__handle_mock__` wrapper just makes sure the mock is resolved before the import is initiated, it doesn't modify the module in any way.
+Wrapper `__handle_mock__` tylko upewnia się, że mock jest rozwiązany przed zainicjowaniem importu, nie modyfikuje modułu w żaden sposób.
 
-The module mocking plugins are available in the [`@vitest/mocker` package](https://github.com/vitest-dev/vitest/tree/main/packages/mocker).
+Pluginy mockowania modułów są dostępne w [pakiecie `@vitest/mocker`](https://github.com/vitest-dev/vitest/tree/main/packages/mocker).
 
 ### JSDOM, happy-dom, Node
 
-When you run your tests in an emulated environment, Vitest creates a [module runner](https://vite.dev/guide/api-environment-runtimes.html#modulerunner) that can consume Vite code. The module runner is designed in such a way that Vitest can hook into the module evaluation and replace it with the mock, if it was registered. This means that Vitest runs your code in an ESM-like environment, but it doesn't use native ESM mechanism directly. This allows the test runner to bend the rules around ES Modules immutability, allowing users to call `vi.spyOn` on a seemingly ES Module.
+Gdy uruchamiasz testy w emulowanym środowisku, Vitest tworzy [runner modułu](https://vite.dev/guide/api-environment-runtimes.html#modulerunner), który może konsumować kod Vite. Runner modułu jest zaprojektowany w taki sposób, że Vitest może podłączyć się do ewaluacji modułu i zastąpić go mockiem, jeśli został zarejestrowany. To oznacza, że Vitest uruchamia twój kod w środowisku podobnym do ESM, ale nie używa bezpośrednio natywnego mechanizmu ESM. To pozwala runnerowi testów naginać zasady dotyczące niezmienności ES Modules, pozwalając użytkownikom wywoływać `vi.spyOn` na pozornie ES Module.
 
-### Browser Mode
+### Tryb przeglądarki
 
-Vitest uses native ESM in the Browser Mode. This means that we cannot replace the module so easily. Instead, Vitest intercepts the fetch request (via playwright's `page.route` or a Vite plugin API if using `preview` or `webdriverio`) and serves transformed code, if the module was mocked.
+Vitest używa natywnego ESM w trybie przeglądarki. To oznacza, że nie możemy tak łatwo zastąpić modułu. Zamiast tego Vitest przechwytuje żądanie fetch (przez `page.route` Playwright lub API pluginu Vite, jeśli używasz `preview` lub `webdriverio`) i serwuje transformowany kod, jeśli moduł był mockowany.
 
-For example, if the module is automocked, Vitest can parse static exports and create a placeholder module:
+Na przykład, jeśli moduł jest automockowany, Vitest może sparsować statyczne eksporty i utworzyć moduł zastępczy:
 
 ::: code-group
 ```ts [answer.js]
@@ -343,9 +343,9 @@ export const answer = __private_module__.answer
 ```
 :::
 
-The example is simplified for brevity, but the concept is unchanged. We can inject a `__private_module__` variable into the module to hold the mocked values. If the user called `vi.mock` with `spy: true`, we pass down the original value; otherwise, we create a simple `vi.fn()` mock.
+Przykład jest uproszczony dla zwięzłości, ale koncepcja pozostaje niezmieniona. Możemy wstrzyknąć zmienną `__private_module__` do modułu, aby przechowywać mockowane wartości. Jeśli użytkownik wywołał `vi.mock` z `spy: true`, przekazujemy oryginalną wartość; w przeciwnym razie tworzymy prosty mock `vi.fn()`.
 
-If user defined a custom factory, this makes it harder to inject the code, but not impossible. When the mocked file is served, we first resolve the factory in the browser, then pass down the keys back to the server, and use them to create a placeholder module:
+Jeśli użytkownik zdefiniował niestandardową fabrykę, utrudnia to wstrzykiwanie kodu, ale nie jest to niemożliwe. Gdy mockowany plik jest serwowany, najpierw rozwiązujemy fabrykę w przeglądarce, następnie przekazujemy klucze z powrotem do serwera i używamy ich do utworzenia modułu zastępczego:
 
 ```ts
 const resolvedFactoryKeys = await resolveBrowserFactory(url)
@@ -355,11 +355,11 @@ ${resolvedFactoryKeys.map(key => `export const ${key} = __private_module__["${ke
 `
 ```
 
-This module can now be served back to the browser. You can inspect the code in the devtools when you run the tests.
+Ten moduł może teraz być serwowany z powrotem do przeglądarki. Możesz sprawdzić kod w devtools, gdy uruchamiasz testy.
 
-## Mocking Modules Pitfalls
+## Pułapki mockowania modułów
 
-Beware that it is not possible to mock calls to methods that are called inside other methods of the same file. For example, in this code:
+Uważaj, że nie jest możliwe mockowanie wywołań do metod, które są wywoływane wewnątrz innych metod tego samego pliku. Na przykład w tym kodzie:
 
 ```ts [foobar.js]
 export function foo() {
@@ -371,31 +371,31 @@ export function foobar() {
 }
 ```
 
-It is not possible to mock the `foo` method from the outside because it is referenced directly. So this code will have no effect on the `foo` call inside `foobar` (but it will affect the `foo` call in other modules):
+Nie jest możliwe mockowanie metody `foo` z zewnątrz, ponieważ jest ona bezpośrednio referencjonowana. Więc ten kod nie będzie miał wpływu na wywołanie `foo` wewnątrz `foobar` (ale wpłynie na wywołanie `foo` w innych modułach):
 
 ```ts [foobar.test.ts]
 import { vi } from 'vitest'
 import * as mod from './foobar.js'
 
-// this will only affect "foo" outside of the original module
+// to wpłynie tylko na "foo" poza oryginalnym modułem
 vi.spyOn(mod, 'foo')
 vi.mock(import('./foobar.js'), async (importOriginal) => {
   return {
     ...await importOriginal(),
-    // this will only affect "foo" outside of the original module
+    // to wpłynie tylko na "foo" poza oryginalnym modułem
     foo: () => 'mocked'
   }
 })
 ```
 
-You can confirm this behavior by providing the implementation to the `foobar` method directly:
+Możesz potwierdzić to zachowanie, dostarczając implementację do metody `foobar` bezpośrednio:
 
 ```ts [foobar.test.js]
 import * as mod from './foobar.js'
 
 vi.spyOn(mod, 'foo')
 
-// exported foo references mocked method
+// eksportowane foo referencjonuje mockowaną metodę
 mod.foobar(mod.foo)
 ```
 
@@ -409,4 +409,4 @@ export function foobar(injectedFoo) {
 }
 ```
 
-This is the intended behavior, and we do not plan to implement a workaround. Consider refactoring your code into multiple files or use techniques such as [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection). We believe that making the application testable is not the responsibility of the test runner, but of the application architecture.
+To jest zamierzone zachowanie i nie planujemy implementować obejścia. Rozważ refaktoryzację swojego kodu na wiele plików lub użyj technik takich jak [wstrzykiwanie zależności](https://en.wikipedia.org/wiki/Dependency_injection). Uważamy, że uczynienie aplikacji testowalną nie jest odpowiedzialnością runnera testów, ale architektury aplikacji.
