@@ -1,36 +1,36 @@
 ---
-title: Mocking | Guide
+title: Mockowanie | Przewodnik
 outline: false
 ---
 
-# Mocking
+# Mockowanie
 
-When writing tests it's only a matter of time before you need to create a "fake" version of an internal — or external — service. This is commonly referred to as **mocking**. Vitest provides utility functions to help you out through its `vi` helper. You can import it from `vitest` or access it globally if [`global` configuration](/config/#globals) is enabled.
+Podczas pisania testów to tylko kwestia czasu, zanim będziesz potrzebować stworzyć "fałszywą" wersję wewnętrznego — lub zewnętrznego — serwisu. Jest to powszechnie nazywane **mockowaniem**. Vitest dostarcza funkcje pomocnicze przez helper `vi`. Możesz go zaimportować z `vitest` lub uzyskać do niego dostęp globalnie, jeśli włączona jest [konfiguracja `global`](/config/#globals).
 
 ::: warning
-Always remember to clear or restore mocks before or after each test run to undo mock state changes between runs! See [`mockReset`](/api/mock#mockreset) docs for more info.
+Zawsze pamiętaj o wyczyszczeniu lub przywróceniu mocków przed lub po każdym uruchomieniu testu, aby cofnąć zmiany stanu mocków między uruchomieniami! Zobacz dokumentację [`mockReset`](/api/mock#mockreset) po więcej informacji.
 :::
 
-If you are not familiar with `vi.fn`, `vi.mock` or `vi.spyOn` methods, check the [API section](/api/vi) first.
+Jeśli nie znasz metod `vi.fn`, `vi.mock` lub `vi.spyOn`, najpierw sprawdź [sekcję API](/api/vi).
 
-Vitest has a comprehensive list of guides regarding mocking:
+Vitest ma obszerną listę przewodników dotyczących mockowania:
 
-- [Mocking Classes](/guide/mocking/classes.md)
-- [Mocking Dates](/guide/mocking/dates.md)
-- [Mocking the File System](/guide/mocking/file-system.md)
-- [Mocking Functions](/guide/mocking/functions.md)
-- [Mocking Globals](/guide/mocking/globals.md)
-- [Mocking Modules](/guide/mocking/modules.md)
-- [Mocking Requests](/guide/mocking/requests.md)
-- [Mocking Timers](/guide/mocking/timers.md)
+- [Mockowanie klas](/guide/mocking/classes.md)
+- [Mockowanie dat](/guide/mocking/dates.md)
+- [Mockowanie systemu plików](/guide/mocking/file-system.md)
+- [Mockowanie funkcji](/guide/mocking/functions.md)
+- [Mockowanie zmiennych globalnych](/guide/mocking/globals.md)
+- [Mockowanie modułów](/guide/mocking/modules.md)
+- [Mockowanie żądań](/guide/mocking/requests.md)
+- [Mockowanie timerów](/guide/mocking/timers.md)
 
-For a simpler and quicker way to get started with mocking, you can check the Cheat Sheet below.
+Aby szybciej i prościej zacząć z mockowaniem, możesz sprawdzić poniższą ściągawkę.
 
-## Cheat Sheet
+## Ściągawka
 
-I want to…
+Chcę…
 
-### Mock exported variables
+### Mockować eksportowane zmienne
 ```js [example.js]
 export const getter = 'variable'
 ```
@@ -41,15 +41,15 @@ vi.spyOn(exports, 'getter', 'get').mockReturnValue('mocked')
 ```
 
 ::: warning
-This will not work in the Browser Mode. For a workaround, see [Limitations](/guide/browser/#spying-on-module-exports).
+To nie będzie działać w trybie przeglądarki. Aby obejść ten problem, zobacz [Ograniczenia](/guide/browser/#spying-on-module-exports).
 :::
 
-### Mock an exported function
+### Mockować eksportowaną funkcję
 
-1. Example with `vi.mock`:
+1. Przykład z `vi.mock`:
 
 ::: warning
-Don't forget that a `vi.mock` call is hoisted to top of the file. It will always be executed before all imports.
+Nie zapomnij, że wywołanie `vi.mock` jest przenoszone na początek pliku. Zawsze będzie wykonywane przed wszystkimi importami.
 :::
 
 ```ts [example.js]
@@ -63,7 +63,7 @@ vi.mock('./example.js', () => ({
 }))
 ```
 
-2. Example with `vi.spyOn`:
+2. Przykład z `vi.spyOn`:
 ```ts
 import * as exports from './example.js'
 
@@ -71,12 +71,12 @@ vi.spyOn(exports, 'method').mockImplementation(() => {})
 ```
 
 ::: warning
-`vi.spyOn` example will not work in the Browser Mode. For a workaround, see [Limitations](/guide/browser/#spying-on-module-exports).
+Przykład z `vi.spyOn` nie będzie działać w trybie przeglądarki. Aby obejść ten problem, zobacz [Ograniczenia](/guide/browser/#spying-on-module-exports).
 :::
 
-### Mock an exported class implementation
+### Mockować implementację eksportowanej klasy
 
-1. Example with a fake `class`:
+1. Przykład z fałszywą `klasą`:
 ```ts [example.js]
 export class SomeClass {}
 ```
@@ -91,7 +91,7 @@ vi.mock(import('./example.js'), () => {
 })
 ```
 
-2. Example with `vi.spyOn`:
+2. Przykład z `vi.spyOn`:
 
 ```ts
 import * as mod from './example.js'
@@ -102,12 +102,12 @@ vi.spyOn(mod, 'SomeClass').mockImplementation(class FakeClass {
 ```
 
 ::: warning
-`vi.spyOn` example will not work in the Browser Mode. For a workaround, see [Limitations](/guide/browser/#spying-on-module-exports).
+Przykład z `vi.spyOn` nie będzie działać w trybie przeglądarki. Aby obejść ten problem, zobacz [Ograniczenia](/guide/browser/#spying-on-module-exports).
 :::
 
-### Spy on an object returned from a function
+### Szpiegować obiekt zwracany z funkcji
 
-1. Example using cache:
+1. Przykład z użyciem cache:
 
 ```ts [example.js]
 export function useObject() {
@@ -133,19 +133,19 @@ vi.mock(import('./example.js'), () => {
         method: vi.fn(),
       }
     }
-    // now every time that useObject() is called it will
-    // return the same object reference
+    // teraz za każdym razem, gdy wywoływane jest useObject(),
+    // zwróci tę samą referencję obiektu
     return _cache
   }
   return { useObject }
 })
 
 const obj = useObject()
-// obj.method was called inside some-path
+// obj.method zostało wywołane wewnątrz some-path
 expect(obj.method).toHaveBeenCalled()
 ```
 
-### Mock part of a module
+### Mockować część modułu
 
 ```ts
 import { mocked, original } from './some-path.js'
@@ -157,76 +157,76 @@ vi.mock(import('./some-path.js'), async (importOriginal) => {
     mocked: vi.fn()
   }
 })
-original() // has original behaviour
-mocked() // is a spy function
+original() // ma oryginalne zachowanie
+mocked() // jest funkcją szpiegującą
 ```
 
 ::: warning
-Don't forget that this only [mocks _external_ access](#mocking-pitfalls). In this example, if `original` calls `mocked` internally, it will always call the function defined in the module, not in the mock factory.
+Nie zapomnij, że to tylko [mockuje dostęp _zewnętrzny_](#mocking-pitfalls). W tym przykładzie, jeśli `original` wywołuje `mocked` wewnętrznie, zawsze wywoła funkcję zdefiniowaną w module, nie w fabryce mocka.
 :::
 
-### Mock the current date
+### Mockować bieżącą datę
 
-To mock `Date`'s time, you can use `vi.setSystemTime` helper function. This value will **not** automatically reset between different tests.
+Aby mockować czas `Date`, możesz użyć funkcji pomocniczej `vi.setSystemTime`. Ta wartość **nie** zostanie automatycznie zresetowana między różnymi testami.
 
-Beware that using `vi.useFakeTimers` also changes the `Date`'s time.
+Uważaj, że używanie `vi.useFakeTimers` również zmienia czas `Date`.
 
 ```ts
 const mockDate = new Date(2022, 0, 1)
 vi.setSystemTime(mockDate)
 const now = new Date()
 expect(now.valueOf()).toBe(mockDate.valueOf())
-// reset mocked time
+// resetuj mockowany czas
 vi.useRealTimers()
 ```
 
-### Mock a global variable
+### Mockować zmienną globalną
 
-You can set global variable by assigning a value to `globalThis` or using [`vi.stubGlobal`](/api/vi#vi-stubglobal) helper. When using `vi.stubGlobal`, it will **not** automatically reset between different tests, unless you enable [`unstubGlobals`](/config/#unstubglobals) config option or call [`vi.unstubAllGlobals`](/api/vi#vi-unstuballglobals).
+Możesz ustawić zmienną globalną przypisując wartość do `globalThis` lub używając helpera [`vi.stubGlobal`](/api/vi#vi-stubglobal). Podczas używania `vi.stubGlobal`, **nie** zostanie automatycznie zresetowana między różnymi testami, chyba że włączysz opcję konfiguracji [`unstubGlobals`](/config/#unstubglobals) lub wywołasz [`vi.unstubAllGlobals`](/api/vi#vi-unstuballglobals).
 
 ```ts
 vi.stubGlobal('__VERSION__', '1.0.0')
 expect(__VERSION__).toBe('1.0.0')
 ```
 
-### Mock `import.meta.env`
+### Mockować `import.meta.env`
 
-1. To change environmental variable, you can just assign a new value to it.
+1. Aby zmienić zmienną środowiskową, możesz po prostu przypisać jej nową wartość.
 
 ::: warning
-The environmental variable value will **_not_** automatically reset between different tests.
+Wartość zmiennej środowiskowej **_nie_** zostanie automatycznie zresetowana między różnymi testami.
 :::
 
 ```ts
 import { beforeEach, expect, it } from 'vitest'
 
-// you can reset it in beforeEach hook manually
+// możesz ją zresetować w hooku beforeEach ręcznie
 const originalViteEnv = import.meta.env.VITE_ENV
 
 beforeEach(() => {
   import.meta.env.VITE_ENV = originalViteEnv
 })
 
-it('changes value', () => {
+it('zmienia wartość', () => {
   import.meta.env.VITE_ENV = 'staging'
   expect(import.meta.env.VITE_ENV).toBe('staging')
 })
 ```
 
-2. If you want to automatically reset the value(s), you can use the `vi.stubEnv` helper with the [`unstubEnvs`](/config/#unstubenvs) config option enabled (or call [`vi.unstubAllEnvs`](/api/vi#vi-unstuballenvs) manually in a `beforeEach` hook):
+2. Jeśli chcesz automatycznie resetować wartość(ci), możesz użyć helpera `vi.stubEnv` z włączoną opcją konfiguracji [`unstubEnvs`](/config/#unstubenvs) (lub ręcznie wywołać [`vi.unstubAllEnvs`](/api/vi#vi-unstuballenvs) w hooku `beforeEach`):
 
 ```ts
 import { expect, it, vi } from 'vitest'
 
-// before running tests "VITE_ENV" is "test"
+// przed uruchomieniem testów "VITE_ENV" wynosi "test"
 import.meta.env.VITE_ENV === 'test'
 
-it('changes value', () => {
+it('zmienia wartość', () => {
   vi.stubEnv('VITE_ENV', 'staging')
   expect(import.meta.env.VITE_ENV).toBe('staging')
 })
 
-it('the value is restored before running an other test', () => {
+it('wartość jest przywracana przed uruchomieniem kolejnego testu', () => {
   expect(import.meta.env.VITE_ENV).toBe('test')
 })
 ```
