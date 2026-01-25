@@ -1,8 +1,8 @@
-# Mocking Dates
+# Mockowanie dat
 
-Sometimes you need to be in control of the date to ensure consistency when testing. Vitest uses [`@sinonjs/fake-timers`](https://github.com/sinonjs/fake-timers) package for manipulating timers, as well as system date. You can find more about the specific API in detail [here](/api/vi#vi-setsystemtime).
+Czasami musisz mieć kontrolę nad datą, aby zapewnić spójność podczas testowania. Vitest używa pakietu [`@sinonjs/fake-timers`](https://github.com/sinonjs/fake-timers) do manipulowania timerami, a także datą systemową. Więcej szczegółów o konkretnym API znajdziesz [tutaj](/api/vi#vi-setsystemtime).
 
-## Example
+## Przykład
 
 ```js
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -20,32 +20,32 @@ function purchase() {
   return { message: 'Error' }
 }
 
-describe('purchasing flow', () => {
+describe('proces zakupowy', () => {
   beforeEach(() => {
-    // tell vitest we use mocked time
+    // informujemy vitest, że używamy mockowanego czasu
     vi.useFakeTimers()
   })
 
   afterEach(() => {
-    // restoring date after each test run
+    // przywracamy datę po każdym uruchomieniu testu
     vi.useRealTimers()
   })
 
-  it('allows purchases within business hours', () => {
-    // set hour within business hours
+  it('pozwala na zakupy w godzinach pracy', () => {
+    // ustawiamy godzinę w ramach godzin pracy
     const date = new Date(2000, 1, 1, 13)
     vi.setSystemTime(date)
 
-    // access Date.now() will result in the date set above
+    // dostęp do Date.now() zwróci datę ustawioną powyżej
     expect(purchase()).toEqual({ message: 'Success' })
   })
 
-  it('disallows purchases outside of business hours', () => {
-    // set hour outside business hours
+  it('nie pozwala na zakupy poza godzinami pracy', () => {
+    // ustawiamy godzinę poza godzinami pracy
     const date = new Date(2000, 1, 1, 19)
     vi.setSystemTime(date)
 
-    // access Date.now() will result in the date set above
+    // dostęp do Date.now() zwróci datę ustawioną powyżej
     expect(purchase()).toEqual({ message: 'Error' })
   })
 })
