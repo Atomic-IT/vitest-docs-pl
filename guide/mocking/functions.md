@@ -1,21 +1,21 @@
-# Mocking Functions
+# Mockowanie funkcji
 
-Mocking functions can be split up into two different categories: spying and mocking.
+Mockowanie funkcji można podzielić na dwie różne kategorie: szpiegowanie i mockowanie.
 
-If you need to observe the behaviour of a method on an object, you can use [`vi.spyOn()`](/api/vi#vi-spyon) to create a spy that tracks calls to that method.
+Jeśli musisz obserwować zachowanie metody na obiekcie, możesz użyć [`vi.spyOn()`](/api/vi#vi-spyon), aby utworzyć szpiega, który śledzi wywołania tej metody.
 
-If you need to pass down a custom function implementation as an argument or create a new mocked entity, you can use [`vi.fn()`](/api/vi#vi-fn) to create a mock function.
+Jeśli musisz przekazać niestandardową implementację funkcji jako argument lub utworzyć nową mockowaną jednostkę, możesz użyć [`vi.fn()`](/api/vi#vi-fn), aby utworzyć funkcję mockującą.
 
-Both `vi.spyOn` and `vi.fn` share the same methods.
+Zarówno `vi.spyOn`, jak i `vi.fn` współdzielą te same metody.
 
-## Example
+## Przykład
 
 ```js
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const messages = {
   items: [
-    { message: 'Simple test message', from: 'Testman' },
+    { message: 'Prosta wiadomość testowa', from: 'Testman' },
     // ...
   ],
   addItem(item) {
@@ -25,14 +25,14 @@ const messages = {
   onItem(callback) {
     messages.callbacks.push(callback)
   },
-  getLatest, // can also be a `getter or setter if supported`
+  getLatest, // może być również `getter lub setter jeśli wspierane`
 }
 
 function getLatest(index = messages.items.length - 1) {
   return messages.items[index]
 }
 
-it('should get the latest message with a spy', () => {
+it('powinien pobrać najnowszą wiadomość ze szpiegiem', () => {
   const spy = vi.spyOn(messages, 'getLatest')
   expect(spy.getMockName()).toEqual('getLatest')
 
@@ -48,13 +48,13 @@ it('should get the latest message with a spy', () => {
   expect(spy).toHaveBeenCalledTimes(2)
 })
 
-it('passing down the mock', () => {
+it('przekazywanie mocka', () => {
   const callback = vi.fn()
   messages.onItem(callback)
 
-  messages.addItem({ message: 'Another test message', from: 'Testman' })
+  messages.addItem({ message: 'Kolejna wiadomość testowa', from: 'Testman' })
   expect(callback).toHaveBeenCalledWith({
-    message: 'Another test message',
+    message: 'Kolejna wiadomość testowa',
     from: 'Testman',
   })
 })
