@@ -1,16 +1,16 @@
 ---
-title: Coverage | Guide
+title: Pokrycie | Przewodnik
 ---
 
-# Coverage
+# Pokrycie
 
-Vitest supports Native code coverage via [`v8`](https://v8.dev/blog/javascript-code-coverage) and instrumented code coverage via [`istanbul`](https://istanbul.js.org/).
+Vitest wspiera natywne pokrycie kodu przez [`v8`](https://v8.dev/blog/javascript-code-coverage) oraz instrumentowane pokrycie kodu przez [`istanbul`](https://istanbul.js.org/).
 
-## Coverage Providers
+## Dostawcy pokrycia
 
-Both `v8` and `istanbul` support are optional. By default, `v8` will be used.
+Zarówno wsparcie `v8`, jak i `istanbul` jest opcjonalne. Domyślnie używany będzie `v8`.
 
-You can select the coverage tool by setting `test.coverage.provider` to `v8` or `istanbul`:
+Możesz wybrać narzędzie do pokrycia, ustawiając `test.coverage.provider` na `v8` lub `istanbul`:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -18,15 +18,15 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     coverage: {
-      provider: 'v8' // or 'istanbul'
+      provider: 'v8' // lub 'istanbul'
     },
   },
 })
 ```
 
-When you start the Vitest process, it will prompt you to install the corresponding support package automatically.
+Gdy uruchomisz proces Vitest, poprosi cię o automatyczną instalację odpowiedniego pakietu wsparcia.
 
-Or if you prefer to install them manually:
+Lub jeśli wolisz zainstalować je ręcznie:
 
 ::: code-group
 ```bash [v8]
@@ -37,28 +37,28 @@ npm i -D @vitest/coverage-istanbul
 ```
 :::
 
-## V8 Provider
+## Dostawca V8
 
 ::: info
-The description of V8 coverage below is Vitest specific and does not apply to other test runners.
-Since `v3.2.0` Vitest has used [AST based coverage remapping](/blog/vitest-3-2#coverage-v8-ast-aware-remapping) for V8 coverage, which produces identical coverage reports to Istanbul.
+Poniższy opis pokrycia V8 jest specyficzny dla Vitest i nie dotyczy innych runnerów testów.
+Od wersji `v3.2.0` Vitest używa [remapowania pokrycia opartego na AST](/blog/vitest-3-2#coverage-v8-ast-aware-remapping) dla pokrycia V8, co produkuje identyczne raporty pokrycia jak Istanbul.
 
-This allows users to have the speed of V8 coverage with accuracy of Istanbul coverage.
+To pozwala użytkownikom mieć szybkość pokrycia V8 z dokładnością pokrycia Istanbul.
 :::
 
-By default Vitest uses `'v8'` coverage provider.
-This provider requires Javascript runtime that's implemented on top of [V8 engine](https://v8.dev/), such as NodeJS, Deno or any Chromium based browsers such as Google Chrome.
+Domyślnie Vitest używa dostawcy pokrycia `'v8'`.
+Ten dostawca wymaga środowiska uruchomieniowego Javascript zaimplementowanego na [silniku V8](https://v8.dev/), takiego jak NodeJS, Deno lub jakiekolwiek przeglądarki oparte na Chromium, takie jak Google Chrome.
 
-Coverage collection is performed during runtime by instructing V8 using [`node:inspector`](https://nodejs.org/api/inspector.html) and [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/tot/Profiler/) in browsers. User's source files can be executed as-is without any pre-instrumentation steps.
+Zbieranie pokrycia jest wykonywane podczas runtime przez instruowanie V8 za pomocą [`node:inspector`](https://nodejs.org/api/inspector.html) i [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/tot/Profiler/) w przeglądarkach. Pliki źródłowe użytkownika mogą być wykonywane bez żadnych kroków pre-instrumentacji.
 
-- ✅ Recommended option to use
-- ✅ No pre-transpile step. Test files can be executed as-is.
-- ✅ Faster execute times than Istanbul.
-- ✅ Lower memory usage than Istanbul.
-- ✅ Coverage report accuracy is as good as with Istanbul ([since Vitest `v3.2.0`](/blog/vitest-3-2#coverage-v8-ast-aware-remapping)).
-- ⚠️ In some cases can be slower than Istanbul, e.g. when loading lots of different modules. V8 does not support limiting coverage collection to specific modules.
-- ⚠️ There are some minor limitations set by V8 engine. See [`ast-v8-to-istanbul` | Limitations](https://github.com/AriPerkkio/ast-v8-to-istanbul?tab=readme-ov-file#limitations).
-- ❌ Does not work on environments that don't use V8, such as Firefox or Bun. Or on environments that don't expose V8 coverage via profiler, such as Cloudflare Workers.
+- ✅ Zalecana opcja do użycia
+- ✅ Brak kroku pre-transpilacji. Pliki testowe mogą być wykonywane bez zmian.
+- ✅ Szybszy czas wykonania niż Istanbul.
+- ✅ Niższe zużycie pamięci niż Istanbul.
+- ✅ Dokładność raportu pokrycia jest tak dobra jak z Istanbul ([od Vitest `v3.2.0`](/blog/vitest-3-2#coverage-v8-ast-aware-remapping)).
+- ⚠️ W niektórych przypadkach może być wolniejszy niż Istanbul, np. przy ładowaniu wielu różnych modułów. V8 nie wspiera ograniczania zbierania pokrycia do konkretnych modułów.
+- ⚠️ Istnieją drobne ograniczenia ustawione przez silnik V8. Zobacz [`ast-v8-to-istanbul` | Ograniczenia](https://github.com/AriPerkkio/ast-v8-to-istanbul?tab=readme-ov-file#limitations).
+- ❌ Nie działa w środowiskach, które nie używają V8, takich jak Firefox lub Bun. Lub w środowiskach, które nie eksponują pokrycia V8 przez profiler, takich jak Cloudflare Workers.
 
 <script setup>
 import ArrowDown from '../.vitepress/components/ArrowDown.vue'
@@ -66,44 +66,44 @@ import Box from '../.vitepress/components/Box.vue'
 </script>
 
 <div style="display: flex; flex-direction: column; align-items: center; padding: 2rem 0; max-width: 20rem;">
-  <Box>Test file</Box>
+  <Box>Plik testowy</Box>
   <ArrowDown />
-  <Box>Enable V8 runtime coverage collection</Box>
+  <Box>Włącz zbieranie pokrycia runtime V8</Box>
   <ArrowDown />
-  <Box>Run file</Box>
+  <Box>Uruchom plik</Box>
   <ArrowDown />
-  <Box>Collect coverage results from V8</Box>
+  <Box>Zbierz wyniki pokrycia z V8</Box>
   <ArrowDown />
-  <Box>Remap coverage results to source files</Box>
+  <Box>Remapuj wyniki pokrycia do plików źródłowych</Box>
   <ArrowDown />
-  <Box>Coverage report</Box>
+  <Box>Raport pokrycia</Box>
 </div>
 
-## Istanbul Provider
+## Dostawca Istanbul
 
-[Istanbul code coverage tooling](https://istanbul.js.org/) has existed since 2012 and is very well battle-tested.
-This provider works on any Javascript runtime as coverage tracking is done by instrumenting user's source files.
+[Narzędzia pokrycia kodu Istanbul](https://istanbul.js.org/) istnieją od 2012 roku i są bardzo dobrze przetestowane w boju.
+Ten dostawca działa na dowolnym środowisku uruchomieniowym Javascript, ponieważ śledzenie pokrycia odbywa się przez instrumentację plików źródłowych użytkownika.
 
-In practice, instrumenting source files means adding additional Javascript in user's files:
+W praktyce instrumentacja plików źródłowych oznacza dodawanie dodatkowego Javascriptu w plikach użytkownika:
 
 ```js
-// Simplified example of branch and function coverage counters
+// Uproszczony przykład liczników pokrycia gałęzi i funkcji
 const coverage = { // [!code ++]
   branches: { 1: [0, 0] }, // [!code ++]
   functions: { 1: 0 }, // [!code ++]
 } // [!code ++]
 
 export function getUsername(id) {
-  // Function coverage increased when this is invoked  // [!code ++]
+  // Pokrycie funkcji zwiększone, gdy to jest wywoływane  // [!code ++]
   coverage.functions['1']++ // [!code ++]
 
   if (id == null) {
-    // Branch coverage increased when this is invoked  // [!code ++]
+    // Pokrycie gałęzi zwiększone, gdy to jest wywoływane  // [!code ++]
     coverage.branches['1'][0]++ // [!code ++]
 
     throw new Error('User ID is required')
   }
-  // Implicit else coverage increased when if-statement condition not met  // [!code ++]
+  // Niejawne pokrycie else zwiększone, gdy warunek if nie jest spełniony  // [!code ++]
   coverage.branches['1'][1]++ // [!code ++]
 
   return database.getUser(id)
@@ -113,35 +113,35 @@ globalThis.__VITEST_COVERAGE__ ||= {} // [!code ++]
 globalThis.__VITEST_COVERAGE__[filename] = coverage // [!code ++]
 ```
 
-- ✅ Works on any Javascript runtime
-- ✅ Widely used and battle-tested for over 13 years.
-- ✅ In some cases faster than V8. Coverage instrumentation can be limited to specific files, as opposed to V8 where all modules are instrumented.
-- ❌ Requires pre-instrumentation step
-- ❌ Execution speed is slower than V8 due to instrumentation overhead
-- ❌ Instrumentation increases file sizes
-- ❌ Memory usage is higher than V8
+- ✅ Działa na dowolnym środowisku uruchomieniowym Javascript
+- ✅ Szeroko używany i przetestowany w boju przez ponad 13 lat.
+- ✅ W niektórych przypadkach szybszy niż V8. Instrumentacja pokrycia może być ograniczona do konkretnych plików, w przeciwieństwie do V8, gdzie wszystkie moduły są instrumentowane.
+- ❌ Wymaga kroku pre-instrumentacji
+- ❌ Prędkość wykonania jest wolniejsza niż V8 z powodu narzutu instrumentacji
+- ❌ Instrumentacja zwiększa rozmiary plików
+- ❌ Zużycie pamięci jest wyższe niż V8
 
 <div style="display: flex; flex-direction: column; align-items: center; padding: 2rem 0; max-width: 20rem;">
-  <Box>Test file</Box>
+  <Box>Plik testowy</Box>
   <ArrowDown />
-  <Box>Pre‑instrumentation with Babel</Box>
+  <Box>Pre-instrumentacja z Babel</Box>
   <ArrowDown />
-  <Box>Run file</Box>
+  <Box>Uruchom plik</Box>
   <ArrowDown />
-  <Box>Collect coverage results from Javascript scope</Box>
+  <Box>Zbierz wyniki pokrycia z zakresu Javascript</Box>
   <ArrowDown />
-  <Box>Remap coverage results to source files</Box>
+  <Box>Remapuj wyniki pokrycia do plików źródłowych</Box>
   <ArrowDown />
-  <Box>Coverage report</Box>
+  <Box>Raport pokrycia</Box>
 </div>
 
-## Coverage Setup
+## Konfiguracja pokrycia
 
 ::: tip
-All coverage options are listed in [Coverage Config Reference](/config/#coverage).
+Wszystkie opcje pokrycia są wymienione w [Referencji konfiguracji pokrycia](/config/#coverage).
 :::
 
-To test with coverage enabled, you can pass the `--coverage` flag in CLI or set `coverage.enabled` in `vitest.config.ts`:
+Aby testować z włączonym pokryciem, możesz przekazać flagę `--coverage` w CLI lub ustawić `coverage.enabled` w `vitest.config.ts`:
 
 ::: code-group
 ```json [package.json]
@@ -165,12 +165,12 @@ export default defineConfig({
 ```
 :::
 
-## Including and Excluding Files from Coverage Report
+## Włączanie i wykluczanie plików z raportu pokrycia
 
-You can define what files are shown in coverage report by configuring [`coverage.include`](/config/#coverage-include) and [`coverage.exclude`](/config/#coverage-exclude).
+Możesz zdefiniować, jakie pliki są pokazywane w raporcie pokrycia, konfigurując [`coverage.include`](/config/#coverage-include) i [`coverage.exclude`](/config/#coverage-exclude).
 
-By default Vitest will show only files that were imported during test run.
-To include uncovered files in the report, you'll need to configure [`coverage.include`](/config/#coverage-include) with a pattern that will pick your source files:
+Domyślnie Vitest pokaże tylko pliki, które zostały zaimportowane podczas uruchomienia testu.
+Aby uwzględnić niepokryte pliki w raporcie, musisz skonfigurować [`coverage.include`](/config/#coverage-include) z wzorcem, który wybierze twoje pliki źródłowe:
 
 ::: code-group
 ```ts [vitest.config.ts] {6}
@@ -184,7 +184,7 @@ export default defineConfig({
   },
 })
 ```
-```sh [Covered Files]
+```sh [Pokryte pliki]
 ├── src
 │   ├── components
 │   │   └── counter.tsx   # [!code ++]
@@ -204,7 +204,7 @@ export default defineConfig({
 ```
 :::
 
-To exclude files that are matching `coverage.include`, you can define an additional [`coverage.exclude`](/config/#coverage-exclude):
+Aby wykluczyć pliki pasujące do `coverage.include`, możesz zdefiniować dodatkowe [`coverage.exclude`](/config/#coverage-exclude):
 
 ::: code-group
 ```ts [vitest.config.ts] {7}
@@ -219,7 +219,7 @@ export default defineConfig({
   },
 })
 ```
-```sh [Covered Files]
+```sh [Pokryte pliki]
 ├── src
 │   ├── components
 │   │   └── counter.tsx   # [!code ++]
@@ -239,9 +239,9 @@ export default defineConfig({
 ```
 :::
 
-## Custom Coverage Reporter
+## Niestandardowy reporter pokrycia
 
-You can use custom coverage reporters by passing either the name of the package or absolute path in `test.coverage.reporter`:
+Możesz używać niestandardowych reporterów pokrycia, przekazując nazwę pakietu lub ścieżkę bezwzględną w `test.coverage.reporter`:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -250,10 +250,10 @@ export default defineConfig({
   test: {
     coverage: {
       reporter: [
-        // Specify reporter using name of the NPM package
+        // Określ reporter używając nazwy pakietu NPM
         ['@vitest/custom-coverage-reporter', { someOption: true }],
 
-        // Specify reporter using local path
+        // Określ reporter używając lokalnej ścieżki
         '/absolute/path/to/custom-reporter.cjs',
       ],
     },
@@ -261,7 +261,7 @@ export default defineConfig({
 })
 ```
 
-Custom reporters are loaded by Istanbul and must match its reporter interface. See [built-in reporters' implementation](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-reports/lib) for reference.
+Niestandardowe reportery są ładowane przez Istanbul i muszą odpowiadać jego interfejsowi reportera. Zobacz [implementację wbudowanych reporterów](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-reports/lib) jako referencję.
 
 ```js [custom-reporter.cjs]
 const { ReportBase } = require('istanbul-lib-report')
@@ -270,25 +270,25 @@ module.exports = class CustomReporter extends ReportBase {
   constructor(opts) {
     super()
 
-    // Options passed from configuration are available here
+    // Opcje przekazane z konfiguracji są dostępne tutaj
     this.file = opts.file
   }
 
   onStart(root, context) {
     this.contentWriter = context.writer.writeFile(this.file)
-    this.contentWriter.println('Start of custom coverage report')
+    this.contentWriter.println('Początek niestandardowego raportu pokrycia')
   }
 
   onEnd() {
-    this.contentWriter.println('End of custom coverage report')
+    this.contentWriter.println('Koniec niestandardowego raportu pokrycia')
     this.contentWriter.close()
   }
 }
 ```
 
-## Custom Coverage Provider
+## Niestandardowy dostawca pokrycia
 
-It's also possible to provide your custom coverage provider by passing `'custom'` in `test.coverage.provider`:
+Możliwe jest również dostarczenie własnego niestandardowego dostawcy pokrycia przez przekazanie `'custom'` w `test.coverage.provider`:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -303,7 +303,7 @@ export default defineConfig({
 })
 ```
 
-The custom providers require a `customProviderModule` option which is a module name or path where to load the `CoverageProviderModule` from. It must export an object that implements `CoverageProviderModule` as default export:
+Niestandardowi dostawcy wymagają opcji `customProviderModule`, która jest nazwą modułu lub ścieżką, skąd załadować `CoverageProviderModule`. Musi eksportować obiekt implementujący `CoverageProviderModule` jako domyślny eksport:
 
 ```ts [my-custom-coverage-provider.ts]
 import type {
@@ -318,7 +318,7 @@ const CustomCoverageProviderModule: CoverageProviderModule = {
     return new CustomCoverageProvider()
   },
 
-  // Implements rest of the CoverageProviderModule ...
+  // Implementuje resztę CoverageProviderModule ...
 }
 
 class CustomCoverageProvider implements CoverageProvider {
@@ -329,26 +329,26 @@ class CustomCoverageProvider implements CoverageProvider {
     this.options = ctx.config.coverage
   }
 
-  // Implements rest of the CoverageProvider ...
+  // Implementuje resztę CoverageProvider ...
 }
 
 export default CustomCoverageProviderModule
 ```
 
-Please refer to the type definition for more details.
+Proszę odnieść się do definicji typów po więcej szczegółów.
 
-## Ignoring Code
+## Ignorowanie kodu
 
-Both coverage providers have their own ways how to ignore code from coverage reports:
+Obaj dostawcy pokrycia mają swoje własne sposoby ignorowania kodu z raportów pokrycia:
 
 - [`v8`](https://github.com/AriPerkkio/ast-v8-to-istanbul?tab=readme-ov-file#ignoring-code)
 - [`istanbul`](https://github.com/istanbuljs/nyc#parsing-hints-ignoring-lines)
 
-When using TypeScript the source codes are transpiled using `esbuild`, which strips all comments from the source codes ([esbuild#516](https://github.com/evanw/esbuild/issues/516)).
-Comments which are considered as [legal comments](https://esbuild.github.io/api/#legal-comments) are preserved.
+Podczas używania TypeScript kody źródłowe są transpilowane za pomocą `esbuild`, który usuwa wszystkie komentarze z kodów źródłowych ([esbuild#516](https://github.com/evanw/esbuild/issues/516)).
+Komentarze, które są uważane za [legalne komentarze](https://esbuild.github.io/api/#legal-comments), są zachowane.
 
-You can include a `@preserve` keyword in the ignore hint.
-Beware that these ignore hints may now be included in final production build as well.
+Możesz dołączyć słowo kluczowe `@preserve` w podpowiedzi ignorowania.
+Uważaj, że te podpowiedzi ignorowania mogą teraz być również dołączone w końcowym buildzie produkcyjnym.
 
 ```diff
 -/* istanbul ignore if */
@@ -360,42 +360,42 @@ if (condition) {
 if (condition) {
 ```
 
-### Examples
+### Przykłady
 
 ::: code-group
 
 ```ts [if else]
 /* v8 ignore if -- @preserve */
 if (parameter) { // [!code error]
-  console.log('Ignored') // [!code error]
+  console.log('Ignorowane') // [!code error]
 } // [!code error]
 else {
-  console.log('Included')
+  console.log('Włączone')
 }
 
 /* v8 ignore else -- @preserve */
 if (parameter) {
-  console.log('Included')
+  console.log('Włączone')
 }
 else { // [!code error]
-  console.log('Ignored') // [!code error]
+  console.log('Ignorowane') // [!code error]
 } // [!code error]
 ```
 
 ```ts [next node]
 /* v8 ignore next -- @preserve */
-console.log('Ignored') // [!code error]
-console.log('Included')
+console.log('Ignorowane') // [!code error]
+console.log('Włączone')
 
 /* v8 ignore next -- @preserve */
 function ignored() { // [!code error]
-  console.log('all') // [!code error]
+  console.log('wszystkie') // [!code error]
   // [!code error]
-  console.log('lines') // [!code error]
+  console.log('linie') // [!code error]
   // [!code error]
-  console.log('are') // [!code error]
+  console.log('są') // [!code error]
   // [!code error]
-  console.log('ignored') // [!code error]
+  console.log('ignorowane') // [!code error]
 } // [!code error]
 
 /* v8 ignore next -- @preserve */
@@ -406,79 +406,79 @@ class Ignored { // [!code error]
 
 /* v8 ignore next -- @preserve */
 condition // [!code error]
-  ? console.log('ignored') // [!code error]
-  : console.log('also ignored') // [!code error]
+  ? console.log('ignorowane') // [!code error]
+  : console.log('też ignorowane') // [!code error]
 ```
 
 ```ts [try catch]
 /* v8 ignore next -- @preserve */
 try { // [!code error]
-  console.log('Ignored') // [!code error]
+  console.log('Ignorowane') // [!code error]
 } // [!code error]
 catch (error) { // [!code error]
-  console.log('Ignored') // [!code error]
+  console.log('Ignorowane') // [!code error]
 } // [!code error]
 
 try {
-  console.log('Included')
+  console.log('Włączone')
 }
 catch (error) {
   /* v8 ignore next -- @preserve */
-  console.log('Ignored') // [!code error]
+  console.log('Ignorowane') // [!code error]
   /* v8 ignore next -- @preserve */
-  console.log('Ignored') // [!code error]
+  console.log('Ignorowane') // [!code error]
 }
 
-// Requires rolldown-vite due to esbuild's lack of support.
-// See https://vite.dev/guide/rolldown.html#how-to-try-rolldown
+// Wymaga rolldown-vite z powodu braku wsparcia esbuild.
+// Zobacz https://vite.dev/guide/rolldown.html#how-to-try-rolldown
 try {
-  console.log('Included')
+  console.log('Włączone')
 }
 catch (error) /* v8 ignore next */ { // [!code error]
-  console.log('Ignored') // [!code error]
+  console.log('Ignorowane') // [!code error]
 } // [!code error]
 ```
 
 ```ts [switch case]
 switch (type) {
   case 1:
-    return 'Included'
+    return 'Włączone'
 
   /* v8 ignore next -- @preserve */
   case 2: // [!code error]
-    return 'Ignored' // [!code error]
+    return 'Ignorowane' // [!code error]
 
   case 3:
-    return 'Included'
+    return 'Włączone'
 
   /* v8 ignore next -- @preserve */
   default: // [!code error]
-    return 'Ignored' // [!code error]
+    return 'Ignorowane' // [!code error]
 }
 ```
 
 ```ts [whole file]
 /* v8 ignore file -- @preserve */
 export function ignored() { // [!code error]
-  return 'Whole file is ignored'// [!code error]
+  return 'Cały plik jest ignorowany'// [!code error]
 }// [!code error]
 ```
 :::
 
-## Coverage Performance
+## Wydajność pokrycia
 
-If code coverage generation is slow on your project, see [Profiling Test Performance | Code coverage](/guide/profiling-test-performance.html#code-coverage).
+Jeśli generowanie pokrycia kodu jest wolne w twoim projekcie, zobacz [Profilowanie wydajności testów | Pokrycie kodu](/guide/profiling-test-performance.html#code-coverage).
 
 ## Vitest UI
 
-You can check your coverage report in [Vitest UI](/guide/ui).
+Możesz sprawdzić swój raport pokrycia w [Vitest UI](/guide/ui).
 
-Vitest UI will enable coverage report when it is enabled explicitly and the html coverage reporter is present, otherwise it will not be available:
-- enable `coverage.enabled=true` in your configuration file or run Vitest with `--coverage.enabled=true` flag
-- add `html` to the `coverage.reporter` list: you can also enable `subdir` option to put coverage report in a subdirectory
+Vitest UI włączy raport pokrycia, gdy jest jawnie włączony i obecny jest reporter html coverage, w przeciwnym razie nie będzie dostępny:
+- włącz `coverage.enabled=true` w swoim pliku konfiguracyjnym lub uruchom Vitest z flagą `--coverage.enabled=true`
+- dodaj `html` do listy `coverage.reporter`: możesz również włączyć opcję `subdir`, aby umieścić raport pokrycia w podkatalogu
 
-<img alt="html coverage activation in Vitest UI" img-light src="/vitest-ui-show-coverage-light.png">
-<img alt="html coverage activation in Vitest UI" img-dark src="/vitest-ui-show-coverage-dark.png">
+<img alt="aktywacja html coverage w Vitest UI" img-light src="/vitest-ui-show-coverage-light.png">
+<img alt="aktywacja html coverage w Vitest UI" img-dark src="/vitest-ui-show-coverage-dark.png">
 
-<img alt="html coverage in Vitest UI" img-light src="/ui-coverage-1-light.png">
-<img alt="html coverage in Vitest UI" img-dark src="/ui-coverage-1-dark.png">
+<img alt="html coverage w Vitest UI" img-light src="/ui-coverage-1-light.png">
+<img alt="html coverage w Vitest UI" img-dark src="/ui-coverage-1-dark.png">
