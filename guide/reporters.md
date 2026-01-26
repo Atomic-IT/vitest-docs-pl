@@ -1,19 +1,19 @@
 ---
-title: Reporters | Guide
+title: Reportery | Przewodnik
 outline: deep
 ---
 
-# Reporters
+# Reportery
 
-Vitest provides several built-in reporters to display test output in different formats, as well as the ability to use custom reporters. You can select different reporters either by using the `--reporter` command line option, or by including a `reporters` property in your [configuration file](/config/#reporters). If no reporter is specified, Vitest will use the `default` reporter as described below.
+Vitest dostarcza kilka wbudowanych reporterów do wyświetlania wyników testów w różnych formatach, a także możliwość używania niestandardowych reporterów. Możesz wybrać różne reportery używając opcji wiersza poleceń `--reporter` lub dołączając właściwość `reporters` w swoim [pliku konfiguracyjnym](/config/#reporters). Jeśli reporter nie jest określony, Vitest użyje reportera `default`, jak opisano poniżej.
 
-Using reporters via command line:
+Używanie reporterów przez wiersz poleceń:
 
 ```bash
 npx vitest --reporter=verbose
 ```
 
-Using reporters via [`vitest.config.ts`](/config/):
+Używanie reporterów przez [`vitest.config.ts`](/config/):
 
 ```ts
 import { defineConfig } from 'vitest/config'
@@ -25,22 +25,22 @@ export default defineConfig({
 })
 ```
 
-Some reporters can be customized by passing additional options to them. Reporter specific options are described in sections below.
+Niektóre reportery można dostosować, przekazując im dodatkowe opcje. Opcje specyficzne dla reporterów są opisane w sekcjach poniżej.
 
 ```ts
 export default defineConfig({
   test: {
     reporters: [
       'default',
-      ['junit', { suiteName: 'UI tests' }]
+      ['junit', { suiteName: 'Testy UI' }]
     ],
   },
 })
 ```
 
-## Reporter Output
+## Wyjście reportera
 
-By default, Vitest's reporters will print their output to the terminal. When using the `json`, `html` or `junit` reporters, you can instead write your tests' output to a file by including an `outputFile` [configuration option](/config/#outputfile) either in your Vite configuration file or via CLI.
+Domyślnie reportery Vitest drukują swoje wyjście do terminala. Podczas używania reporterów `json`, `html` lub `junit` możesz zamiast tego zapisać wyjście testów do pliku, dołączając opcję konfiguracji [`outputFile`](/config/#outputfile) w pliku konfiguracyjnym Vite lub przez CLI.
 
 :::code-group
 ```bash [CLI]
@@ -57,9 +57,9 @@ export default defineConfig({
 ```
 :::
 
-## Combining Reporters
+## Łączenie reporterów
 
-You can use multiple reporters simultaneously to print your test results in different formats. For example:
+Możesz używać wielu reporterów jednocześnie, aby drukować wyniki testów w różnych formatach. Na przykład:
 
 ```bash
 npx vitest --reporter=json --reporter=default
@@ -74,9 +74,9 @@ export default defineConfig({
 })
 ```
 
-The above example will both print the test results to the terminal in the default style and write them as JSON to the designated output file.
+Powyższy przykład wydrukuje wyniki testów do terminala w domyślnym stylu i zapisze je jako JSON do wskazanego pliku wyjściowego.
 
-When using multiple reporters, it's also possible to designate multiple output files, as follows:
+Przy używaniu wielu reporterów możliwe jest również wskazanie wielu plików wyjściowych, w następujący sposób:
 
 ```ts
 export default defineConfig({
@@ -90,15 +90,15 @@ export default defineConfig({
 })
 ```
 
-This example will write separate JSON and XML reports as well as printing a verbose report to the terminal.
+Ten przykład zapisze oddzielne raporty JSON i XML, a także wydrukuje szczegółowy raport do terminala.
 
-## Built-in Reporters
+## Wbudowane reportery
 
-### Default Reporter
+### Reporter Default
 
-By default (i.e. if no reporter is specified), Vitest will display summary of running tests and their status at the bottom. Once a suite passes, its status will be reported on top of the summary.
+Domyślnie (tzn. jeśli reporter nie jest określony), Vitest wyświetla podsumowanie uruchomionych testów i ich status na dole. Gdy suite przejdzie, jego status zostanie zgłoszony na górze podsumowania.
 
-You can disable the summary by configuring the reporter:
+Możesz wyłączyć podsumowanie, konfigurując reporter:
 
 :::code-group
 ```ts [vitest.config.ts]
@@ -112,7 +112,7 @@ export default defineConfig({
 ```
 :::
 
-Example output for tests in progress:
+Przykładowe wyjście dla testów w trakcie:
 
 ```bash
  ✓ test/example-1.test.ts (5 tests | 1 skipped) 306ms
@@ -127,7 +127,7 @@ Example output for tests in progress:
    Duration 2.00s
 ```
 
-Final output after tests have finished:
+Końcowe wyjście po zakończeniu testów:
 
 ```bash
  ✓ test/example-1.test.ts (5 tests | 1 skipped) 306ms
@@ -141,7 +141,7 @@ Final output after tests have finished:
    Duration  1.26s (transform 35ms, setup 1ms, collect 90ms, tests 1.47s, environment 0ms, prepare 267ms)
 ```
 
-If there is only one test file running, Vitest will output the full test tree of that file, similar to the [`tree`](#tree-reporter) reporter. The default reporter will also print the test tree if there is at least one failed test in the file.
+Jeśli uruchamiany jest tylko jeden plik testowy, Vitest wyświetli pełne drzewo testów tego pliku, podobnie do reportera [`tree`](#tree-reporter). Reporter default również wydrukuje drzewo testów, jeśli w pliku jest co najmniej jeden nieudany test.
 
 ```bash
 ✓ __tests__/file1.test.ts (2) 725ms
@@ -155,13 +155,13 @@ If there is only one test file running, Vitest will output the full test tree of
    Duration  1.26s (transform 35ms, setup 1ms, collect 90ms, tests 1.47s, environment 0ms, prepare 267ms)
 ```
 
-### Verbose Reporter
+### Reporter Verbose
 
-The verbose reporter prints every test case once it is finished. It does not report suites or files separately. If `--includeTaskLocation` is enabled, it will also include the location of each test in the output. Similar to `default` reporter, you can disable the summary by configuring the reporter.
+Reporter verbose drukuje każdy przypadek testowy po jego zakończeniu. Nie raportuje suite'ów ani plików oddzielnie. Jeśli włączono `--includeTaskLocation`, uwzględni również lokalizację każdego testu w wyjściu. Podobnie do reportera `default`, możesz wyłączyć podsumowanie, konfigurując reporter.
 
-In addition to this, the `verbose` reporter prints test error messages right away. The full test error is reported when the test run is finished.
+Dodatkowo reporter `verbose` drukuje komunikaty błędów testów od razu. Pełny błąd testu jest raportowany po zakończeniu uruchomienia testu.
 
-This is the only terminal reporter that reports [annotations](/guide/test-annotations) when the test doesn't fail.
+Jest to jedyny reporter terminalowy, który raportuje [adnotacje](/guide/test-annotations), gdy test nie kończy się niepowodzeniem.
 
 :::code-group
 ```bash [CLI]
@@ -179,7 +179,7 @@ export default defineConfig({
 ```
 :::
 
-Example output:
+Przykładowe wyjście:
 
 ```bash
 ✓ __tests__/file1.test.ts > first test file > 2 + 2 should equal 4 1ms
@@ -193,7 +193,7 @@ Example output:
    Duration  1.26s (transform 35ms, setup 1ms, collect 90ms, tests 1.47s, environment 0ms, prepare 267ms)
 ```
 
-An example with `--includeTaskLocation`:
+Przykład z `--includeTaskLocation`:
 
 ```bash
 ✓ __tests__/file1.test.ts:2:1 > first test file > 2 + 2 should equal 4 1ms
@@ -207,9 +207,9 @@ An example with `--includeTaskLocation`:
    Duration  1.26s (transform 35ms, setup 1ms, collect 90ms, tests 1.47s, environment 0ms, prepare 267ms)
 ```
 
-### Tree Reporter
+### Reporter Tree
 
-The tree reporter is same as `default` reporter, but it also displays each individual test after the suite has finished. Similar to `default` reporter, you can disable the summary by configuring the reporter.
+Reporter tree jest taki sam jak reporter `default`, ale również wyświetla każdy indywidualny test po zakończeniu suite. Podobnie do reportera `default`, możesz wyłączyć podsumowanie, konfigurując reporter.
 
 :::code-group
 ```bash [CLI]
@@ -227,7 +227,7 @@ export default defineConfig({
 ```
 :::
 
-Example output for tests in progress with default `slowTestThreshold: 300`:
+Przykładowe wyjście dla testów w trakcie z domyślnym `slowTestThreshold: 300`:
 
 ```bash
  ✓ __tests__/example-1.test.ts (2) 725ms
@@ -245,7 +245,7 @@ Example output for tests in progress with default `slowTestThreshold: 300`:
    Duration 2.00s
 ```
 
-Example of final terminal output for a passing test suite:
+Przykład końcowego wyjścia terminala dla udanego zestawu testów:
 
 ```bash
 ✓ __tests__/file1.test.ts (2) 725ms
@@ -263,9 +263,9 @@ Example of final terminal output for a passing test suite:
    Duration  1.26s (transform 35ms, setup 1ms, collect 90ms, tests 1.47s, environment 0ms, prepare 267ms)
 ```
 
-### Dot Reporter
+### Reporter Dot
 
-Prints a single dot for each completed test to provide minimal output while still showing all tests that have run. Details are only provided for failed tests, along with the summary for the suite.
+Drukuje pojedynczą kropkę dla każdego ukończonego testu, zapewniając minimalne wyjście, jednocześnie pokazując wszystkie testy, które zostały uruchomione. Szczegóły są podawane tylko dla nieudanych testów, wraz z podsumowaniem dla suite.
 
 :::code-group
 ```bash [CLI]
@@ -281,7 +281,7 @@ export default defineConfig({
 ```
 :::
 
-Example terminal output for a passing test suite:
+Przykładowe wyjście terminala dla udanego zestawu testów:
 
 ```bash
 ....
@@ -292,9 +292,9 @@ Example terminal output for a passing test suite:
    Duration  1.26s (transform 35ms, setup 1ms, collect 90ms, tests 1.47s, environment 0ms, prepare 267ms)
 ```
 
-### JUnit Reporter
+### Reporter JUnit
 
-Outputs a report of the test results in JUnit XML format. Can either be printed to the terminal or written to an XML file using the [`outputFile`](/config/#outputfile) configuration option.
+Generuje raport wyników testów w formacie JUnit XML. Może być drukowany do terminala lub zapisany do pliku XML za pomocą opcji konfiguracji [`outputFile`](/config/#outputfile).
 
 :::code-group
 ```bash [CLI]
@@ -310,7 +310,7 @@ export default defineConfig({
 ```
 :::
 
-Example of a JUnit XML report:
+Przykład raportu JUnit XML:
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites name="vitest tests" tests="2" failures="1" errors="0" time="0.503">
@@ -327,9 +327,9 @@ AssertionError: expected 5 to be 4 // Object.is equality
 </testsuites>
 ```
 
-The outputted XML contains nested `testsuites` and `testcase` tags. These can also be customized via reporter options `suiteName` and `classnameTemplate`. `classnameTemplate` can either be a template string or a function.
+Wygenerowany XML zawiera zagnieżdżone tagi `testsuites` i `testcase`. Mogą być również dostosowane za pomocą opcji reportera `suiteName` i `classnameTemplate`. `classnameTemplate` może być albo stringiem szablonu, albo funkcją.
 
-The supported placeholders for the `classnameTemplate` option are:
+Wspierane placeholdery dla opcji `classnameTemplate` to:
 - filename
 - filepath
 
@@ -337,15 +337,15 @@ The supported placeholders for the `classnameTemplate` option are:
 export default defineConfig({
   test: {
     reporters: [
-      ['junit', { suiteName: 'custom suite name', classnameTemplate: 'filename:{filename} - filepath:{filepath}' }]
+      ['junit', { suiteName: 'niestandardowa nazwa suite', classnameTemplate: 'filename:{filename} - filepath:{filepath}' }]
     ]
   },
 })
 ```
 
-### JSON Reporter
+### Reporter JSON
 
-Generates a report of the test results in a JSON format compatible with Jest's `--json` option. Can either be printed to the terminal or written to a file using the [`outputFile`](/config/#outputfile) configuration option.
+Generuje raport wyników testów w formacie JSON kompatybilnym z opcją `--json` Jesta. Może być drukowany do terminala lub zapisany do pliku za pomocą opcji konfiguracji [`outputFile`](/config/#outputfile).
 
 :::code-group
 ```bash [CLI]
@@ -361,7 +361,7 @@ export default defineConfig({
 ```
 :::
 
-Example of a JSON report:
+Przykład raportu JSON:
 
 ```json
 {
@@ -410,14 +410,14 @@ Example of a JSON report:
 ```
 
 ::: info
-Since Vitest 3, the JSON reporter includes coverage information in `coverageMap` if coverage is enabled.
+Od Vitest 3, reporter JSON zawiera informacje o pokryciu w `coverageMap`, jeśli pokrycie jest włączone.
 :::
 
-### HTML Reporter
+### Reporter HTML
 
-Generates an HTML file to view test results through an interactive [GUI](/guide/ui). After the file has been generated, Vitest will keep a local development server running and provide a link to view the report in a browser.
+Generuje plik HTML do przeglądania wyników testów przez interaktywne [GUI](/guide/ui). Po wygenerowaniu pliku Vitest utrzymuje działający lokalny serwer deweloperski i dostarcza link do przeglądania raportu w przeglądarce.
 
-Output file can be specified using the [`outputFile`](/config/#outputfile) configuration option. If no `outputFile` option is provided, a new HTML file will be created.
+Plik wyjściowy można określić za pomocą opcji konfiguracji [`outputFile`](/config/#outputfile). Jeśli opcja `outputFile` nie jest podana, zostanie utworzony nowy plik HTML.
 
 :::code-group
 ```bash [CLI]
@@ -434,12 +434,12 @@ export default defineConfig({
 :::
 
 ::: tip
-This reporter requires installed [`@vitest/ui`](/guide/ui) package.
+Ten reporter wymaga zainstalowanego pakietu [`@vitest/ui`](/guide/ui).
 :::
 
-### TAP Reporter
+### Reporter TAP
 
-Outputs a report following [Test Anything Protocol](https://testanything.org/) (TAP).
+Generuje raport zgodny z [Test Anything Protocol](https://testanything.org/) (TAP).
 
 :::code-group
 ```bash [CLI]
@@ -455,7 +455,7 @@ export default defineConfig({
 ```
 :::
 
-Example of a TAP report:
+Przykład raportu TAP:
 ```bash
 TAP version 13
 1..1
@@ -477,9 +477,9 @@ not ok 1 - __tests__/test-file-1.test.ts # time=14.00ms {
 }
 ```
 
-### TAP Flat Reporter
+### Reporter TAP Flat
 
-Outputs a TAP flat report. Like the `tap` reporter, test results are formatted to follow TAP standards, but test suites are formatted as a flat list rather than a nested hierarchy.
+Generuje płaski raport TAP. Podobnie jak reporter `tap`, wyniki testów są formatowane zgodnie ze standardami TAP, ale zestawy testów są formatowane jako płaska lista zamiast zagnieżdżonej hierarchii.
 
 :::code-group
 ```bash [CLI]
@@ -495,7 +495,7 @@ export default defineConfig({
 ```
 :::
 
-Example of a TAP flat report:
+Przykład płaskiego raportu TAP:
 ```bash
 TAP version 13
 1..2
@@ -511,9 +511,9 @@ not ok 1 - __tests__/test-file-1.test.ts > first test file > 2 + 2 should equal 
 ok 2 - __tests__/test-file-1.test.ts > first test file > 4 - 2 should equal 2 # time=0.00ms
 ```
 
-### Hanging Process Reporter
+### Reporter Hanging Process
 
-Displays a list of hanging processes, if any are preventing Vitest from exiting safely. The `hanging-process` reporter does not itself display test results, but can be used in conjunction with another reporter to monitor processes while tests run. Using this reporter can be resource-intensive, so should generally be reserved for debugging purposes in situations where Vitest consistently cannot exit the process.
+Wyświetla listę zawieszonych procesów, jeśli jakiekolwiek uniemożliwiają Vitest bezpieczne zakończenie. Reporter `hanging-process` sam nie wyświetla wyników testów, ale może być używany w połączeniu z innym reporterem do monitorowania procesów podczas uruchamiania testów. Używanie tego reportera może być zasobożerne, więc powinien być ogólnie zarezerwowany do celów debugowania w sytuacjach, gdy Vitest konsekwentnie nie może zakończyć procesu.
 
 :::code-group
 ```bash [CLI]
@@ -529,15 +529,15 @@ export default defineConfig({
 ```
 :::
 
-### GitHub Actions Reporter {#github-actions-reporter}
+### Reporter GitHub Actions {#github-actions-reporter}
 
-Output [workflow commands](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-error-message)
-to provide annotations for test failures. This reporter is automatically enabled with a [`default`](#default-reporter) reporter when `process.env.GITHUB_ACTIONS === 'true'`.
+Generuje [polecenia workflow](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-error-message)
+do dostarczania adnotacji dla niepowodzeń testów. Ten reporter jest automatycznie włączany z reporterem [`default`](#default-reporter), gdy `process.env.GITHUB_ACTIONS === 'true'`.
 
 <img alt="GitHub Actions" img-dark src="https://github.com/vitest-dev/vitest/assets/4232207/336cddc2-df6b-4b8a-8e72-4d00010e37f5">
 <img alt="GitHub Actions" img-light src="https://github.com/vitest-dev/vitest/assets/4232207/ce8447c1-0eab-4fe1-abef-d0d322290dca">
 
-If you configure non-default reporters, you need to explicitly add `github-actions`.
+Jeśli konfigurujesz niestandardowe reportery, musisz jawnie dodać `github-actions`.
 
 ```ts
 export default defineConfig({
@@ -547,7 +547,7 @@ export default defineConfig({
 })
 ```
 
-You can customize the file paths that are printed in [GitHub's annotation command format](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions) by using the `onWritePath` option. This is useful when running Vitest in a containerized environment, such as Docker, where the file paths may not match the paths in the GitHub Actions environment.
+Możesz dostosować ścieżki plików, które są drukowane w [formacie polecenia adnotacji GitHub](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions), używając opcji `onWritePath`. Jest to przydatne przy uruchamianiu Vitest w środowisku kontenerowym, takim jak Docker, gdzie ścieżki plików mogą nie odpowiadać ścieżkom w środowisku GitHub Actions.
 
 ```ts
 export default defineConfig({
@@ -564,7 +564,7 @@ export default defineConfig({
 })
 ```
 
-If you are using [Annotations API](/guide/test-annotations), the reporter will automatically inline them in the GitHub UI. You can disable this by setting `displayAnnotations` option to `false`:
+Jeśli używasz [API adnotacji](/guide/test-annotations), reporter automatycznie wyświetli je w interfejsie GitHub. Możesz to wyłączyć, ustawiając opcję `displayAnnotations` na `false`:
 
 ```ts
 export default defineConfig({
@@ -576,29 +576,29 @@ export default defineConfig({
 })
 ```
 
-### Blob Reporter
+### Reporter Blob
 
-Stores test results on the machine so they can be later merged using [`--merge-reports`](/guide/cli#merge-reports) command.
-By default, stores all results in `.vitest-reports` folder, but can be overridden with `--outputFile` or `--outputFile.blob` flags.
+Przechowuje wyniki testów na maszynie, aby mogły być później scalone za pomocą polecenia [`--merge-reports`](/guide/cli#merge-reports).
+Domyślnie przechowuje wszystkie wyniki w folderze `.vitest-reports`, ale można to nadpisać flagami `--outputFile` lub `--outputFile.blob`.
 
 ```bash
 npx vitest --reporter=blob --outputFile=reports/blob-1.json
 ```
 
-We recommend using this reporter if you are running Vitest on different machines with the [`--shard`](/guide/cli#shard) flag.
-All blob reports can be merged into any report by using `--merge-reports` command at the end of your CI pipeline:
+Zalecamy używanie tego reportera, jeśli uruchamiasz Vitest na różnych maszynach z flagą [`--shard`](/guide/cli#shard).
+Wszystkie raporty blob można scalić w dowolny raport za pomocą polecenia `--merge-reports` na końcu pipeline CI:
 
 ```bash
 npx vitest --merge-reports=reports --reporter=json --reporter=default
 ```
 
 ::: tip
-Both `--reporter=blob` and `--merge-reports` do not work in watch mode.
+Zarówno `--reporter=blob`, jak i `--merge-reports` nie działają w trybie watch.
 :::
 
-## Custom Reporters
+## Niestandardowe reportery
 
-You can use third-party custom reporters installed from NPM by specifying their package name in the reporters' option:
+Możesz używać zewnętrznych niestandardowych reporterów zainstalowanych z NPM, określając nazwę ich pakietu w opcji reporters:
 
 :::code-group
 ```bash [CLI]
@@ -614,10 +614,10 @@ export default defineConfig({
 ```
 :::
 
-Additionally, you can define your own [custom reporters](/guide/advanced/reporters) and use them by specifying their file path:
+Dodatkowo możesz zdefiniować własne [niestandardowe reportery](/guide/advanced/reporters) i używać ich, określając ścieżkę do pliku:
 
 ```bash
 npx vitest --reporter=./path/to/reporter.ts
 ```
 
-Custom reporters should implement the [Reporter interface](https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/node/types/reporter.ts).
+Niestandardowe reportery powinny implementować [interfejs Reporter](https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/node/types/reporter.ts).
