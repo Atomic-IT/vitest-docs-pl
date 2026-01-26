@@ -1,8 +1,8 @@
 ---
-title: Pokrycie | Przewodnik
+title: Pokrycie kodu | Przewodnik
 ---
 
-# Pokrycie
+# Pokrycie kodu
 
 Vitest wspiera natywne pokrycie kodu przez [`v8`](https://v8.dev/blog/javascript-code-coverage) oraz instrumentowane pokrycie kodu przez [`istanbul`](https://istanbul.js.org/).
 
