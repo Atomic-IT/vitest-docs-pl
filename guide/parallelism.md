@@ -1,37 +1,37 @@
 ---
-title: Parallelism | Guide
+title: Równoległość | Przewodnik
 outline: deep
 ---
 
-# Parallelism
+# Równoległość
 
-## File Parallelism
+## Równoległość plików
 
-By default, Vitest runs _test files_ in parallel. Depending on the specified `pool`, Vitest uses a different mechanism to parallelize test files:
+Domyślnie Vitest uruchamia _pliki testowe_ równolegle. W zależności od określonego `pool`, Vitest używa różnych mechanizmów do zrównoleglenia plików testowych:
 
-- `forks` (the default) and `vmForks` run tests in different [child processes](https://nodejs.org/api/child_process.html)
-- `threads` and `vmThreads` run tests in different [worker threads](https://nodejs.org/api/worker_threads.html)
+- `forks` (domyślny) i `vmForks` uruchamiają testy w różnych [procesach potomnych](https://nodejs.org/api/child_process.html)
+- `threads` i `vmThreads` uruchamiają testy w różnych [wątkach workerów](https://nodejs.org/api/worker_threads.html)
 
-Both "child processes" and "worker threads" are refered to as "workers". You can configure the number of running workers with [`maxWorkers`](/config/#maxworkers) option.
+Zarówno "procesy potomne", jak i "wątki workerów" są nazywane "workerami". Możesz skonfigurować liczbę działających workerów za pomocą opcji [`maxWorkers`](/config/#maxworkers).
 
-If you have a lot of tests, it is usually faster to run them in parallel, but it also depends on the project, the environment and [isolation](/config/#isolate) state. To disable file parallelisation, you can set [`fileParallelism`](/config/#fileparallelism) to `false`. To learn more about possible performance improvements, read the [Performance Guide](/guide/improving-performance).
+Jeśli masz dużo testów, zwykle szybciej jest uruchamiać je równolegle, ale zależy to również od projektu, środowiska i stanu [izolacji](/config/#isolate). Aby wyłączyć równoległość plików, możesz ustawić [`fileParallelism`](/config/#fileparallelism) na `false`. Aby dowiedzieć się więcej o możliwych usprawnieniach wydajności, przeczytaj [Przewodnik wydajności](/guide/improving-performance).
 
-## Test Parallelism
+## Równoległość testów
 
-Unlike _test files_, Vitest runs _tests_ in sequence. This means that tests inside a single test file will run in the order they are defined.
+W przeciwieństwie do _plików testowych_, Vitest uruchamia _testy_ sekwencyjnie. Oznacza to, że testy wewnątrz pojedynczego pliku testowego będą uruchamiane w kolejności, w jakiej zostały zdefiniowane.
 
-Vitest supports the [`concurrent`](/api/#test-concurrent) option to run tests together. If this option is set, Vitest will group concurrent tests in the same _file_ (the number of simultaneously running tests depends on the [`maxConcurrency`](/config/#maxconcurrency) option) and run them with [`Promise.all`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all).
+Vitest wspiera opcję [`concurrent`](/api/#test-concurrent) do uruchamiania testów razem. Jeśli ta opcja jest ustawiona, Vitest zgrupuje współbieżne testy w tym samym _pliku_ (liczba jednocześnie uruchomionych testów zależy od opcji [`maxConcurrency`](/config/#maxconcurrency)) i uruchomi je za pomocą [`Promise.all`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all).
 
-Vitest doesn't perform any smart analysis and doesn't create additional workers to run these tests. This means that the performance of your tests will improve only if you rely heavily on asynchronous operations. For example, these tests will still run one after another even though the `concurrent` option is specified. This is because they are synchronous:
+Vitest nie wykonuje żadnej inteligentnej analizy i nie tworzy dodatkowych workerów do uruchamiania tych testów. Oznacza to, że wydajność twoich testów poprawi się tylko wtedy, gdy polegasz mocno na operacjach asynchronicznych. Na przykład te testy nadal będą uruchamiane jeden po drugim, mimo że opcja `concurrent` jest określona. Dzieje się tak, ponieważ są synchroniczne:
 
 ```ts
-test.concurrent('the first test', () => {
+test.concurrent('pierwszy test', () => {
   expect(1).toBe(1)
 })
 
-test.concurrent('the second test', () => {
+test.concurrent('drugi test', () => {
   expect(2).toBe(2)
 })
 ```
 
-If you wish to run all tests concurrently, you can set the [`sequence.concurrent`](/config/#sequence-concurrent) option to `true`.
+Jeśli chcesz uruchamiać wszystkie testy współbieżnie, możesz ustawić opcję [`sequence.concurrent`](/config/#sequence-concurrent) na `true`.
