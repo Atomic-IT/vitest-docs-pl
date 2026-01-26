@@ -1,16 +1,16 @@
-# Mocking Requests
+# Mockowanie żądań
 
-Because Vitest runs in Node, mocking network requests is tricky; web APIs are not available, so we need something that will mimic network behavior for us. We recommend [Mock Service Worker](https://mswjs.io/) to accomplish this. It allows you to mock `http`, `WebSocket` and `GraphQL` network requests, and is framework agnostic.
+Ponieważ Vitest działa w Node, mockowanie żądań sieciowych jest trudne; API webowe nie są dostępne, więc potrzebujemy czegoś, co będzie naśladować zachowanie sieci za nas. Zalecamy [Mock Service Worker](https://mswjs.io/), aby to osiągnąć. Pozwala mockować żądania sieciowe `http`, `WebSocket` i `GraphQL`, i jest niezależny od frameworka.
 
-Mock Service Worker (MSW) works by intercepting the requests your tests make, allowing you to use it without changing any of your application code. In-browser, this uses the [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API). In Node.js, and for Vitest, it uses the [`@mswjs/interceptors`](https://github.com/mswjs/interceptors) library. To learn more about MSW, read their [introduction](https://mswjs.io/docs/)
+Mock Service Worker (MSW) działa poprzez przechwytywanie żądań wykonywanych przez twoje testy, pozwalając ci używać go bez zmieniania kodu aplikacji. W przeglądarce wykorzystuje [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API). W Node.js i dla Vitest używa biblioteki [`@mswjs/interceptors`](https://github.com/mswjs/interceptors). Aby dowiedzieć się więcej o MSW, przeczytaj ich [wprowadzenie](https://mswjs.io/docs/)
 
-## Configuration
+## Konfiguracja
 
-You can use it like below in your [setup file](/config/setupfiles)
+Możesz użyć go jak poniżej w swoim [pliku setup](/config/setupfiles)
 
 ::: code-group
 
-```js [HTTP Setup]
+```js [Konfiguracja HTTP]
 import { afterAll, afterEach, beforeAll } from 'vitest'
 import { setupServer } from 'msw/node'
 import { http, HttpResponse } from 'msw'
@@ -19,8 +19,8 @@ const posts = [
   {
     userId: 1,
     id: 1,
-    title: 'first post title',
-    body: 'first post body',
+    title: 'tytuł pierwszego posta',
+    body: 'treść pierwszego posta',
   },
   // ...
 ]
@@ -33,17 +33,17 @@ export const restHandlers = [
 
 const server = setupServer(...restHandlers)
 
-// Start server before all tests
+// Uruchom serwer przed wszystkimi testami
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
 
-// Close server after all tests
+// Zamknij serwer po wszystkich testach
 afterAll(() => server.close())
 
-// Reset handlers after each test for test isolation
+// Zresetuj handlery po każdym teście dla izolacji testów
 afterEach(() => server.resetHandlers())
 ```
 
-```js [GraphQL Setup]
+```js [Konfiguracja GraphQL]
 import { afterAll, afterEach, beforeAll } from 'vitest'
 import { setupServer } from 'msw/node'
 import { graphql, HttpResponse } from 'msw'
@@ -52,8 +52,8 @@ const posts = [
   {
     userId: 1,
     id: 1,
-    title: 'first post title',
-    body: 'first post body',
+    title: 'tytuł pierwszego posta',
+    body: 'treść pierwszego posta',
   },
   // ...
 ]
@@ -68,17 +68,17 @@ const graphqlHandlers = [
 
 const server = setupServer(...graphqlHandlers)
 
-// Start server before all tests
+// Uruchom serwer przed wszystkimi testami
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
 
-// Close server after all tests
+// Zamknij serwer po wszystkich testach
 afterAll(() => server.close())
 
-// Reset handlers after each test for test isolation
+// Zresetuj handlery po każdym teście dla izolacji testów
 afterEach(() => server.resetHandlers())
 ```
 
-```js [WebSocket Setup]
+```js [Konfiguracja WebSocket]
 import { afterAll, afterEach, beforeAll } from 'vitest'
 import { setupServer } from 'msw/node'
 import { ws } from 'msw'
@@ -88,27 +88,27 @@ const chat = ws.link('wss://chat.example.com')
 const wsHandlers = [
   chat.addEventListener('connection', ({ client }) => {
     client.addEventListener('message', (event) => {
-      console.log('Received message from client:', event.data)
-      // Echo the received message back to the client
-      client.send(`Server received: ${event.data}`)
+      console.log('Otrzymano wiadomość od klienta:', event.data)
+      // Odesłanie otrzymanej wiadomości z powrotem do klienta
+      client.send(`Serwer otrzymał: ${event.data}`)
     })
   }),
 ]
 
 const server = setupServer(...wsHandlers)
 
-// Start server before all tests
+// Uruchom serwer przed wszystkimi testami
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
 
-// Close server after all tests
+// Zamknij serwer po wszystkich testach
 afterAll(() => server.close())
 
-// Reset handlers after each test for test isolation
+// Zresetuj handlery po każdym teście dla izolacji testów
 afterEach(() => server.resetHandlers())
 ```
 :::
 
-> Configuring the server with `onUnhandledRequest: 'error'` ensures that an error is thrown whenever there is a request that does not have a corresponding request handler.
+> Konfiguracja serwera z `onUnhandledRequest: 'error'` zapewnia, że błąd zostanie wyrzucony za każdym razem, gdy pojawi się żądanie, które nie ma odpowiadającego mu handlera żądania.
 
-## More
-There is much more to MSW. You can access cookies and query parameters, define mock error responses, and much more! To see all you can do with MSW, read [their documentation](https://mswjs.io/docs).
+## Więcej
+MSW oferuje znacznie więcej. Możesz uzyskać dostęp do ciasteczek i parametrów zapytania, definiować mockowane odpowiedzi błędów i wiele więcej! Aby zobaczyć wszystko, co możesz zrobić z MSW, przeczytaj [ich dokumentację](https://mswjs.io/docs).
