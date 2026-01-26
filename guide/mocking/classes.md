@@ -1,6 +1,6 @@
-# Mocking Classes
+# Mockowanie klas
 
-You can mock an entire class with a single [`vi.fn`](/api/vi#fn) call.
+Możesz mockować całą klasę za pomocą jednego wywołania [`vi.fn`](/api/vi#fn).
 
 ```ts
 class Dog {
@@ -15,11 +15,11 @@ class Dog {
   }
 
   greet = (): string => {
-    return `Hi! My name is ${this.name}!`
+    return `Cześć! Mam na imię ${this.name}!`
   }
 
   speak(): string {
-    return 'bark!'
+    return 'hau!'
   }
 
   isHungry() {}
@@ -27,24 +27,24 @@ class Dog {
 }
 ```
 
-We can re-create this class with `vi.fn` (or `vi.spyOn().mockImplementation()`):
+Możemy odtworzyć tę klasę za pomocą `vi.fn` (lub `vi.spyOn().mockImplementation()`):
 
 ```ts
 const Dog = vi.fn(class {
-  static getType = vi.fn(() => 'mocked animal')
+  static getType = vi.fn(() => 'mockowane zwierzę')
 
   constructor(name) {
     this.name = name
   }
 
-  greet = vi.fn(() => `Hi! My name is ${this.name}!`)
-  speak = vi.fn(() => 'loud bark!')
+  greet = vi.fn(() => `Cześć! Mam na imię ${this.name}!`)
+  speak = vi.fn(() => 'głośne hau!')
   feed = vi.fn()
 })
 ```
 
 ::: warning
-If a non-primitive is returned from the constructor function, that value will become the result of the new expression. In this case the `[[Prototype]]` may not be correctly bound:
+Jeśli z funkcji konstruktora zwrócona zostanie wartość nieprymitywna, ta wartość stanie się wynikiem wyrażenia new. W tym przypadku `[[Prototype]]` może nie być poprawnie powiązany:
 
 ```ts
 const CorrectDogClass = vi.fn(function (name) {
@@ -62,11 +62,11 @@ Marti instanceof CorrectDogClass // ✅ true
 Newt instanceof IncorrectDogClass // ❌ false!
 ```
 
-If you are mocking classes, prefer the class syntax over the function.
+Jeśli mockujesz klasy, preferuj składnię klasy zamiast funkcji.
 :::
 
-::: tip WHEN TO USE?
-Generally speaking, you would re-create a class like this inside the module factory if the class is re-exported from another module:
+::: tip KIEDY UŻYWAĆ?
+Ogólnie rzecz biorąc, odtwarzasz klasę w ten sposób wewnątrz fabryki modułu, jeśli klasa jest reeksportowana z innego modułu:
 
 ```ts
 import { Dog } from './dog.js'
@@ -74,13 +74,13 @@ import { Dog } from './dog.js'
 vi.mock(import('./dog.js'), () => {
   const Dog = vi.fn(class {
     feed = vi.fn()
-    // ... other mocks
+    // ... inne mocki
   })
   return { Dog }
 })
 ```
 
-This method can also be used to pass an instance of a class to a function that accepts the same interface:
+Ta metoda może być również użyta do przekazania instancji klasy do funkcji, która przyjmuje ten sam interfejs:
 
 ```ts [src/feed.ts]
 function feed(dog: Dog) {
@@ -95,7 +95,7 @@ const Dog = vi.fn(class {
   feed = vi.fn()
 })
 
-test('can feed dogs', () => {
+test('może karmić psy', () => {
   const dogMax = new Dog('Max')
 
   feed(dogMax)
@@ -106,39 +106,39 @@ test('can feed dogs', () => {
 ```
 :::
 
-Now, when we create a new instance of the `Dog` class its `speak` method (alongside `feed` and `greet`) is already mocked:
+Teraz, gdy tworzymy nową instancję klasy `Dog`, jej metoda `speak` (wraz z `feed` i `greet`) jest już mockowana:
 
 ```ts
 const Cooper = new Dog('Cooper')
-Cooper.speak() // loud bark!
-Cooper.greet() // Hi! My name is Cooper!
+Cooper.speak() // głośne hau!
+Cooper.greet() // Cześć! Mam na imię Cooper!
 
-// you can use built-in assertions to check the validity of the call
+// możesz użyć wbudowanych asercji, aby sprawdzić poprawność wywołania
 expect(Cooper.speak).toHaveBeenCalled()
 expect(Cooper.greet).toHaveBeenCalled()
 
 const Max = new Dog('Max')
 
-// methods are not shared between instances if you assigned them directly
+// metody nie są współdzielone między instancjami, jeśli przypisałeś je bezpośrednio
 expect(Max.speak).not.toHaveBeenCalled()
 expect(Max.greet).not.toHaveBeenCalled()
 ```
 
-We can reassign the return value for a specific instance:
+Możemy przypisać nową wartość zwracaną dla konkretnej instancji:
 
 ```ts
 const dog = new Dog('Cooper')
 
-// "vi.mocked" is a type helper, since
-// TypeScript doesn't know that Dog is a mocked class,
-// it wraps any function in a Mock<T> type
-// without validating if the function is a mock
-vi.mocked(dog.speak).mockReturnValue('woof woof')
+// "vi.mocked" to helper typów, ponieważ
+// TypeScript nie wie, że Dog jest mockowaną klasą,
+// owija każdą funkcję w typ Mock<T>
+// bez walidacji, czy funkcja jest mockiem
+vi.mocked(dog.speak).mockReturnValue('hau hau')
 
-dog.speak() // woof woof
+dog.speak() // hau hau
 ```
 
-To mock the property, we can use the `vi.spyOn(dog, 'name', 'get')` method. This makes it possible to use spy assertions on the mocked property:
+Aby mockować właściwość, możemy użyć metody `vi.spyOn(dog, 'name', 'get')`. To umożliwia używanie asercji szpiegowskich na mockowanej właściwości:
 
 ```ts
 const dog = new Dog('Cooper')
@@ -150,9 +150,9 @@ expect(nameSpy).toHaveBeenCalledTimes(1)
 ```
 
 ::: tip
-You can also spy on getters and setters using the same method.
+Możesz również szpiegować gettery i settery używając tej samej metody.
 :::
 
 ::: danger
-Using classes with `vi.fn()` was introduced in Vitest 4. Previously, you had to use `function` and `prototype` inheritence directly. See [v3 guide](https://v3.vitest.dev/guide/mocking.html#classes).
+Używanie klas z `vi.fn()` zostało wprowadzone w Vitest 4. Wcześniej trzeba było używać `function` i dziedziczenia `prototype` bezpośrednio. Zobacz [przewodnik v3](https://v3.vitest.dev/guide/mocking.html#classes).
 :::
