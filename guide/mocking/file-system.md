@@ -1,25 +1,25 @@
-# Mocking the File System
+# Mockowanie systemu plików
 
-Mocking the file system ensures that the tests do not depend on the actual file system, making the tests more reliable and predictable. This isolation helps in avoiding side effects from previous tests. It allows for testing error conditions and edge cases that might be difficult or impossible to replicate with an actual file system, such as permission issues, disk full scenarios, or read/write errors.
+Mockowanie systemu plików zapewnia, że testy nie zależą od rzeczywistego systemu plików, czyniąc testy bardziej niezawodnymi i przewidywalnymi. Ta izolacja pomaga unikać efektów ubocznych z poprzednich testów. Pozwala testować warunki błędów i przypadki brzegowe, które mogłyby być trudne lub niemożliwe do odtworzenia z rzeczywistym systemem plików, takie jak problemy z uprawnieniami, scenariusze pełnego dysku czy błędy odczytu/zapisu.
 
-Vitest doesn't provide any file system mocking API out of the box. You can use `vi.mock` to mock the `fs` module manually, but it's hard to maintain. Instead, we recommend using [`memfs`](https://www.npmjs.com/package/memfs) to do that for you. `memfs` creates an in-memory file system, which simulates file system operations without touching the actual disk. This approach is fast and safe, avoiding any potential side effects on the real file system.
+Vitest nie dostarcza żadnego API do mockowania systemu plików od razu. Możesz użyć `vi.mock`, aby ręcznie mockować moduł `fs`, ale jest to trudne do utrzymania. Zamiast tego zalecamy użycie [`memfs`](https://www.npmjs.com/package/memfs), aby zrobił to za ciebie. `memfs` tworzy system plików w pamięci, który symuluje operacje na systemie plików bez dotykania rzeczywistego dysku. To podejście jest szybkie i bezpieczne, unikając potencjalnych efektów ubocznych na prawdziwym systemie plików.
 
-## Example
+## Przykład
 
-To automatically redirect every `fs` call to `memfs`, you can create `__mocks__/fs.cjs` and `__mocks__/fs/promises.cjs` files at the root of your project:
+Aby automatycznie przekierować każde wywołanie `fs` do `memfs`, możesz utworzyć pliki `__mocks__/fs.cjs` i `__mocks__/fs/promises.cjs` w katalogu głównym swojego projektu:
 
 ::: code-group
 ```ts [__mocks__/fs.cjs]
-// we can also use `import`, but then
-// every export should be explicitly defined
+// możemy również użyć `import`, ale wtedy
+// każdy eksport powinien być jawnie zdefiniowany
 
 const { fs } = require('memfs')
 module.exports = fs
 ```
 
 ```ts [__mocks__/fs/promises.cjs]
-// we can also use `import`, but then
-// every export should be explicitly defined
+// możemy również użyć `import`, ale wtedy
+// każdy eksport powinien być jawnie zdefiniowany
 
 const { fs } = require('memfs')
 module.exports = fs.promises
@@ -39,17 +39,17 @@ import { beforeEach, expect, it, vi } from 'vitest'
 import { fs, vol } from 'memfs'
 import { readHelloWorld } from './read-hello-world.js'
 
-// tell vitest to use fs mock from __mocks__ folder
-// this can be done in a setup file if fs should always be mocked
+// informujemy vitest, aby użył mocka fs z folderu __mocks__
+// można to zrobić w pliku setup, jeśli fs powinien być zawsze mockowany
 vi.mock('node:fs')
 vi.mock('node:fs/promises')
 
 beforeEach(() => {
-  // reset the state of in-memory fs
+  // resetujemy stan systemu plików w pamięci
   vol.reset()
 })
 
-it('should return correct text', () => {
+it('powinien zwrócić poprawny tekst', () => {
   const path = '/hello-world.txt'
   fs.writeFileSync(path, 'hello world')
 
@@ -57,14 +57,14 @@ it('should return correct text', () => {
   expect(text).toBe('hello world')
 })
 
-it('can return a value multiple times', () => {
-  // you can use vol.fromJSON to define several files
+it('może zwrócić wartość wielokrotnie', () => {
+  // możesz użyć vol.fromJSON, aby zdefiniować kilka plików
   vol.fromJSON(
     {
       './dir1/hw.txt': 'hello dir1',
       './dir2/hw.txt': 'hello dir2',
     },
-    // default cwd
+    // domyślny cwd
     '/tmp',
   )
 
