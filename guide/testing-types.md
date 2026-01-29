@@ -1,57 +1,57 @@
 ---
-title: Testing Types | Guide
+title: Testowanie typów | Przewodnik
 ---
 
-# Testing Types
+# Testowanie typów
 
-::: tip Sample Project
+::: tip Przykładowy projekt
 
-[GitHub](https://github.com/vitest-dev/vitest/tree/main/examples/typecheck) - [Play Online](https://stackblitz.com/fork/github/vitest-dev/vitest/tree/main/examples/typecheck?initialPath=__vitest__/)
+[GitHub](https://github.com/vitest-dev/vitest/tree/main/examples/typecheck) - [Wypróbuj online](https://stackblitz.com/fork/github/vitest-dev/vitest/tree/main/examples/typecheck?initialPath=__vitest__/)
 
 :::
 
-Vitest allows you to write tests for your types, using `expectTypeOf` or `assertType` syntaxes. By default all tests inside `*.test-d.ts` files are considered type tests, but you can change it with [`typecheck.include`](/config/#typecheck-include) config option.
+Vitest pozwala pisać testy dla twoich typów, używając składni `expectTypeOf` lub `assertType`. Domyślnie wszystkie testy wewnątrz plików `*.test-d.ts` są uważane za testy typów, ale możesz to zmienić za pomocą opcji konfiguracji [`typecheck.include`](/config/#typecheck-include).
 
-Under the hood Vitest calls `tsc` or `vue-tsc`, depending on your config, and parses results. Vitest will also print out type errors in your source code, if it finds any. You can disable it with [`typecheck.ignoreSourceErrors`](/config/#typecheck-ignoresourceerrors) config option.
+Pod spodem Vitest wywołuje `tsc` lub `vue-tsc`, w zależności od twojej konfiguracji, i parsuje wyniki. Vitest wydrukuje również błędy typów w twoim kodzie źródłowym, jeśli jakieś znajdzie. Możesz to wyłączyć za pomocą opcji konfiguracji [`typecheck.ignoreSourceErrors`](/config/#typecheck-ignoresourceerrors).
 
-Keep in mind that Vitest doesn't run these files, they are only statically analyzed by the compiler. Meaning, that if you use a dynamic name or `test.each` or `test.for`, the test name will not be evaluated - it will be displayed as is.
+Pamiętaj, że Vitest nie uruchamia tych plików, są one tylko statycznie analizowane przez kompilator. Oznacza to, że jeśli użyjesz dynamicznej nazwy lub `test.each` lub `test.for`, nazwa testu nie zostanie ewaluowana - zostanie wyświetlona tak jak jest.
 
 ::: warning
-Before Vitest 2.1, your `typecheck.include` overrode the `include` pattern, so your runtime tests did not actually run; they were only type-checked.
+Przed Vitest 2.1 twój `typecheck.include` nadpisywał wzorzec `include`, więc twoje testy runtime nie były faktycznie uruchamiane; były tylko sprawdzane pod względem typów.
 
-Since Vitest 2.1, if your `include` and `typecheck.include` overlap, Vitest will report type tests and runtime tests as separate entries.
+Od Vitest 2.1, jeśli twoje `include` i `typecheck.include` się nakładają, Vitest zgłosi testy typów i testy runtime jako oddzielne wpisy.
 :::
 
-Using CLI flags, like `--allowOnly` and `-t` are also supported for type checking.
+Używanie flag CLI, takich jak `--allowOnly` i `-t`, jest również wspierane dla sprawdzania typów.
 
 ```ts [mount.test-d.ts]
 import { assertType, expectTypeOf } from 'vitest'
 import { mount } from './mount.js'
 
-test('my types work properly', () => {
+test('moje typy działają poprawnie', () => {
   expectTypeOf(mount).toBeFunction()
   expectTypeOf(mount).parameter(0).toExtend<{ name: string }>()
 
-  // @ts-expect-error name is a string
+  // @ts-expect-error name jest stringiem
   assertType(mount({ name: 42 }))
 })
 ```
 
-Any type error triggered inside a test file will be treated as a test error, so you can use any type trick you want to test types of your project.
+Każdy błąd typu wywołany wewnątrz pliku testowego będzie traktowany jako błąd testu, więc możesz użyć dowolnej sztuczki typów, aby testować typy swojego projektu.
 
-You can see a list of possible matchers in [API section](/api/expect-typeof).
+Możesz zobaczyć listę możliwych matcherów w [sekcji API](/api/expect-typeof).
 
-## Reading Errors
+## Czytanie błędów
 
-If you are using `expectTypeOf` API, refer to the [expect-type documentation on its error messages](https://github.com/mmkal/expect-type#error-messages).
+Jeśli używasz API `expectTypeOf`, odwołaj się do [dokumentacji expect-type o komunikatach błędów](https://github.com/mmkal/expect-type#error-messages).
 
-When types don't match, `.toEqualTypeOf` and `.toExtend` use a special helper type to produce error messages that are as actionable as possible. But there's a bit of an nuance to understanding them. Since the assertions are written "fluently", the failure should be on the "expected" type, not the "actual" type (`expect<Actual>().toEqualTypeOf<Expected>()`). This means that type errors can be a little confusing - so this library produces a `MismatchInfo` type to try to make explicit what the expectation is. For example:
+Gdy typy się nie zgadzają, `.toEqualTypeOf` i `.toExtend` używają specjalnego typu pomocniczego do tworzenia komunikatów błędów, które są jak najbardziej użyteczne. Ale jest pewien niuans w ich zrozumieniu. Ponieważ asercje są pisane "płynnie", niepowodzenie powinno być na typie "oczekiwanym", nie na typie "faktycznym" (`expect<Actual>().toEqualTypeOf<Expected>()`). Oznacza to, że błędy typów mogą być trochę mylące - więc ta biblioteka produkuje typ `MismatchInfo`, aby spróbować jawnie określić, jakie jest oczekiwanie. Na przykład:
 
 ```ts
 expectTypeOf({ a: 1 }).toEqualTypeOf<{ a: string }>()
 ```
 
-Is an assertion that will fail, since `{a: 1}` has type `{a: number}` and not `{a: string}`.  The error message in this case will read something like this:
+Jest asercją, która nie powiedzie się, ponieważ `{a: 1}` ma typ `{a: number}`, a nie `{a: string}`. Komunikat błędu w tym przypadku będzie wyglądał mniej więcej tak:
 
 ```
 test/test.ts:999:999 - error TS2344: Type '{ a: string; }' does not satisfy the constraint '{ a: \\"Expected: string, Actual: number\\"; }'.
@@ -61,9 +61,9 @@ test/test.ts:999:999 - error TS2344: Type '{ a: string; }' does not satisfy the 
 999 expectTypeOf({a: 1}).toEqualTypeOf<{a: string}>()
 ```
 
-Note that the type constraint reported is a human-readable messaging specifying both the "expected" and "actual" types. Rather than taking the sentence `Types of property 'a' are incompatible // Type 'string' is not assignable to type "Expected: string, Actual: number"` literally - just look at the property name (`'a'`) and the message: `Expected: string, Actual: number`. This will tell you what's wrong, in most cases. Extremely complex types will of course be more effort to debug, and may require some experimentation. Please [raise an issue](https://github.com/mmkal/expect-type) if the error messages are actually misleading.
+Zauważ, że zgłoszone ograniczenie typu to czytelna dla człowieka wiadomość określająca zarówno typy "oczekiwany" jak i "faktyczny". Zamiast brać dosłownie zdanie `Types of property 'a' are incompatible // Type 'string' is not assignable to type "Expected: string, Actual: number"` - po prostu spójrz na nazwę właściwości (`'a'`) i wiadomość: `Expected: string, Actual: number`. To powie ci, co jest nie tak, w większości przypadków. Ekstremalnie złożone typy będą oczywiście wymagały więcej wysiłku do debugowania i mogą wymagać eksperymentowania. Proszę [zgłoś issue](https://github.com/mmkal/expect-type), jeśli komunikaty błędów są faktycznie mylące.
 
-The `toBe...` methods (like `toBeString`, `toBeNumber`, `toBeVoid` etc.) fail by resolving to a non-callable type when the `Actual` type under test doesn't match up. For example, the failure for an assertion like `expectTypeOf(1).toBeString()` will look something like this:
+Metody `toBe...` (takie jak `toBeString`, `toBeNumber`, `toBeVoid` itp.) kończą się niepowodzeniem przez rozwiązanie do typu, który nie jest wywoływalny, gdy typ `Actual` pod testem nie pasuje. Na przykład niepowodzenie dla asercji takiej jak `expectTypeOf(1).toBeString()` będzie wyglądać mniej więcej tak:
 
 ```
 test/test.ts:999:999 - error TS2349: This expression is not callable.
@@ -73,25 +73,25 @@ test/test.ts:999:999 - error TS2349: This expression is not callable.
                     ~~~~~~~~~~
 ```
 
-The `This expression is not callable` part isn't all that helpful - the meaningful error is the next line, `Type 'ExpectString<number> has no call signatures`. This essentially means you passed a number but asserted it should be a string.
+Część `This expression is not callable` nie jest zbyt pomocna - znaczący błąd jest w następnej linii, `Type 'ExpectString<number> has no call signatures`. To w zasadzie oznacza, że przekazałeś number, ale stwierdziłeś, że powinien być stringiem.
 
-If TypeScript added support for ["throw" types](https://github.com/microsoft/TypeScript/pull/40468) these error messages could be improved significantly. Until then they will take a certain amount of squinting.
+Jeśli TypeScript dodałby wsparcie dla [typów "throw"](https://github.com/microsoft/TypeScript/pull/40468), te komunikaty błędów mogłyby być znacząco ulepszone. Do tego czasu będą wymagały pewnego zmrużenia oczu.
 
-#### Concrete "expected" objects vs typeargs
+#### Konkretne obiekty "oczekiwane" vs typeargs
 
-Error messages for an assertion like this:
+Komunikaty błędów dla asercji takiej jak ta:
 
 ```ts
 expectTypeOf({ a: 1 }).toEqualTypeOf({ a: '' })
 ```
 
-Will be less helpful than for an assertion like this:
+Będą mniej pomocne niż dla asercji takiej jak ta:
 
 ```ts
 expectTypeOf({ a: 1 }).toEqualTypeOf<{ a: string }>()
 ```
 
-This is because the TypeScript compiler needs to infer the typearg for the `.toEqualTypeOf({a: ''})` style, and this library can only mark it as a failure by comparing it against a generic `Mismatch` type. So, where possible, use a typearg rather than a concrete type for `.toEqualTypeOf` and `.toExtend`. If it's much more convenient to compare two concrete types, you can use `typeof`:
+Dzieje się tak, ponieważ kompilator TypeScript musi wywnioskować typearg dla stylu `.toEqualTypeOf({a: ''})`, a ta biblioteka może oznaczyć to jako niepowodzenie tylko przez porównanie z generycznym typem `Mismatch`. Więc, gdzie to możliwe, użyj typearg zamiast konkretnego typu dla `.toEqualTypeOf` i `.toExtend`. Jeśli jest znacznie wygodniej porównywać dwa konkretne typy, możesz użyć `typeof`:
 
 ```ts
 const one = valueFromFunctionOne({ some: { complex: inputs } })
@@ -100,30 +100,30 @@ const two = valueFromFunctionTwo({ some: { other: inputs } })
 expectTypeOf(one).toEqualTypeOf<typeof two>()
 ```
 
-If you find it hard working with `expectTypeOf` API and figuring out errors, you can always use more simple `assertType` API:
+Jeśli masz trudności z pracą z API `expectTypeOf` i rozumieniem błędów, zawsze możesz użyć prostszego API `assertType`:
 
 ```ts
 const answer = 42
 
 assertType<number>(answer)
-// @ts-expect-error answer is not a string
+// @ts-expect-error answer nie jest stringiem
 assertType<string>(answer)
 ```
 
 ::: tip
-When using `@ts-expect-error` syntax, you might want to make sure that you didn't make a typo. You can do that by including your type files in [`test.include`](/config/#include) config option, so Vitest will also actually *run* these tests and fail with `ReferenceError`.
+Podczas używania składni `@ts-expect-error` możesz chcieć upewnić się, że nie zrobiłeś literówki. Możesz to zrobić, włączając swoje pliki typów w opcji konfiguracji [`test.include`](/config/#include), więc Vitest faktycznie *uruchomi* te testy i zakończy się niepowodzeniem z `ReferenceError`.
 
-This will pass, because it expects an error, but the word “answer” has a typo, so it's a false positive error:
+To przejdzie, ponieważ oczekuje błędu, ale słowo "answer" ma literówkę, więc to fałszywy pozytywny błąd:
 
 ```ts
-// @ts-expect-error answer is not a string
+// @ts-expect-error answer nie jest stringiem
 assertType<string>(answr)
 ```
 :::
 
-## Run Typechecking
+## Uruchamianie sprawdzania typów
 
-To enable typechecking, just add [`--typecheck`](/config/#typecheck) flag to your Vitest command in `package.json`:
+Aby włączyć sprawdzanie typów, po prostu dodaj flagę [`--typecheck`](/config/#typecheck) do swojego polecenia Vitest w `package.json`:
 
 ```json [package.json]
 {
@@ -133,7 +133,7 @@ To enable typechecking, just add [`--typecheck`](/config/#typecheck) flag to you
 }
 ```
 
-Now you can run typecheck:
+Teraz możesz uruchomić sprawdzanie typów:
 
 ::: code-group
 ```bash [npm]
@@ -150,4 +150,4 @@ bun test
 ```
 :::
 
-Vitest uses `tsc --noEmit` or `vue-tsc --noEmit`, depending on your configuration, so you can remove these scripts from your pipeline.
+Vitest używa `tsc --noEmit` lub `vue-tsc --noEmit`, w zależności od twojej konfiguracji, więc możesz usunąć te skrypty ze swojego pipeline.
