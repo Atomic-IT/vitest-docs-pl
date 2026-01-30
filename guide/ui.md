@@ -1,31 +1,31 @@
 ---
-title: Vitest UI | Guide
+title: Vitest UI | Przewodnik
 ---
 
 # Vitest UI
 
-Powered by Vite, Vitest also has a dev server under the hood when running the tests. This allows Vitest to provide a beautiful UI to view and interact with your tests. The Vitest UI is optional, so you'll need to install it with:
+Napędzany przez Vite, Vitest ma również serwer deweloperski pod spodem podczas uruchamiania testów. To pozwala Vitest dostarczyć piękne UI do przeglądania i interakcji z twoimi testami. Vitest UI jest opcjonalne, więc musisz je zainstalować:
 
 ```bash
 npm i -D @vitest/ui
 ```
 
-Then you can start the tests with UI by passing the `--ui` flag:
+Następnie możesz uruchomić testy z UI, przekazując flagę `--ui`:
 
 ```bash
 vitest --ui
 ```
 
-Then you can visit the Vitest UI at <a href="http://localhost:51204/__vitest__/">`http://localhost:51204/__vitest__/`</a>
+Potem możesz odwiedzić Vitest UI pod adresem <a href="http://localhost:51204/__vitest__/">`http://localhost:51204/__vitest__/`</a>
 
 ::: warning
-The UI is interactive and requires a running Vite server, so make sure to run Vitest in `watch` mode (the default). Alternatively, you can generate a static HTML report that looks identical to the Vitest UI by specifying `html` in config's `reporters` option.
+UI jest interaktywne i wymaga działającego serwera Vite, więc upewnij się, że uruchamiasz Vitest w trybie `watch` (domyślny). Alternatywnie możesz wygenerować statyczny raport HTML, który wygląda identycznie jak Vitest UI, określając `html` w opcji `reporters` konfiguracji.
 :::
 
 <img alt="Vitest UI" img-light src="/ui-1-light.png">
 <img alt="Vitest UI" img-dark src="/ui-1-dark.png">
 
-UI can also be used as a reporter. Use `'html'` reporter in your Vitest configuration to generate HTML output and preview the results of your tests:
+UI może być również używane jako reporter. Użyj reportera `'html'` w swojej konfiguracji Vitest, aby wygenerować wyjście HTML i podejrzeć wyniki twoich testów:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -37,111 +37,111 @@ export default defineConfig({
 })
 ```
 
-You can check your coverage report in Vitest UI: see [Vitest UI Coverage](/guide/coverage#vitest-ui) for more details.
+Możesz sprawdzić swój raport pokrycia w Vitest UI: zobacz [Vitest UI Coverage](/guide/coverage#vitest-ui) po więcej szczegółów.
 
 ::: warning
-If you still want to see how your tests are running in real time in the terminal, don't forget to add `default` reporter to `reporters` option: `['default', 'html']`.
+Jeśli nadal chcesz widzieć, jak twoje testy działają w czasie rzeczywistym w terminalu, nie zapomnij dodać reportera `default` do opcji `reporters`: `['default', 'html']`.
 :::
 
 ::: tip
-To preview your HTML report, you can use the [vite preview](https://vitejs.dev/guide/cli.html#vite-preview) command:
+Aby podejrzeć swój raport HTML, możesz użyć polecenia [vite preview](https://vitejs.dev/guide/cli.html#vite-preview):
 
 ```sh
 npx vite preview --outDir ./html
 ```
 
-You can configure output with [`outputFile`](/config/#outputfile) config option. You need to specify `.html` path there. For example, `./html/index.html` is the default value.
+Możesz skonfigurować wyjście za pomocą opcji konfiguracji [`outputFile`](/config/#outputfile). Musisz tam określić ścieżkę `.html`. Na przykład `./html/index.html` jest wartością domyślną.
 :::
 
-## Module Graph
+## Graf modułów
 
-Module Graph's tab displays the module graph of the selected test file.
+Zakładka Graf modułów wyświetla graf modułów wybranego pliku testowego.
 
 ::: info
-All of the provided images use [Zammad](https://github.com/zammad/zammad) repository as an example.
+Wszystkie dostarczone obrazy używają repozytorium [Zammad](https://github.com/zammad/zammad) jako przykładu.
 :::
 
-<img alt="The module graph view" img-light src="/ui/light-module-graph.png">
-<img alt="The module graph view" img-dark src="/ui/dark-module-graph.png">
+<img alt="Widok grafu modułów" img-light src="/ui/light-module-graph.png">
+<img alt="Widok grafu modułów" img-dark src="/ui/dark-module-graph.png">
 
-If there are more than 50 modules, the module graph displays only the first two levels of the graph to reduce the visual clutter. You can always click on "Show Full Graph" icon to preview the full graph.
+Jeśli jest więcej niż 50 modułów, graf modułów wyświetla tylko pierwsze dwa poziomy grafu, aby zredukować wizualny bałagan. Zawsze możesz kliknąć ikonę "Show Full Graph", aby podejrzeć pełny graf.
 
 <center>
-  <img alt="The 'Show Full Graph' button located close to the legend" img-light src="/ui/light-ui-show-graph.png">
-  <img alt="The 'Show Full Graph' button located close to the legend" img-dark src="/ui/dark-ui-show-graph.png">
+  <img alt="Przycisk 'Show Full Graph' zlokalizowany blisko legendy" img-light src="/ui/light-ui-show-graph.png">
+  <img alt="Przycisk 'Show Full Graph' zlokalizowany blisko legendy" img-dark src="/ui/dark-ui-show-graph.png">
 </center>
 
 ::: warning
-Note that if your graph is too big, it may take some time before the node positions are stabilized.
+Zauważ, że jeśli twój graf jest zbyt duży, może zająć trochę czasu, zanim pozycje węzłów się ustabilizują.
 :::
 
-You can always restore the entry module graph by clicking on "Reset". To expand the module graph, right-click or hold <kbd>Shift</kbd> while clicking the node that interests you. It will display all nodes related to the selected one.
+Zawsze możesz przywrócić wejściowy graf modułów, klikając "Reset". Aby rozwinąć graf modułów, kliknij prawym przyciskiem myszy lub przytrzymaj <kbd>Shift</kbd> podczas klikania węzła, który cię interesuje. Wyświetli wszystkie węzły związane z wybranym.
 
-By default, Vitest doesn't show the modules from `node_modules`. Usually, these modules are externalized. You can enable them by deselecting "Hide node_modules".
+Domyślnie Vitest nie pokazuje modułów z `node_modules`. Zazwyczaj te moduły są eksternalizowane. Możesz je włączyć, odznaczając "Hide node_modules".
 
-### Module Info
+### Informacje o module
 
-By left-clicking on the module node, you open the Module Info view.
+Klikając lewym przyciskiem myszy na węzeł modułu, otwierasz widok Informacji o module.
 
-<img alt="The module info view for an inlined module" img-light src="/ui/light-module-info.png">
-<img alt="The module info view for an inlined module" img-dark src="/ui/dark-module-info.png">
+<img alt="Widok informacji o module dla modułu inline" img-light src="/ui/light-module-info.png">
+<img alt="Widok informacji o module dla modułu inline" img-dark src="/ui/dark-module-info.png">
 
-This view is separated into two parts. The top part shows the full module ID and some diagnostics about the module. If [`experimental.fsModuleCache`](/config/experimental#experimental-fsmodulecache) is enabled, there will be a "cached" or "not cached" badge. On the right you can see time diagnostics:
+Ten widok jest podzielony na dwie części. Górna część pokazuje pełny ID modułu i pewne diagnostyki o module. Jeśli [`experimental.fsModuleCache`](/config/experimental#experimental-fsmodulecache) jest włączone, będzie badge "cached" lub "not cached". Po prawej możesz zobaczyć diagnostyki czasowe:
 
-- Self Time: the time it took to import the module, excluding static imports.
-- Total Time: the time it took to import the module, including static imports. Note that this does not include `transform` time of the current module.
-- Transform: the time it took to transform the module.
+- Self Time: czas potrzebny na zaimportowanie modułu, wykluczając statyczne importy.
+- Total Time: czas potrzebny na zaimportowanie modułu, włączając statyczne importy. Zauważ, że to nie obejmuje czasu `transform` bieżącego modułu.
+- Transform: czas potrzebny na transformację modułu.
 
-If you opened this view by clicking on an import, you will also see a "Back" button at the start that will take you to the previous module.
+Jeśli otworzyłeś ten widok klikając na import, zobaczysz również przycisk "Back" na początku, który przeniesie cię do poprzedniego modułu.
 
-The bottom part depends on the module type. If the module is external, you will only see the source code of that file. You will not be able to traverse the module graph any further, and you won't see how long it took to import static imports.
+Dolna część zależy od typu modułu. Jeśli moduł jest zewnętrzny, zobaczysz tylko kod źródłowy tego pliku. Nie będziesz mógł dalej przemierzać grafu modułów i nie zobaczysz, jak długo trwało importowanie statycznych importów.
 
-<img alt="The module info view for an external module" img-light src="/ui/light-module-info-external.png">
-<img alt="The module info view for an external module" img-dark src="/ui/dark-module-info-external.png">
+<img alt="Widok informacji o module dla modułu zewnętrznego" img-light src="/ui/light-module-info-external.png">
+<img alt="Widok informacji o module dla modułu zewnętrznego" img-dark src="/ui/dark-module-info-external.png">
 
-If the module was inlined, you will see three more windows:
+Jeśli moduł był inline, zobaczysz trzy dodatkowe okna:
 
-- Source: unchanged source code of the module
-- Transformed: the transformed code that Vitest executes using Vite's [module runner](https://vite.dev/guide/api-environment-runtimes#modulerunner)
-- Source Map (v3): source map mappings
+- Source: niezmieniony kod źródłowy modułu
+- Transformed: transformowany kod, który Vitest wykonuje używając [module runner](https://vite.dev/guide/api-environment-runtimes#modulerunner) Vite
+- Source Map (v3): mapowania source map
 
-All static imports in the "Source" window show a total time it took to evaluate them by the current module. If the import was already evaluated in the module graph, it will show `0ms` because it is cached by that point.
+Wszystkie statyczne importy w oknie "Source" pokazują całkowity czas potrzebny do ich ewaluacji przez bieżący moduł. Jeśli import był już ewaluowany w grafie modułów, pokaże `0ms`, ponieważ jest cachowany w tym momencie.
 
-If the module took longer than 500 milliseconds to load, the time will be displayed in red. If the module took longer than 100 milliseconds, the time will be displayed in orange.
+Jeśli moduł potrzebował więcej niż 500 milisekund do załadowania, czas będzie wyświetlony na czerwono. Jeśli moduł potrzebował więcej niż 100 milisekund, czas będzie wyświetlony na pomarańczowo.
 
-You can click on an import source to jump into that module and traverse the graph further (note `./support/assertions/index.ts` below).
+Możesz kliknąć na źródło importu, aby przejść do tego modułu i przemierzać graf dalej (zauważ `./support/assertions/index.ts` poniżej).
 
-<img alt="The module info view for an internal module" img-light src="/ui/light-module-info-traverse.png">
-<img alt="The module info view for an internal module" img-dark src="/ui/dark-module-info-traverse.png">
+<img alt="Widok informacji o module dla modułu wewnętrznego" img-light src="/ui/light-module-info-traverse.png">
+<img alt="Widok informacji o module dla modułu wewnętrznego" img-dark src="/ui/dark-module-info-traverse.png">
 
 ::: warning
-Note that type-only imports are not executed at runtime and do not display a total duration. They also cannot be opened.
+Zauważ, że importy tylko typów nie są wykonywane w runtime i nie wyświetlają całkowitego czasu trwania. Nie mogą być również otwierane.
 :::
 
-If another plugin injects a module import during transformation, those imports will be displayed at the start of the module in gray colour (for example, modules injected by `import.meta.glob`). They also show the total time and can be traversed further.
+Jeśli inny plugin wstrzykuje import modułu podczas transformacji, te importy będą wyświetlane na początku modułu w szarym kolorze (na przykład moduły wstrzyknięte przez `import.meta.glob`). Również pokazują całkowity czas i mogą być dalej przemierzane.
 
-<img alt="The module info view for an internal module" img-light src="/ui/light-module-info-shadow.png">
-<img alt="The module info view for an internal module" img-dark src="/ui/dark-module-info-shadow.png">
+<img alt="Widok informacji o module dla modułu wewnętrznego" img-light src="/ui/light-module-info-shadow.png">
+<img alt="Widok informacji o module dla modułu wewnętrznego" img-dark src="/ui/dark-module-info-shadow.png">
 
 ::: tip
-If you are developing a custom integration on top of Vitest, you can use [`vitest.experimental_getSourceModuleDiagnostic`](/api/advanced/vitest#getsourcemodulediagnostic) to retrieve this information.
+Jeśli rozwijasz niestandardową integrację na bazie Vitest, możesz użyć [`vitest.experimental_getSourceModuleDiagnostic`](/api/advanced/vitest#getsourcemodulediagnostic), aby pobrać te informacje.
 :::
 
-### Import Breakdown
+### Rozkład importów
 
 ::: tip FEEDBACK
-Please, leave feedback regarding this feature in a [GitHub Discussion](https://github.com/vitest-dev/vitest/discussions/9224).
+Proszę, zostaw opinię dotyczącą tej funkcji w [GitHub Discussion](https://github.com/vitest-dev/vitest/discussions/9224).
 :::
 
-The Module Graph tab also provides an Import Breakdown with a list of modules that take the longest time to load (top 10 by default, but you can press "Show more" to load 10 more), sorted by Total Time.
+Zakładka Graf modułów również dostarcza Rozkład importów z listą modułów, które potrzebują najdłuższego czasu do załadowania (domyślnie top 10, ale możesz nacisnąć "Show more", aby załadować 10 więcej), posortowanych według Total Time.
 
-<img alt="Import breakdown with a list of top 10 modules that take the longest time to load" img-light src="/ui/light-import-breakdown.png">
-<img alt="Import breakdown with a list of top 10 modules that take the longest time to load" img-dark src="/ui/dark-import-breakdown.png">
+<img alt="Rozkład importów z listą top 10 modułów, które potrzebują najdłuższego czasu do załadowania" img-light src="/ui/light-import-breakdown.png">
+<img alt="Rozkład importów z listą top 10 modułów, które potrzebują najdłuższego czasu do załadowania" img-dark src="/ui/dark-import-breakdown.png">
 
-You can click on the module to see the Module Info. If the module is external, it will have the yellow color (the same color in the module graph).
+Możesz kliknąć na moduł, aby zobaczyć Informacje o module. Jeśli moduł jest zewnętrzny, będzie miał żółty kolor (taki sam kolor jak w grafie modułów).
 
-The breakdown shows a list of modules with self time, total time, and a percentage relative to the time it took to load the whole test file.
+Rozkład pokazuje listę modułów z self time, total time i procentem względem czasu potrzebnego do załadowania całego pliku testowego.
 
-The "Show Import Breakdown" icon will have a red color if there is at least one file that took longer than 500 milliseconds to load, and it will be orange if there is at least one file that took longer than 100 milliseconds.
+Ikona "Show Import Breakdown" będzie miała czerwony kolor, jeśli jest co najmniej jeden plik, który potrzebował więcej niż 500 milisekund do załadowania, i będzie pomarańczowa, jeśli jest co najmniej jeden plik, który potrzebował więcej niż 100 milisekund.
 
-By default, Vitest shows the breakdown automatically if there is at least one module that took longer than 500 milliseconds to load. You can control the behaviour by setting the [`experimental.printImportBreakdown`](/config/experimental#experimental-printimportbreakdown) option.
+Domyślnie Vitest pokazuje rozkład automatycznie, jeśli jest co najmniej jeden moduł, który potrzebował więcej niż 500 milisekund do załadowania. Możesz kontrolować zachowanie, ustawiając opcję [`experimental.printImportBreakdown`](/config/experimental#experimental-printimportbreakdown).
