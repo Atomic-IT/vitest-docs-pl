@@ -1,28 +1,28 @@
 ---
-title: In-Source Testing | Guide
+title: Testowanie w źródle | Przewodnik
 ---
 
-# In-Source Testing
+# Testowanie w źródle
 
-Vitest provides a way to run tests within your source code along side the implementation, similar to [Rust's module tests](https://doc.rust-lang.org/book/ch11-03-test-organization.html#the-tests-module-and-cfgtest).
+Vitest zapewnia sposób na uruchamianie testów wewnątrz twojego kodu źródłowego obok implementacji, podobnie do [testów modułowych Rust](https://doc.rust-lang.org/book/ch11-03-test-organization.html#the-tests-module-and-cfgtest).
 
-This makes the tests share the same closure as the implementations and able to test against private states without exporting. Meanwhile, it also brings a closer feedback loop for development.
+To sprawia, że testy współdzielą ten sam closure co implementacje i mogą testować prywatne stany bez eksportowania. Jednocześnie przynosi to bliższą pętlę feedbacku dla rozwoju.
 
 ::: warning
-This guide explains how to write tests inside your source code. If you need to write tests in separate test files, follow the ["Writing Tests" guide](/guide/#writing-tests).
+Ten przewodnik wyjaśnia, jak pisać testy wewnątrz twojego kodu źródłowego. Jeśli musisz pisać testy w oddzielnych plikach testowych, postępuj zgodnie z [przewodnikiem "Pisanie testów"](/guide/#writing-tests).
 :::
 
-## Setup
+## Konfiguracja
 
-To get started, put a `if (import.meta.vitest)` block at the end of your source file and write some tests inside it. For example:
+Aby zacząć, umieść blok `if (import.meta.vitest)` na końcu twojego pliku źródłowego i napisz wewnątrz kilka testów. Na przykład:
 
 ```ts [src/index.ts]
-// the implementation
+// implementacja
 export function add(...args: number[]) {
   return args.reduce((a, b) => a + b, 0)
 }
 
-// in-source test suites
+// zestawy testów w źródle
 if (import.meta.vitest) {
   const { it, expect } = import.meta.vitest
   it('add', () => {
@@ -33,7 +33,7 @@ if (import.meta.vitest) {
 }
 ```
 
-Update the `includeSource` config for Vitest to grab the files under `src/`:
+Zaktualizuj konfigurację `includeSource` dla Vitest, aby objęła pliki w `src/`:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -45,15 +45,15 @@ export default defineConfig({
 })
 ```
 
-Then you can start to test!
+Następnie możesz zacząć testować!
 
 ```bash
 $ npx vitest
 ```
 
-## Production Build
+## Build produkcyjny
 
-For the production build, you will need to set the `define` options in your config file, letting the bundler do the dead code elimination. For example, in Vite
+Dla buildu produkcyjnego musisz ustawić opcje `define` w swoim pliku konfiguracyjnym, pozwalając bundlerowi na eliminację martwego kodu. Na przykład w Vite
 
 ```ts [vite.config.ts]
 /// <reference types="vitest/config" />
@@ -70,7 +70,7 @@ export default defineConfig({
 })
 ```
 
-### Other Bundlers
+### Inne bundlery
 
 ::: details Rolldown
 ```js [rolldown.config.js]
@@ -85,7 +85,7 @@ export default defineConfig({
 })
 ```
 
-Learn more: [Rolldown](https://rolldown.rs/)
+Dowiedz się więcej: [Rolldown](https://rolldown.rs/)
 :::
 
 ::: details Rollup
@@ -98,11 +98,11 @@ export default {
       'import.meta.vitest': 'undefined', // [!code ++]
     }) // [!code ++]
   ],
-  // other options
+  // inne opcje
 }
 ```
 
-Learn more: [Rollup](https://rollupjs.org/)
+Dowiedz się więcej: [Rollup](https://rollupjs.org/)
 :::
 
 ::: details unbuild
@@ -113,11 +113,11 @@ export default defineBuildConfig({
   replace: { // [!code ++]
     'import.meta.vitest': 'undefined', // [!code ++]
   }, // [!code ++]
-  // other options
+  // inne opcje
 })
 ```
 
-Learn more: [unbuild](https://github.com/unjs/unbuild)
+Dowiedz się więcej: [unbuild](https://github.com/unjs/unbuild)
 :::
 
 ::: details webpack
@@ -133,12 +133,12 @@ module.exports = {
 }
 ```
 
-Learn more: [webpack](https://webpack.js.org/plugins/define-plugin/)
+Dowiedz się więcej: [webpack](https://webpack.js.org/plugins/define-plugin/)
 :::
 
 ## TypeScript
 
-To get TypeScript support for `import.meta.vitest`, add `vitest/importMeta` to your `tsconfig.json`:
+Aby uzyskać wsparcie TypeScript dla `import.meta.vitest`, dodaj `vitest/importMeta` do twojego `tsconfig.json`:
 
 ```json [tsconfig.json]
 {
@@ -150,14 +150,14 @@ To get TypeScript support for `import.meta.vitest`, add `vitest/importMeta` to y
 }
 ```
 
-Reference to [`examples/in-source-test`](https://github.com/vitest-dev/vitest/tree/main/examples/in-source-test) for the full example.
+Odwołaj się do [`examples/in-source-test`](https://github.com/vitest-dev/vitest/tree/main/examples/in-source-test) po pełny przykład.
 
-## Notes
+## Uwagi
 
-This feature could be useful for:
+Ta funkcja może być przydatna dla:
 
-- Unit testing for small-scoped functions or utilities
-- Prototyping
-- Inline Assertion
+- Testów jednostkowych dla małych funkcji lub narzędzi
+- Prototypowania
+- Asercji inline
 
-It's recommended to **use separate test files instead** for more complex tests like components or E2E testing.
+Zaleca się **używanie oddzielnych plików testowych** dla bardziej złożonych testów, takich jak testy komponentów lub E2E.
