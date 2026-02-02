@@ -1,29 +1,29 @@
 ---
-title: Extending Matchers | Guide
+title: Rozszerzanie matcherów | Przewodnik
 ---
 
-# Extending Matchers
+# Rozszerzanie matcherów
 
-Since Vitest is compatible with both Chai and Jest, you can use either the `chai.use` API or `expect.extend`, whichever you prefer.
+Ponieważ Vitest jest kompatybilny zarówno z Chai, jak i Jest, możesz użyć API `chai.use` lub `expect.extend`, w zależności od tego, co wolisz.
 
-This guide will explore extending matchers with `expect.extend`. If you are interested in Chai's API, check [their guide](https://www.chaijs.com/guide/plugins/).
+Ten przewodnik omówi rozszerzanie matcherów za pomocą `expect.extend`. Jeśli interesuje cię API Chai, sprawdź [ich przewodnik](https://www.chaijs.com/guide/plugins/).
 
-To extend default matchers, call `expect.extend` with an object containing your matchers.
+Aby rozszerzyć domyślne matchery, wywołaj `expect.extend` z obiektem zawierającym twoje matchery.
 
 ```ts
 expect.extend({
   toBeFoo(received, expected) {
     const { isNot } = this
     return {
-      // do not alter your "pass" based on isNot. Vitest does it for you
+      // nie zmieniaj swojego "pass" na podstawie isNot. Vitest robi to za ciebie
       pass: received === 'foo',
-      message: () => `${received} is${isNot ? ' not' : ''} foo`
+      message: () => `${received} ${isNot ? 'nie ' : ''}jest foo`
     }
   }
 })
 ```
 
-If you are using TypeScript, you can extend default `Assertion` interface in an ambient declaration file (e.g: `vitest.d.ts`) with the code below:
+Jeśli używasz TypeScript, możesz rozszerzyć domyślny interfejs `Assertion` w pliku deklaracji ambient (np. `vitest.d.ts`) poniższym kodem:
 
 ::: code-group
 ```ts [<Version>3.2.0</Version>]
@@ -52,28 +52,28 @@ declare module 'vitest' {
 :::
 
 ::: tip
-Since Vitest 3.2, you can extend the `Matchers` interface to have type-safe assertions in `expect.extend`, `expect().*`, and `expect.*` methods at the same time. Previously, you had to define separate interfaces for each of them.
+Od Vitest 3.2 możesz rozszerzyć interfejs `Matchers`, aby mieć asercje bezpieczne typowo w `expect.extend`, `expect().*` i metodach `expect.*` jednocześnie. Wcześniej musiałeś definiować oddzielne interfejsy dla każdego z nich.
 :::
 
 ::: warning
-Don't forget to include the ambient declaration file in your `tsconfig.json`.
+Nie zapomnij dołączyć pliku deklaracji ambient do twojego `tsconfig.json`.
 :::
 
-The return value of a matcher should be compatible with the following interface:
+Wartość zwracana przez matcher powinna być kompatybilna z następującym interfejsem:
 
 ```ts
 interface ExpectationResult {
   pass: boolean
   message: () => string
-  // If you pass these, they will automatically appear inside a diff when
-  // the matcher does not pass, so you don't need to print the diff yourself
+  // Jeśli przekażesz te wartości, automatycznie pojawią się w diffie, gdy
+  // matcher nie przejdzie, więc nie musisz sam drukować diffa
   actual?: unknown
   expected?: unknown
 }
 ```
 
 ::: warning
-If you create an asynchronous matcher, don't forget to `await` the result (`await expect('foo').toBeFoo()`) in the test itself::
+Jeśli tworzysz asynchroniczny matcher, nie zapomnij `await` wyniku (`await expect('foo').toBeFoo()`) w samym teście:
 
 ```ts
 expect.extend({
@@ -86,40 +86,40 @@ await expect().toBeAsyncAssertion()
 ```
 :::
 
-The first argument inside a matcher's function is the received value (the one inside `expect(received)`). The rest are arguments passed directly to the matcher.
+Pierwszym argumentem wewnątrz funkcji matchera jest otrzymana wartość (ta wewnątrz `expect(received)`). Reszta to argumenty przekazane bezpośrednio do matchera.
 
-Matcher function has access to `this` context with the following properties:
+Funkcja matchera ma dostęp do kontekstu `this` z następującymi właściwościami:
 
 ### `isNot`
 
-Returns true, if matcher was called on `not` (`expect(received).not.toBeFoo()`).
+Zwraca true, jeśli matcher został wywołany na `not` (`expect(received).not.toBeFoo()`).
 
 ### `promise`
 
-If matcher was called on `resolved/rejected`, this value will contain the name of modifier. Otherwise, it will be an empty string.
+Jeśli matcher został wywołany na `resolved/rejected`, ta wartość będzie zawierać nazwę modyfikatora. W przeciwnym razie będzie pustym stringiem.
 
 ### `equals`
 
-This is a utility function that allows you to compare two values. It will return `true` if values are equal, `false` otherwise. This function is used internally for almost every matcher. It supports objects with asymmetric matchers by default.
+To jest funkcja pomocnicza, która pozwala porównać dwie wartości. Zwróci `true`, jeśli wartości są równe, `false` w przeciwnym razie. Ta funkcja jest używana wewnętrznie dla prawie każdego matchera. Domyślnie wspiera obiekty z asymetrycznymi matcherami.
 
 ### `utils`
 
-This contains a set of utility functions that you can use to display messages.
+Zawiera zestaw funkcji pomocniczych, których możesz użyć do wyświetlania wiadomości.
 
-`this` context also contains information about the current test. You can also get it by calling `expect.getState()`. The most useful properties are:
+Kontekst `this` zawiera również informacje o bieżącym teście. Możesz również uzyskać je wywołując `expect.getState()`. Najbardziej przydatne właściwości to:
 
 ### `currentTestName`
 
-Full name of the current test (including describe block).
+Pełna nazwa bieżącego testu (włączając blok describe).
 
 ### `task` <Advanced /> <Version type="experimental">4.0.11</Version> {#task}
 
-Contains a reference to [the `Test` runner task](/api/advanced/runner#tasks) when available.
+Zawiera referencję do [zadania runnera `Test`](/api/advanced/runner#tasks), gdy jest dostępne.
 
 ::: warning
-When using the global `expect` with concurrent tests, `this.task` is `undefined`. Use `context.expect` instead to ensure `task` is available in custom matchers.
+Podczas używania globalnego `expect` z testami współbieżnymi, `this.task` jest `undefined`. Użyj zamiast tego `context.expect`, aby upewnić się, że `task` jest dostępne w niestandardowych matcherach.
 :::
 
 ### `testPath`
 
-Path to the current test.
+Ścieżka do bieżącego testu.
