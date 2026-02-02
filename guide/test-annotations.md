@@ -1,85 +1,85 @@
 ---
-title: Test Annotations | Guide
+title: Adnotacje testów | Przewodnik
 outline: deep
 ---
 
-# Test Annotations
+# Adnotacje testów
 
-Vitest supports annotating your tests with custom messages and files via the [`context.annotate`](/guide/test-context#annotate) API. These annotations will be attached to the test case and passed down to reporters in the [`onTestAnnotate`](/api/advanced/reporters#ontestannotate) hook.
+Vitest wspiera adnotowanie twoich testów niestandardowymi wiadomościami i plikami przez API [`context.annotate`](/guide/test-context#annotate). Te adnotacje będą dołączone do przypadku testowego i przekazane do reporterów w hooku [`onTestAnnotate`](/api/advanced/reporters#ontestannotate).
 
 ```ts
 test('hello world', async ({ annotate }) => {
-  await annotate('this is my test')
+  await annotate('to jest mój test')
 
   if (condition) {
-    await annotate('this should\'ve errored', 'error')
+    await annotate('to powinno było zgłosić błąd', 'error')
   }
 
   const file = createTestSpecificFile()
-  await annotate('creates a file', { body: file })
+  await annotate('tworzy plik', { body: file })
 })
 ```
 
 ::: warning
-The `annotate` function returns a Promise, so it needs to be awaited if you rely on it somehow. However, Vitest will also automatically await any non-awaited annotation before the test finishes.
+Funkcja `annotate` zwraca Promise, więc musi być oczekiwana, jeśli w jakiś sposób na niej polegasz. Jednak Vitest automatycznie oczekuje również na każdą nieoczekiwaną adnotację przed zakończeniem testu.
 :::
 
-Depending on your reporter, you will see these annotations differently.
+W zależności od twojego reportera, zobaczysz te adnotacje inaczej.
 
-## Built-in Reporters
+## Wbudowane reportery
 ### default
 
-The `default` reporter prints annotations only if the test has failed:
+Reporter `default` drukuje adnotacje tylko jeśli test nie powiódł się:
 
 ```
   ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
 
-  FAIL  example.test.js > an example of a test with annotation
-Error: thrown error
+  FAIL  example.test.js > przykład testu z adnotacją
+Error: wyrzucony błąd
   ❯ example.test.js:11:21
-      9 |    await annotate('annotation 1')
-      10|    await annotate('annotation 2', 'warning')
-      11|    throw new Error('thrown error')
+      9 |    await annotate('adnotacja 1')
+      10|    await annotate('adnotacja 2', 'warning')
+      11|    throw new Error('wyrzucony błąd')
         |          ^
       12|  })
 
   ❯ example.test.js:9:15 notice
-    ↳ annotation 1
+    ↳ adnotacja 1
   ❯ example.test.js:10:15 warning
-    ↳ annotation 2
+    ↳ adnotacja 2
 
   ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
 ```
 
 ### verbose
 
-The `verbose` reporter is the only terminal reporter that reports annotations when the test doesn't fail.
+Reporter `verbose` jest jedynym reporterem terminalowym, który raportuje adnotacje, gdy test nie kończy się niepowodzeniem.
 
 ```
-✓ example.test.js > an example of a test with annotation
+✓ example.test.js > przykład testu z adnotacją
 
   ❯ example.test.js:9:15 notice
-    ↳ annotation 1
+    ↳ adnotacja 1
   ❯ example.test.js:10:15 warning
-    ↳ annotation 2
+    ↳ adnotacja 2
 
 ```
 
 ### html
 
-The HTML reporter shows annotations the same way the UI does. You can see the annotation on the line where it was called. At the moment, if the annotation wasn't called in a test file, you cannot see it in the UI. We are planning to support a separate test summary view where it will be visible.
+Reporter HTML pokazuje adnotacje w ten sam sposób co UI. Możesz zobaczyć adnotację w linii, gdzie została wywołana. W tej chwili, jeśli adnotacja nie została wywołana w pliku testowym, nie możesz jej zobaczyć w UI. Planujemy wsparcie oddzielnego widoku podsumowania testu, gdzie będzie widoczna.
 
 <img alt="Vitest UI" img-light src="/annotations-html-light.png">
 <img alt="Vitest UI" img-dark src="/annotations-html-dark.png">
 
 ### junit
 
-The `junit` reporter lists annotations inside the testcase's `properties` tag. The JUnit reporter will ignore all attachments and will print only the type and the message.
+Reporter `junit` wyświetla adnotacje wewnątrz tagu `properties` przypadku testowego. Reporter JUnit zignoruje wszystkie załączniki i wydrukuje tylko typ i wiadomość.
 
 ```xml
-<testcase classname="basic/example.test.js" name="an example of a test with annotation" time="0.14315">
+<testcase classname="basic/example.test.js" name="przykład testu z adnotacją" time="0.14315">
     <properties>
-        <property name="notice" value="the message of the annotation">
+        <property name="notice" value="wiadomość adnotacji">
         </property>
     </properties>
 </testcase>
@@ -87,16 +87,16 @@ The `junit` reporter lists annotations inside the testcase's `properties` tag. T
 
 ### github-actions
 
-The `github-actions` reporter will print the annotation as a [notice message](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#setting-a-notice-message) by default. You can configure the `type` by passing down the second argument as `notice`, `warning` or `error`. If type is none of these, Vitest will show the message as a notice.
+Reporter `github-actions` domyślnie wydrukuje adnotację jako [wiadomość notice](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#setting-a-notice-message). Możesz skonfigurować `type`, przekazując drugi argument jako `notice`, `warning` lub `error`. Jeśli typ nie jest żadnym z tych, Vitest pokaże wiadomość jako notice.
 
 <img alt="GitHub Actions" img-light src="/annotations-gha-light.png">
 <img alt="GitHub Actions" img-dark src="/annotations-gha-dark.png">
 
 ### tap
 
-The `tap` and `tap-flat` reporters print annotations as diagnostic messages on a new line starting with a `#` symbol. They will ignore all attachments and will print only the type and message:
+Reportery `tap` i `tap-flat` drukują adnotacje jako wiadomości diagnostyczne w nowej linii zaczynającej się od symbolu `#`. Zignorują wszystkie załączniki i wydrukują tylko typ i wiadomość:
 
 ```
-ok 1 - an example of a test with annotation # time=143.15ms
-    # notice: the message of the annotation
+ok 1 - przykład testu z adnotacją # time=143.15ms
+    # notice: wiadomość adnotacji
 ```
