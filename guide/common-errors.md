@@ -1,16 +1,16 @@
 ---
-title: Common Errors | Guide
+title: Częste błędy | Przewodnik
 ---
 
-# Common Errors
+# Częste błędy
 
 ## Cannot find module './relative-path'
 
-If you receive an error that module cannot be found, it might mean several different things:
+Jeśli otrzymujesz błąd, że moduł nie może być znaleziony, może to oznaczać kilka różnych rzeczy:
 
-- 1. You misspelled the path. Make sure the path is correct.
+- 1. Źle napisałeś ścieżkę. Upewnij się, że ścieżka jest poprawna.
 
-- 2. It's possible that you rely on `baseUrl` in your `tsconfig.json`. Vite doesn't take into account `tsconfig.json` by default, so you might need to install [`vite-tsconfig-paths`](https://www.npmjs.com/package/vite-tsconfig-paths) yourself, if you rely on this behaviour.
+- 2. Możliwe, że polegasz na `baseUrl` w swoim `tsconfig.json`. Vite domyślnie nie bierze pod uwagę `tsconfig.json`, więc możesz potrzebować zainstalować [`vite-tsconfig-paths`](https://www.npmjs.com/package/vite-tsconfig-paths) samodzielnie, jeśli polegasz na tym zachowaniu.
 
 ```ts
 import { defineConfig } from 'vitest/config'
@@ -21,14 +21,14 @@ export default defineConfig({
 })
 ```
 
-Or rewrite your path to not be relative to root:
+Lub przepisz swoją ścieżkę, aby nie była względna do roota:
 
 ```diff
 - import helpers from 'src/helpers'
 + import helpers from '../src/helpers'
 ```
 
-- 3. Make sure you don't have relative [aliases](/config/#alias). Vite treats them as relative to the file where the import is instead of the root.
+- 3. Upewnij się, że nie masz względnych [aliasów](/config/#alias). Vite traktuje je jako względne do pliku, w którym znajduje się import, zamiast do roota.
 
 ```ts
 import { defineConfig } from 'vitest/config'
@@ -45,9 +45,9 @@ export default defineConfig({
 
 ## Failed to Terminate Worker
 
-This error can happen when NodeJS's `fetch` is used with default [`pool: 'threads'`](/config/#threads). This issue is tracked on issue [Timeout abort can leave process(es) running in the background #3077](https://github.com/vitest-dev/vitest/issues/3077).
+Ten błąd może wystąpić, gdy `fetch` NodeJS jest używany z domyślnym [`pool: 'threads'`](/config/#threads). Ten problem jest śledzony w issue [Timeout abort can leave process(es) running in the background #3077](https://github.com/vitest-dev/vitest/issues/3077).
 
-As work-around you can switch to [`pool: 'forks'`](/config/#forks) or [`pool: 'vmForks'`](/config/#vmforks).
+Jako obejście możesz przełączyć się na [`pool: 'forks'`](/config/#forks) lub [`pool: 'vmForks'`](/config/#vmforks).
 
 ::: code-group
 ```ts [vitest.config.js]
@@ -64,11 +64,11 @@ vitest --pool=forks
 ```
 :::
 
-## Custom package conditions are not resolved
+## Niestandardowe warunki pakietów nie są rozwiązywane
 
-If you are using custom conditions in your `package.json` [exports](https://nodejs.org/api/packages.html#package-entry-points) or [subpath imports](https://nodejs.org/api/packages.html#subpath-imports), you may find that Vitest does not respect these conditions by default.
+Jeśli używasz niestandardowych warunków w swoim `package.json` [exports](https://nodejs.org/api/packages.html#package-entry-points) lub [subpath imports](https://nodejs.org/api/packages.html#subpath-imports), możesz zauważyć, że Vitest domyślnie nie respektuje tych warunków.
 
-For example, if you have the following in your `package.json`:
+Na przykład, jeśli masz następujące w swoim `package.json`:
 
 ```json
 {
@@ -87,7 +87,7 @@ For example, if you have the following in your `package.json`:
 }
 ```
 
-By default, Vitest will only use the `import` and `default` conditions. To make Vitest respect custom conditions, you need to configure [`ssr.resolve.conditions`](https://vite.dev/config/ssr-options#ssr-resolve-conditions) in your Vitest config:
+Domyślnie Vitest użyje tylko warunków `import` i `default`. Aby Vitest respektował niestandardowe warunki, musisz skonfigurować [`ssr.resolve.conditions`](https://vite.dev/config/ssr-options#ssr-resolve-conditions) w swojej konfiguracji Vitest:
 
 ```ts [vitest.config.js]
 import { defineConfig } from 'vitest/config'
@@ -101,26 +101,26 @@ export default defineConfig({
 })
 ```
 
-::: tip Why `ssr.resolve.conditions` and not `resolve.conditions`?
-Vitest follows Vite's configuration convention:
-- [`resolve.conditions`](https://vite.dev/config/shared-options#resolve-conditions) applies to Vite's `client` environment, which corresponds to Vitest's browser mode, jsdom, happy-dom, or custom environments with `viteEnvironment: 'client'`.
-- [`ssr.resolve.conditions`](https://vite.dev/config/ssr-options#ssr-resolve-conditions) applies to Vite's `ssr` environment, which corresponds to Vitest's node environment or custom environments with `viteEnvironment: 'ssr'`.
+::: tip Dlaczego `ssr.resolve.conditions` a nie `resolve.conditions`?
+Vitest podąża za konwencją konfiguracji Vite:
+- [`resolve.conditions`](https://vite.dev/config/shared-options#resolve-conditions) stosuje się do środowiska `client` Vite, które odpowiada trybowi przeglądarki Vitest, jsdom, happy-dom lub niestandardowym środowiskom z `viteEnvironment: 'client'`.
+- [`ssr.resolve.conditions`](https://vite.dev/config/ssr-options#ssr-resolve-conditions) stosuje się do środowiska `ssr` Vite, które odpowiada środowisku node Vitest lub niestandardowym środowiskom z `viteEnvironment: 'ssr'`.
 
-Since Vitest defaults to the `node` environment (which uses `viteEnvironment: 'ssr'`), module resolution uses `ssr.resolve.conditions`. This applies to both package exports and subpath imports.
+Ponieważ Vitest domyślnie używa środowiska `node` (które używa `viteEnvironment: 'ssr'`), rozwiązywanie modułów używa `ssr.resolve.conditions`. Dotyczy to zarówno eksportów pakietów, jak i subpath imports.
 
-You can learn more about Vite environments and Vitest environments in [`environment`](/config/environment).
+Możesz dowiedzieć się więcej o środowiskach Vite i środowiskach Vitest w [`environment`](/config/environment).
 :::
 
-## Segfaults and Native Code Errors
+## Segfaults i błędy natywnego kodu
 
-Running [native NodeJS modules](https://nodejs.org/api/addons.html) in `pool: 'threads'` can run into cryptic errors coming from the native code.
+Uruchamianie [natywnych modułów NodeJS](https://nodejs.org/api/addons.html) w `pool: 'threads'` może powodować zagadkowe błędy pochodzące z natywnego kodu.
 
 - `Segmentation fault (core dumped)`
 - `thread '<unnamed>' panicked at 'assertion failed`
 - `Abort trap: 6`
 - `internal error: entered unreachable code`
 
-In these cases the native module is likely not built to be multi-thread safe. As work-around, you can switch to `pool: 'forks'` which runs the test cases in multiple `node:child_process` instead of multiple `node:worker_threads`.
+W tych przypadkach natywny moduł prawdopodobnie nie jest zbudowany jako bezpieczny wielowątkowo. Jako obejście możesz przełączyć się na `pool: 'forks'`, który uruchamia przypadki testowe w wielu `node:child_process` zamiast wielu `node:worker_threads`.
 
 ::: code-group
 ```ts [vitest.config.js]
