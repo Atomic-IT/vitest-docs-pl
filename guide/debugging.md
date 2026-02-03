@@ -1,34 +1,34 @@
 ---
-title: Debugging | Guide
+title: Debugowanie | Przewodnik
 ---
 
-# Debugging
+# Debugowanie
 
 :::tip
-When debugging tests you might want to use following options:
+Podczas debugowania testów możesz chcieć użyć następujących opcji:
 
-- [`--test-timeout=0`](/guide/cli#testtimeout) to prevent tests from timing out when stopping at breakpoints
-- [`--no-file-parallelism`](/guide/cli#fileparallelism) to prevent test files from running parallel
+- [`--test-timeout=0`](/guide/cli#testtimeout) aby zapobiec timeout testów przy zatrzymywaniu na breakpointach
+- [`--no-file-parallelism`](/guide/cli#fileparallelism) aby zapobiec równoległemu uruchamianiu plików testowych
 
 :::
 
 ## VS Code
 
-Quick way to debug tests in VS Code is via `JavaScript Debug Terminal`. Open a new `JavaScript Debug Terminal` and run `npm run test` or `vitest` directly. *this works with any code run in Node, so will work with most JS testing frameworks*
+Szybkim sposobem na debugowanie testów w VS Code jest przez `JavaScript Debug Terminal`. Otwórz nowy `JavaScript Debug Terminal` i uruchom `npm run test` lub `vitest` bezpośrednio. *to działa z każdym kodem uruchamianym w Node, więc będzie działać z większością frameworków testowych JS*
 
 ![image](https://user-images.githubusercontent.com/5594348/212169143-72bf39ce-f763-48f5-822a-0c8b2e6a8484.png)
 
-You can also add a dedicated launch configuration to debug a test file in VS Code:
+Możesz również dodać dedykowaną konfigurację uruchamiania do debugowania pliku testowego w VS Code:
 
 ```json
 {
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  // Więcej informacji: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug Current Test File",
+      "name": "Debuguj bieżący plik testowy",
       "autoAttachChildProcesses": true,
       "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
@@ -40,11 +40,11 @@ You can also add a dedicated launch configuration to debug a test file in VS Cod
 }
 ```
 
-Then in the debug tab, ensure 'Debug Current Test File' is selected. You can then open the test file you want to debug and press F5 to start debugging.
+Następnie w zakładce debug upewnij się, że wybrano 'Debuguj bieżący plik testowy'. Możesz wtedy otworzyć plik testowy, który chcesz debugować, i nacisnąć F5, aby rozpocząć debugowanie.
 
-### Browser mode
+### Tryb przeglądarki
 
-To debug [Vitest Browser Mode](/guide/browser/index.md), pass `--inspect` or `--inspect-brk` in CLI or define it in your Vitest configuration:
+Aby debugować [Vitest Browser Mode](/guide/browser/index.md), przekaż `--inspect` lub `--inspect-brk` w CLI lub zdefiniuj to w swojej konfiguracji Vitest:
 
 ::: code-group
 ```bash [CLI]
@@ -67,13 +67,13 @@ export default defineConfig({
 ```
 :::
 
-By default Vitest will use port `9229` as debugging port. You can overwrite it with by passing value in `--inspect-brk`:
+Domyślnie Vitest użyje portu `9229` jako portu debugowania. Możesz go nadpisać, przekazując wartość w `--inspect-brk`:
 
 ```bash
 vitest --inspect-brk=127.0.0.1:3000 --browser --no-file-parallelism
 ```
 
-Use following [VSCode Compound configuration](https://code.visualstudio.com/docs/editor/debugging#_compound-launch-configurations) for launching Vitest and attaching debugger in the browser:
+Użyj następującej [konfiguracji Compound VSCode](https://code.visualstudio.com/docs/editor/debugging#_compound-launch-configurations) do uruchamiania Vitest i podłączania debuggera w przeglądarce:
 
 ```json
 {
@@ -82,7 +82,7 @@ Use following [VSCode Compound configuration](https://code.visualstudio.com/docs
     {
       "type": "node",
       "request": "launch",
-      "name": "Run Vitest Browser",
+      "name": "Uruchom Vitest Browser",
       "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
       "console": "integratedTerminal",
       "args": ["--inspect-brk", "--browser", "--no-file-parallelism"]
@@ -90,14 +90,14 @@ Use following [VSCode Compound configuration](https://code.visualstudio.com/docs
     {
       "type": "chrome",
       "request": "attach",
-      "name": "Attach to Vitest Browser",
+      "name": "Podłącz do Vitest Browser",
       "port": 9229
     }
   ],
   "compounds": [
     {
-      "name": "Debug Vitest Browser",
-      "configurations": ["Attach to Vitest Browser", "Run Vitest Browser"],
+      "name": "Debuguj Vitest Browser",
+      "configurations": ["Podłącz do Vitest Browser", "Uruchom Vitest Browser"],
       "stopAll": true
     }
   ]
@@ -106,26 +106,26 @@ Use following [VSCode Compound configuration](https://code.visualstudio.com/docs
 
 ## IntelliJ IDEA
 
-Create a [vitest](https://www.jetbrains.com/help/idea/vitest.html#createRunConfigVitest) run configuration. Use the following settings to run all tests in debug mode:
+Utwórz konfigurację uruchamiania [vitest](https://www.jetbrains.com/help/idea/vitest.html#createRunConfigVitest). Użyj następujących ustawień, aby uruchomić wszystkie testy w trybie debug:
 
-Setting | Value
- --- | ---
+Ustawienie | Wartość
+--- | ---
 Working directory | `/path/to/your-project-root`
 
-Then run this configuration in debug mode. The IDE will stop at JS/TS breakpoints set in the editor.
+Następnie uruchom tę konfigurację w trybie debug. IDE zatrzyma się na breakpointach JS/TS ustawionych w edytorze.
 
-## Node Inspector, e.g. Chrome DevTools
+## Node Inspector, np. Chrome DevTools
 
-Vitest also supports debugging tests without IDEs. However this requires that tests are not run parallel. Use one of the following commands to launch Vitest.
+Vitest wspiera również debugowanie testów bez IDE. Jednak wymaga to, aby testy nie były uruchamiane równolegle. Użyj jednego z następujących poleceń, aby uruchomić Vitest.
 
 ```sh
-# To run in a single worker
+# Aby uruchomić w pojedynczym workerze
 vitest --inspect-brk --no-file-parallelism
 
-# To run in browser mode
+# Aby uruchomić w trybie przeglądarki
 vitest --inspect-brk --browser --no-file-parallelism
 ```
 
-Once Vitest starts it will stop execution and wait for you to open developer tools that can connect to [Node.js inspector](https://nodejs.org/en/docs/guides/debugging-getting-started/). You can use Chrome DevTools for this by opening `chrome://inspect` on browser.
+Gdy Vitest się uruchomi, zatrzyma wykonywanie i poczeka, aż otworzysz narzędzia deweloperskie, które mogą połączyć się z [Node.js inspector](https://nodejs.org/en/docs/guides/debugging-getting-started/). Możesz do tego użyć Chrome DevTools, otwierając `chrome://inspect` w przeglądarce.
 
-In watch mode you can keep the debugger open during test re-runs by using the `--isolate false` options.
+W trybie watch możesz utrzymać debugger otwarty podczas ponownych uruchomień testów, używając opcji `--isolate false`.
