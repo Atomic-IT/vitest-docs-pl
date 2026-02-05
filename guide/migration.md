@@ -1,50 +1,50 @@
 ---
-title: Migration Guide | Guide
+title: Przewodnik migracji | Przewodnik
 outline: deep
 ---
 
-# Migration Guide
+# Przewodnik migracji
 
-## Migrating to Vitest 4.0 {#vitest-4}
+## Migracja do Vitest 4.0 {#vitest-4}
 
-### V8 Code Coverage Major Changes
+### Główne zmiany w pokryciu kodu V8
 
-Vitest's V8 code coverage provider is now using more accurate coverage result remapping logic.
-It is expected for users to see changes in their coverage reports when updating from Vitest v3.
+Dostawca pokrycia kodu V8 w Vitest używa teraz dokładniejszej logiki remapowania wyników pokrycia.
+Oczekuje się, że użytkownicy zobaczą zmiany w swoich raportach pokrycia podczas aktualizacji z Vitest v3.
 
-In the past Vitest used [`v8-to-istanbul`](https://github.com/istanbuljs/v8-to-istanbul) for remapping V8 coverage results into your source files.
-This method wasn't very accurate and provided plenty of false positives in the coverage reports.
-We've now developed a new package that utilizes AST based analysis for the V8 coverage.
-This allows V8 reports to be as accurate as `@vitest/coverage-istanbul` reports.
+W przeszłości Vitest używał [`v8-to-istanbul`](https://github.com/istanbuljs/v8-to-istanbul) do remapowania wyników pokrycia V8 na pliki źródłowe.
+Ta metoda nie była zbyt dokładna i dostarczała wiele fałszywych pozytywów w raportach pokrycia.
+Opracowaliśmy teraz nowy pakiet, który wykorzystuje analizę opartą na AST dla pokrycia V8.
+To pozwala raportom V8 być tak dokładnymi jak raporty `@vitest/coverage-istanbul`.
 
-- Coverage ignore hints have updated. See [Coverage | Ignoring Code](/guide/coverage.html#ignoring-code).
-- `coverage.ignoreEmptyLines` is removed. Lines without runtime code are no longer included in reports.
-- `coverage.experimentalAstAwareRemapping` is removed. This option is now enabled by default, and is the only supported remapping method.
-- `coverage.ignoreClassMethods` is now supported by V8 provider too.
+- Podpowiedzi ignorowania pokrycia zostały zaktualizowane. Zobacz [Pokrycie | Ignorowanie kodu](/guide/coverage.html#ignoring-code).
+- `coverage.ignoreEmptyLines` zostało usunięte. Linie bez kodu runtime nie są już uwzględniane w raportach.
+- `coverage.experimentalAstAwareRemapping` zostało usunięte. Ta opcja jest teraz domyślnie włączona i jest jedyną wspieraną metodą remapowania.
+- `coverage.ignoreClassMethods` jest teraz wspierane również przez dostawcę V8.
 
-### Removed Options `coverage.all` and `coverage.extensions`
+### Usunięte opcje `coverage.all` i `coverage.extensions`
 
-In previous versions Vitest included all uncovered files in coverage report by default.
-This was due to `coverage.all` defaulting to `true`, and `coverage.include` defaulting to `**`.
-These default values were chosen for a good reason - it is impossible for testing tools to guess where users are storing their source files.
+W poprzednich wersjach Vitest domyślnie uwzględniał wszystkie niepokryte pliki w raporcie pokrycia.
+Było to spowodowane domyślną wartością `coverage.all` ustawioną na `true` i `coverage.include` ustawioną na `**`.
+Te domyślne wartości zostały wybrane z dobrego powodu - narzędzia testowe nie mogą zgadnąć, gdzie użytkownicy przechowują swoje pliki źródłowe.
 
-This ended up having Vitest's coverage providers processing unexpected files, like minified Javascript, leading to slow/stuck coverage report generations.
-In Vitest v4 we have removed `coverage.all` completely and <ins>**defaulted to include only covered files in the report**</ins>.
+To skutkowało przetwarzaniem przez dostawców pokrycia Vitest nieoczekiwanych plików, takich jak zminifikowany Javascript, prowadząc do wolnego/zablokowanego generowania raportów pokrycia.
+W Vitest v4 całkowicie usunęliśmy `coverage.all` i <ins>**domyślnie uwzględniamy tylko pokryte pliki w raporcie**</ins>.
 
-When upgrading to v4 it is recommended to define `coverage.include` in your configuration, and then start applying simple `coverage.exclude` patterns if needed.
+Podczas aktualizacji do v4 zaleca się zdefiniowanie `coverage.include` w konfiguracji, a następnie stosowanie prostych wzorców `coverage.exclude` w razie potrzeby.
 
 ```ts [vitest.config.ts]
 export default defineConfig({
   test: {
     coverage: {
-      // Include covered and uncovered files matching this pattern:
+      // Uwzględnij pokryte i niepokryte pliki pasujące do tego wzorca:
       include: ['packages/**/src/**.{js,jsx,ts,tsx}'], // [!code ++]
 
-      // Exclusion is applied for the files that match include pattern above
-      // No need to define root level *.config.ts files or node_modules, as we didn't add those in include
+      // Wykluczenie jest stosowane dla plików pasujących do powyższego wzorca include
+      // Nie trzeba definiować plików *.config.ts na poziomie root ani node_modules, ponieważ nie dodaliśmy ich w include
       exclude: ['**/some-pattern/**'], // [!code ++]
 
-      // These options are removed now
+      // Te opcje są teraz usunięte
       all: true, // [!code --]
       extensions: ['js', 'ts'], // [!code --]
     }
@@ -52,34 +52,34 @@ export default defineConfig({
 })
 ```
 
-If `coverage.include` is not defined, coverage report will include only files that were loaded during test run:
+Jeśli `coverage.include` nie jest zdefiniowane, raport pokrycia będzie zawierał tylko pliki załadowane podczas uruchomienia testu:
 ```ts [vitest.config.ts]
 export default defineConfig({
   test: {
     coverage: {
-      // Include not set, include only files that are loaded during test run
+      // Include nie ustawione, uwzględnij tylko pliki załadowane podczas uruchomienia testu
       include: undefined, // [!code ++]
 
-      // Loaded files that match this pattern will be excluded:
+      // Załadowane pliki pasujące do tego wzorca będą wykluczone:
       exclude: ['**/some-pattern/**'], // [!code ++]
     }
   }
 })
 ```
 
-See also new guides:
-- [Including and excluding files from coverage report](/guide/coverage.html#including-and-excluding-files-from-coverage-report) for examples
-- [Profiling Test Performance | Code coverage](/guide/profiling-test-performance.html#code-coverage) for tips about debugging coverage generation
+Zobacz również nowe przewodniki:
+- [Włączanie i wykluczanie plików z raportu pokrycia](/guide/coverage.html#including-and-excluding-files-from-coverage-report) po przykłady
+- [Profilowanie wydajności testów | Pokrycie kodu](/guide/profiling-test-performance.html#code-coverage) po wskazówki dotyczące debugowania generowania pokrycia
 
-### Simplified `exclude`
+### Uproszczone `exclude`
 
-By default, Vitest now only excludes tests from `node_modules` and `.git` folders. This means that Vitest no longer excludes:
+Domyślnie Vitest teraz wyklucza testy tylko z folderów `node_modules` i `.git`. Oznacza to, że Vitest nie wyklucza już:
 
-- `dist` and `cypress` folders
-- `.idea`, `.cache`, `.output`, `.temp` folders
-- config files like `rollup.config.js`, `prettier.config.js`, `ava.config.js` and so on
+- folderów `dist` i `cypress`
+- folderów `.idea`, `.cache`, `.output`, `.temp`
+- plików konfiguracyjnych jak `rollup.config.js`, `prettier.config.js`, `ava.config.js` itd.
 
-If you need to limit the directory where your tests files are located, use the [`test.dir`](/config/dir) option instead because it is more performant than excluding files:
+Jeśli musisz ograniczyć katalog, w którym znajdują się twoje pliki testowe, użyj zamiast tego opcji [`test.dir`](/config/dir), ponieważ jest bardziej wydajna niż wykluczanie plików:
 
 ```ts
 import { configDefaults, defineConfig } from 'vitest/config'
@@ -91,7 +91,7 @@ export default defineConfig({
 })
 ```
 
-To restore the previous behaviour, specify old `excludes` manually:
+Aby przywrócić poprzednie zachowanie, określ ręcznie stare `excludes`:
 
 ```ts
 import { configDefaults, defineConfig } from 'vitest/config'
@@ -109,9 +109,9 @@ export default defineConfig({
 })
 ```
 
-### `spyOn` and `fn` Support Constructors
+### `spyOn` i `fn` wspierają konstruktory
 
-Previously, if you tried to spy on a constructor with `vi.spyOn`, you would get an error like `Constructor <name> requires 'new'`. Since Vitest 4, all mocks called with a `new` keyword construct the instance instead of calling `mock.apply`. This means that the mock implementation has to use either the `function` or the `class` keyword in these cases:
+Wcześniej, jeśli próbowałeś szpiegować konstruktor za pomocą `vi.spyOn`, otrzymywałeś błąd jak `Constructor <name> requires 'new'`. Od Vitest 4 wszystkie mocki wywoływane ze słowem kluczowym `new` konstruują instancję zamiast wywoływać `mock.apply`. Oznacza to, że implementacja mocka musi używać albo słowa kluczowego `function`, albo `class` w tych przypadkach:
 
 ```ts {12-14,16-20}
 const cart = {
@@ -124,11 +124,11 @@ const cart = {
 
 const Spy = vi.spyOn(cart, 'Apples')
   .mockImplementation(() => ({ getApples: () => 0 })) // [!code --]
-  // with a function keyword
+  // ze słowem kluczowym function
   .mockImplementation(function () {
     this.getApples = () => 0
   })
-  // with a custom class
+  // z niestandardową klasą
   .mockImplementation(class MockApples {
     getApples() {
       return 0
@@ -138,17 +138,17 @@ const Spy = vi.spyOn(cart, 'Apples')
 const mock = new Spy()
 ```
 
-Note that now if you provide an arrow function, you will get [`<anonymous> is not a constructor` error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Not_a_constructor) when the mock is called.
+Zauważ, że teraz jeśli podasz funkcję strzałkową, otrzymasz [błąd `<anonymous> is not a constructor`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Not_a_constructor), gdy mock zostanie wywołany.
 
-### Changes to Mocking
+### Zmiany w mockowaniu
 
-Alongside new features like supporting constructors, Vitest 4 creates mocks differently to address several module mocking issues that we received over the years. This release attempts to make module spies less confusing, especially when working with classes.
+Wraz z nowymi funkcjami jak wsparcie konstruktorów, Vitest 4 tworzy mocki inaczej, aby rozwiązać kilka problemów z mockowaniem modułów, które otrzymaliśmy przez lata. Ta wersja próbuje uczynić szpiegów modułów mniej mylącymi, szczególnie podczas pracy z klasami.
 
-- `vi.fn().getMockName()` now returns `vi.fn()` by default instead of `spy`. This can affect snapshots with mocks - the name will be changed from `[MockFunction spy]` to `[MockFunction]`. Spies created with `vi.spyOn` will keep using the original name by default for better debugging experience
-- `vi.restoreAllMocks` no longer resets the state of spies and only restores spies created manually with `vi.spyOn`, automocks are no longer affected by this function (this also affects the config option [`restoreMocks`](/config/#restoremocks)). Note that `.mockRestore` will still reset the mock implementation and clear the state
-- Calling `vi.spyOn` on a mock now returns the same mock
-- `mock.settledResults` are now populated immediately on function invocation with an `'incomplete'` result. When the promise is finished, the type is changed according to the result.
-- Automocked instance methods are now properly isolated, but share a state with the prototype. Overriding the prototype implementation will always affect instance methods unless the methods have a custom mock implementation of their own. Calling `.mockReset` on the mock also no longer breaks that inheritance.
+- `vi.fn().getMockName()` teraz domyślnie zwraca `vi.fn()` zamiast `spy`. Może to wpłynąć na snapshoty z mockami - nazwa zostanie zmieniona z `[MockFunction spy]` na `[MockFunction]`. Szpiegi utworzone za pomocą `vi.spyOn` będą domyślnie nadal używać oryginalnej nazwy dla lepszego doświadczenia debugowania
+- `vi.restoreAllMocks` nie resetuje już stanu szpiegów i przywraca tylko szpiegów utworzonych ręcznie za pomocą `vi.spyOn`, automocki nie są już dotknięte przez tę funkcję (dotyczy to również opcji konfiguracji [`restoreMocks`](/config/#restoremocks)). Zauważ, że `.mockRestore` nadal będzie resetować implementację mocka i czyścić stan
+- Wywołanie `vi.spyOn` na mocku teraz zwraca ten sam mock
+- `mock.settledResults` są teraz wypełniane natychmiast przy wywołaniu funkcji z wynikiem `'incomplete'`. Gdy promise jest zakończony, typ jest zmieniany zgodnie z wynikiem.
+- Automockowane metody instancji są teraz prawidłowo izolowane, ale współdzielą stan z prototypem. Nadpisanie implementacji prototypu zawsze wpłynie na metody instancji, chyba że metody mają własną niestandardową implementację mocka. Wywołanie `.mockReset` na mocku również nie łamie już tego dziedziczenia.
 ```ts
 import { AutoMockedClass } from './example.js'
 const instance1 = new AutoMockedClass()
@@ -169,22 +169,22 @@ expect(instance2.method()).toBe(100)
 
 expect(AutoMockedClass.prototype.method).toHaveBeenCalledTimes(4)
 ```
-- Automocked methods can no longer be restored, even with a manual `.mockRestore`. Automocked modules with `spy: true` will keep working as before
-- Automocked getters no longer call the original getter. By default, automocked getters now return `undefined`. You can keep using `vi.spyOn(object, name, 'get')` to spy on a getter and change its implementation
-- The mock `vi.fn(implementation).mockReset()` now correctly returns the mock implementation in `.getMockImplementation()`
-- `vi.fn().mock.invocationCallOrder` now starts with `1`, like Jest does, instead of `0`
+- Automockowane metody nie mogą być już przywracane, nawet ręcznym `.mockRestore`. Automockowane moduły z `spy: true` będą nadal działać jak wcześniej
+- Automockowane gettery nie wywołują już oryginalnego gettera. Domyślnie automockowane gettery teraz zwracają `undefined`. Możesz nadal używać `vi.spyOn(object, name, 'get')`, aby szpiegować getter i zmienić jego implementację
+- Mock `vi.fn(implementation).mockReset()` teraz prawidłowo zwraca implementację mocka w `.getMockImplementation()`
+- `vi.fn().mock.invocationCallOrder` teraz zaczyna od `1`, jak w Jest, zamiast od `0`
 
-### Standalone Mode with Filename Filter
+### Tryb standalone z filtrem nazwy pliku
 
-To improve user experience, Vitest will now start running the matched files when [`--standalone`](/guide/cli#standalone) is used with filename filter.
+Aby poprawić doświadczenie użytkownika, Vitest teraz zacznie uruchamiać dopasowane pliki, gdy [`--standalone`](/guide/cli#standalone) jest używane z filtrem nazwy pliku.
 
 ```sh
-# In Vitest v3 and below this command would ignore "math.test.ts" filename filter.
-# In Vitest v4 the math.test.ts will run automatically.
+# W Vitest v3 i wcześniejszych to polecenie ignorowałoby filtr nazwy pliku "math.test.ts".
+# W Vitest v4 math.test.ts uruchomi się automatycznie.
 $ vitest --standalone math.test.ts
 ```
 
-This allows users to create re-usable `package.json` scripts for standalone mode.
+To pozwala użytkownikom tworzyć wielokrotnego użytku skrypty `package.json` dla trybu standalone.
 
 ::: code-group
 ```json [package.json]
@@ -195,32 +195,32 @@ This allows users to create re-usable `package.json` scripts for standalone mode
 }
 ```
 ```bash [CLI]
-# Start Vitest in standalone mode, without running any files on start
+# Uruchom Vitest w trybie standalone, bez uruchamiania żadnych plików na starcie
 $ pnpm run test:dev
 
-# Run math.test.ts immediately
+# Uruchom math.test.ts natychmiast
 $ pnpm run test:dev math.test.ts
 ```
 :::
 
-### Replacing `vite-node` with [Module Runner](https://vite.dev/guide/api-environment-runtimes.html#modulerunner)
+### Zastąpienie `vite-node` przez [Module Runner](https://vite.dev/guide/api-environment-runtimes.html#modulerunner)
 
-Module Runner is a successor to `vite-node` implemented directly in Vite. Vitest now uses it directly instead of having a wrapper around Vite SSR handler. This means that certain features are no longer available:
+Module Runner jest następcą `vite-node` zaimplementowanym bezpośrednio w Vite. Vitest teraz używa go bezpośrednio zamiast mieć wrapper wokół handlera Vite SSR. Oznacza to, że pewne funkcje nie są już dostępne:
 
-- `VITE_NODE_DEPS_MODULE_DIRECTORIES` environment variable was replaced with `VITEST_MODULE_DIRECTORIES`
-- Vitest no longer injects `__vitest_executor` into every [test runner](/api/advanced/runner). Instead, it injects `moduleRunner` which is an instance of [`ModuleRunner`](https://vite.dev/guide/api-environment-runtimes.html#modulerunner)
-- `vitest/execute` entry point was removed. It was always meant to be internal
-- [Custom environments](/guide/environment) no longer need to provide a `transformMode` property. Instead, provide `viteEnvironment`. If it is not provided, Vitest will use the environment name to transform files on the server (see [`server.environments`](https://vite.dev/guide/api-environment-instances.html))
-- `vite-node` is no longer a dependency of Vitest
-- `deps.optimizer.web` was renamed to [`deps.optimizer.client`](/config/#deps-optimizer-client). You can also use any custom names to apply optimizer configs when using other server environments
+- Zmienna środowiskowa `VITE_NODE_DEPS_MODULE_DIRECTORIES` została zastąpiona przez `VITEST_MODULE_DIRECTORIES`
+- Vitest nie wstrzykuje już `__vitest_executor` do każdego [runnera testów](/api/advanced/runner). Zamiast tego wstrzykuje `moduleRunner`, który jest instancją [`ModuleRunner`](https://vite.dev/guide/api-environment-runtimes.html#modulerunner)
+- Punkt wejścia `vitest/execute` został usunięty. Zawsze był przeznaczony do użytku wewnętrznego
+- [Niestandardowe środowiska](/guide/environment) nie muszą już dostarczać właściwości `transformMode`. Zamiast tego dostarcz `viteEnvironment`. Jeśli nie jest dostarczone, Vitest użyje nazwy środowiska do transformacji plików na serwerze (zobacz [`server.environments`](https://vite.dev/guide/api-environment-instances.html))
+- `vite-node` nie jest już zależnością Vitest
+- `deps.optimizer.web` zostało przemianowane na [`deps.optimizer.client`](/config/#deps-optimizer-client). Możesz również używać dowolnych niestandardowych nazw do stosowania konfiguracji optymalizatora podczas używania innych środowisk serwera
 
-Vite has its own externalization mechanism, but we decided to keep using the old one to reduce the amount of breaking changes. You can keep using [`server.deps`](/config/#server-deps) to inline or externalize packages.
+Vite ma swój własny mechanizm eksternalizacji, ale zdecydowaliśmy się nadal używać starego, aby zmniejszyć ilość przełomowych zmian. Możesz nadal używać [`server.deps`](/config/#server-deps) do inline'owania lub eksternalizacji pakietów.
 
-This update should not be noticeable unless you rely on advanced features mentioned above.
+Ta aktualizacja nie powinna być zauważalna, chyba że polegasz na zaawansowanych funkcjach wymienionych powyżej.
 
-### `workspace` is Replaced with `projects`
+### `workspace` zostało zastąpione przez `projects`
 
-The `workspace` configuration option was renamed to [`projects`](/guide/projects) in Vitest 3.2. They are functionally the same, except you cannot specify another file as the source of your workspace (previously you could specify a file that would export an array of projects). Migrating to `projects` is easy, just move the code from `vitest.workspace.js` to `vitest.config.ts`:
+Opcja konfiguracji `workspace` została przemianowana na [`projects`](/guide/projects) w Vitest 3.2. Są funkcjonalnie takie same, z wyjątkiem tego, że nie możesz określić innego pliku jako źródła swojego workspace (wcześniej mogłeś określić plik, który eksportowałby tablicę projektów). Migracja do `projects` jest łatwa, po prostu przenieś kod z `vitest.workspace.js` do `vitest.config.ts`:
 
 ::: code-group
 ```ts [vitest.config.js]
@@ -254,9 +254,9 @@ export default defineWorkspace([ // [!code --]
 ```
 :::
 
-### Browser Provider Rework
+### Przebudowa dostawcy przeglądarki
 
-In Vitest 4.0, the browser provider now accepts an object instead of a string (`'playwright'`, `'webdriverio'`). The `preview` is no longer a default. This makes it simpler to work with custom options and doesn't require adding `/// <reference` comments anymore.
+W Vitest 4.0 dostawca przeglądarki teraz przyjmuje obiekt zamiast stringa (`'playwright'`, `'webdriverio'`). `preview` nie jest już domyślny. To ułatwia pracę z niestandardowymi opcjami i nie wymaga już dodawania komentarzy `/// <reference`.
 
 ```ts
 import { playwright } from '@vitest/browser-playwright' // [!code ++]
@@ -283,22 +283,22 @@ export default defineConfig({
 })
 ```
 
-The naming of properties in `playwright` factory now also aligns with [Playwright documentation](https://playwright.dev/docs/api/class-testoptions#test-options-launch-options) making it easier to find.
+Nazewnictwo właściwości w fabryce `playwright` jest teraz również zgodne z [dokumentacją Playwright](https://playwright.dev/docs/api/class-testoptions#test-options-launch-options), co ułatwia znajdowanie.
 
-With this change, the `@vitest/browser` package is no longer needed, and you can remove it from your dependencies. To support the context import, you should update the `@vitest/browser/context` to `vitest/browser`:
+Z tą zmianą pakiet `@vitest/browser` nie jest już potrzebny i możesz go usunąć ze swoich zależności. Aby wspierać import kontekstu, powinieneś zaktualizować `@vitest/browser/context` na `vitest/browser`:
 
 ```ts
 import { page } from '@vitest/browser/context' // [!code --]
 import { page } from 'vitest/browser' // [!code ++]
 
-test('example', async () => {
+test('przykład', async () => {
   await page.getByRole('button').click()
 })
 ```
 
-The modules are identical, so doing a simple "Find and Replace" should be sufficient.
+Moduły są identyczne, więc proste "Znajdź i zamień" powinno wystarczyć.
 
-If you were using the `@vitest/browser/utils` module, you can now import those utilities from `vitest/browser` as well:
+Jeśli używałeś modułu `@vitest/browser/utils`, możesz teraz importować te narzędzia również z `vitest/browser`:
 
 ```ts
 import { getElementError } from '@vitest/browser/utils' // [!code --]
@@ -307,22 +307,21 @@ const { getElementError } = utils // [!code ++]
 ```
 
 ::: warning
-Both `@vitest/browser/context` and `@vitest/browser/utils` work at runtime during the transition period, but they will be removed in a future release.
+Zarówno `@vitest/browser/context`, jak i `@vitest/browser/utils` działają w runtime podczas okresu przejściowego, ale zostaną usunięte w przyszłej wersji.
 :::
 
-### Pool Rework
+### Przebudowa pool
 
-Vitest has used [`tinypool`](https://github.com/tinylibs/tinypool) for orchestrating how test files are run in the test runner workers. Tinypool has controlled how complex tasks like parallelism, isolation and IPC communication works internally. However we've found that Tinypool has some flaws that are slowing down development of Vitest. In Vitest v4 we've completely removed Tinypool and rewritten how pools work without new dependencies. Read more about reasoning from [feat!: rewrite pools without tinypool #8705
-](https://github.com/vitest-dev/vitest/pull/8705).
+Vitest używał [`tinypool`](https://github.com/tinylibs/tinypool) do orkiestracji sposobu uruchamiania plików testowych w workerach runnera testów. Tinypool kontrolował, jak złożone zadania takie jak równoległość, izolacja i komunikacja IPC działają wewnętrznie. Jednak stwierdziliśmy, że Tinypool ma pewne wady, które spowalniają rozwój Vitest. W Vitest v4 całkowicie usunęliśmy Tinypool i przepisaliśmy sposób działania pool bez nowych zależności. Przeczytaj więcej o rozumowaniu w [feat!: rewrite pools without tinypool #8705](https://github.com/vitest-dev/vitest/pull/8705).
 
-New pool architecture allows Vitest to simplify many previously complex configuration options:
+Nowa architektura pool pozwala Vitest uprościć wiele wcześniej złożonych opcji konfiguracyjnych:
 
-- `maxThreads` and `maxForks` are now `maxWorkers`.
-- Environment variables `VITEST_MAX_THREADS` and `VITEST_MAX_FORKS` are now `VITEST_MAX_WORKERS`.
-- `singleThread` and `singleFork` are now `maxWorkers: 1, isolate: false`. If your tests were relying on module reset between tests, you'll need to add [setupFile](/config/setupfiles) that calls [`vi.resetModules()`](/api/vi.html#vi-resetmodules) in [`beforeAll` test hook](/api/#beforeall).
-- `poolOptions` is removed. All previous `poolOptions` are now top-level options. The `memoryLimit` of VM pools is renamed to `vmMemoryLimit`.
-- `threads.useAtomics` is removed. If you have a use case for this, feel free to open a new feature request.
-- Custom pool interface has been rewritten, see [Custom Pool](/guide/advanced/pool#custom-pool)
+- `maxThreads` i `maxForks` to teraz `maxWorkers`.
+- Zmienne środowiskowe `VITEST_MAX_THREADS` i `VITEST_MAX_FORKS` to teraz `VITEST_MAX_WORKERS`.
+- `singleThread` i `singleFork` to teraz `maxWorkers: 1, isolate: false`. Jeśli twoje testy polegały na resecie modułów między testami, musisz dodać [setupFile](/config/setupfiles), który wywołuje [`vi.resetModules()`](/api/vi.html#vi-resetmodules) w [hooku `beforeAll`](/api/#beforeall).
+- `poolOptions` zostało usunięte. Wszystkie poprzednie `poolOptions` są teraz opcjami najwyższego poziomu. `memoryLimit` pool VM zostało przemianowane na `vmMemoryLimit`.
+- `threads.useAtomics` zostało usunięte. Jeśli masz przypadek użycia dla tego, otwórz nowe żądanie funkcji.
+- Interfejs niestandardowego pool został przepisany, zobacz [Niestandardowy pool](/guide/advanced/pool#custom-pool)
 
 ```ts
 export default defineConfig({
@@ -345,23 +344,23 @@ export default defineConfig({
 })
 ```
 
-Previously it was not possible to specify some pool related options per project when using [Vitest Projects](/guide/projects). With the new architecture this is no longer a blocker.
+Wcześniej nie było możliwe określenie niektórych opcji związanych z pool dla projektu podczas używania [Vitest Projects](/guide/projects). Z nową architekturą to nie jest już blokadą.
 
 ::: code-group
-```ts [Isolation per project]
+```ts [Izolacja na projekt]
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
     projects: [
       {
-        // Non-isolated unit tests
+        // Nieizolowane testy jednostkowe
         name: 'Unit tests',
         isolate: false,
         exclude: ['**.integration.test.ts'],
       },
       {
-        // Isolated integration tests
+        // Izolowane testy integracyjne
         name: 'Integration tests',
         include: ['**.integration.test.ts'],
       },
@@ -369,7 +368,7 @@ export default defineConfig({
   },
 })
 ```
-```ts [Parallel & Sequential projects]
+```ts [Projekty równoległe i sekwencyjne]
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -388,7 +387,7 @@ export default defineConfig({
   },
 })
 ```
-```ts [Node CLI options per project]
+```ts [Opcje Node CLI na projekt]
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -408,13 +407,13 @@ export default defineConfig({
 ```
 :::
 
-See [Recipes](/guide/recipes) for more examples.
+Zobacz [Przepisy](/guide/recipes) po więcej przykładów.
 
-### Reporter Updates
+### Aktualizacje reporterów
 
-Reporter APIs `onCollected`, `onSpecsCollected`, `onPathsCollected`, `onTaskUpdate` and `onFinished` were removed. See [`Reporters API`](/api/advanced/reporters) for new alternatives. The new APIs were introduced in Vitest `v3.0.0`.
+API reporterów `onCollected`, `onSpecsCollected`, `onPathsCollected`, `onTaskUpdate` i `onFinished` zostały usunięte. Zobacz [`API Reporterów`](/api/advanced/reporters) po nowe alternatywy. Nowe API zostały wprowadzone w Vitest `v3.0.0`.
 
-The `basic` reporter was removed as it is equal to:
+Reporter `basic` został usunięty, ponieważ jest równoważny z:
 
 ```ts
 export default defineConfig({
@@ -426,7 +425,7 @@ export default defineConfig({
 })
 ```
 
-The [`verbose`](/guide/reporters#verbose-reporter) reporter now prints test cases as a flat list. To revert to the previous behaviour, use `--reporter=tree`:
+Reporter [`verbose`](/guide/reporters#verbose-reporter) teraz drukuje przypadki testowe jako płaską listę. Aby przywrócić poprzednie zachowanie, użyj `--reporter=tree`:
 
 ```ts
 export default defineConfig({
@@ -437,12 +436,12 @@ export default defineConfig({
 })
 ```
 
-### Snapshots using Custom Elements Print the Shadow Root
+### Snapshoty używające Custom Elements drukują Shadow Root
 
-In Vitest 4.0 snapshots that include custom elements will print the shadow root contents. To restore the previous behavior, set the [`printShadowRoot` option](/config/#snapshotformat) to `false`.
+W Vitest 4.0 snapshoty zawierające custom elements będą drukować zawartość shadow root. Aby przywrócić poprzednie zachowanie, ustaw [opcję `printShadowRoot`](/config/#snapshotformat) na `false`.
 
 ```js{15-22}
-// before Vite 4.0
+// przed Vite 4.0
 exports[`custom element with shadow root 1`] = `
 "<body>
   <div>
@@ -451,7 +450,7 @@ exports[`custom element with shadow root 1`] = `
 </body>"
 `
 
-// after Vite 4.0
+// po Vite 4.0
 exports[`custom element with shadow root 1`] = `
 "<body>
   <div>
@@ -470,63 +469,62 @@ exports[`custom element with shadow root 1`] = `
 `
 ```
 
-### Deprecated APIs are Removed
+### Przestarzałe API zostały usunięte
 
-Vitest 4.0 removes some deprecated APIs, including:
+Vitest 4.0 usuwa niektóre przestarzałe API, w tym:
 
-- `poolMatchGlobs` config option. Use [`projects`](/guide/projects) instead.
-- `environmentMatchGlobs` config option. Use [`projects`](/guide/projects) instead.
-- `deps.external`, `deps.inline`, `deps.fallbackCJS` config options. Use `server.deps.external`, `server.deps.inline`, or `server.deps.fallbackCJS` instead.
-- `browser.testerScripts` config option. Use [`browser.testerHtmlPath`](/config/browser/testerhtmlpath) instead.
-- `minWorkers` config option. Only `maxWorkers` has any effect on how tests are running, so we are removing this public option.
-- Vitest no longer supports providing test options object as a third argument to `test` and `describe`. Use the second argument instead:
-
-```ts
-test('example', () => { /* ... */ }, { retry: 2 }) // [!code --]
-test('example', { retry: 2 }, () => { /* ... */ }) // [!code ++]
-```
-
-Note that providing a timeout number as the last argument is still supported:
+- Opcja konfiguracji `poolMatchGlobs`. Użyj zamiast tego [`projects`](/guide/projects).
+- Opcja konfiguracji `environmentMatchGlobs`. Użyj zamiast tego [`projects`](/guide/projects).
+- Opcje konfiguracji `deps.external`, `deps.inline`, `deps.fallbackCJS`. Użyj zamiast tego `server.deps.external`, `server.deps.inline` lub `server.deps.fallbackCJS`.
+- Opcja konfiguracji `browser.testerScripts`. Użyj zamiast tego [`browser.testerHtmlPath`](/config/browser/testerhtmlpath).
+- Opcja konfiguracji `minWorkers`. Tylko `maxWorkers` ma wpływ na sposób uruchamiania testów, więc usuwamy tę publiczną opcję.
+- Vitest nie wspiera już podawania obiektu opcji testu jako trzeciego argumentu do `test` i `describe`. Użyj zamiast tego drugiego argumentu:
 
 ```ts
-test('example', () => { /* ... */ }, 1000) // ✅
+test('przykład', () => { /* ... */ }, { retry: 2 }) // [!code --]
+test('przykład', { retry: 2 }, () => { /* ... */ }) // [!code ++]
 ```
 
-This release also removes all deprecated types. This finally fixes an issue where Vitest accidentally pulled in `@types/node` (see [#5481](https://github.com/vitest-dev/vitest/issues/5481) and [#6141](https://github.com/vitest-dev/vitest/issues/6141)).
+Zauważ, że podawanie liczby timeout jako ostatniego argumentu jest nadal wspierane:
 
-## Migrating from Jest {#jest}
+```ts
+test('przykład', () => { /* ... */ }, 1000) // ✅
+```
 
-Vitest has been designed with a Jest compatible API, in order to make the migration from Jest as simple as possible. Despite those efforts, you may still run into the following differences:
+Ta wersja usuwa również wszystkie przestarzałe typy. To w końcu naprawia problem, gdzie Vitest przypadkowo ściągał `@types/node` (zobacz [#5481](https://github.com/vitest-dev/vitest/issues/5481) i [#6141](https://github.com/vitest-dev/vitest/issues/6141)).
 
-### Globals as a Default
+## Migracja z Jest {#jest}
 
-Jest has their [globals API](https://jestjs.io/docs/api) enabled by default. Vitest does not. You can either enable globals via [the `globals` configuration setting](/config/#globals) or update your code to use imports from the `vitest` module instead.
+Vitest został zaprojektowany z API kompatybilnym z Jest, aby uczynić migrację z Jest tak prostą jak to możliwe. Pomimo tych wysiłków, możesz nadal napotkać następujące różnice:
 
-If you decide to keep globals disabled, be aware that common libraries like [`testing-library`](https://testing-library.com/) will not run auto DOM [cleanup](https://testing-library.com/docs/svelte-testing-library/api/#cleanup).
+### Globale jako domyślne
+
+Jest ma domyślnie włączone [API globalne](https://jestjs.io/docs/api). Vitest nie. Możesz albo włączyć globale przez [ustawienie konfiguracji `globals`](/config/#globals), albo zaktualizować swój kod, aby używać importów z modułu `vitest`.
+
+Jeśli zdecydujesz się zachować globale wyłączone, pamiętaj, że popularne biblioteki jak [`testing-library`](https://testing-library.com/) nie będą automatycznie uruchamiać [cleanup](https://testing-library.com/docs/svelte-testing-library/api/#cleanup) DOM.
 
 ### `mock.mockReset`
 
-Jest's [`mockReset`](https://jestjs.io/docs/mock-function-api#mockfnmockreset) replaces the mock implementation with an
-empty function that returns `undefined`.
+[`mockReset`](https://jestjs.io/docs/mock-function-api#mockfnmockreset) Jesta zastępuje implementację mocka pustą funkcją, która zwraca `undefined`.
 
-Vitest's [`mockReset`](/api/mock#mockreset) resets the mock implementation to its original.
-That is, resetting a mock created by `vi.fn(impl)` will reset the mock implementation to `impl`.
+[`mockReset`](/api/mock#mockreset) Vitest resetuje implementację mocka do jej oryginału.
+Oznacza to, że resetowanie mocka utworzonego przez `vi.fn(impl)` zresetuje implementację mocka do `impl`.
 
-### `mock.mock` is Persistent
+### `mock.mock` jest trwały
 
-Jest will recreate the mock state when `.mockClear` is called, meaning you always need to access it as a getter. Vitest, on the other hand, holds a persistent reference to the state, meaning you can reuse it:
+Jest odtworzy stan mocka, gdy wywołane zostanie `.mockClear`, co oznacza, że zawsze musisz uzyskiwać do niego dostęp jako getter. Vitest natomiast przechowuje trwałą referencję do stanu, co oznacza, że możesz go ponownie użyć:
 
 ```ts
 const mock = vi.fn()
 const state = mock.mock
 mock.mockClear()
 
-expect(state).toBe(mock.mock) // fails in Jest
+expect(state).toBe(mock.mock) // nie powiedzie się w Jest
 ```
 
-### Module Mocks
+### Mocki modułów
 
-When mocking a module in Jest, the factory argument's return value is the default export. In Vitest, the factory argument has to return an object with each export explicitly defined. For example, the following `jest.mock` would have to be updated as follows:
+Podczas mockowania modułu w Jest, wartość zwracana przez argument fabryki jest domyślnym eksportem. W Vitest argument fabryki musi zwrócić obiekt z każdym eksportem jawnie zdefiniowanym. Na przykład następujący `jest.mock` musiałby być zaktualizowany w następujący sposób:
 
 ```ts
 jest.mock('./some-path', () => 'hello') // [!code --]
@@ -535,24 +533,24 @@ vi.mock('./some-path', () => ({ // [!code ++]
 })) // [!code ++]
 ```
 
-For more details please refer to the [`vi.mock` api section](/api/vi#vi-mock).
+Po więcej szczegółów odwołaj się do [sekcji API `vi.mock`](/api/vi#vi-mock).
 
-### Auto-Mocking Behaviour
+### Zachowanie auto-mockowania
 
-Unlike Jest, mocked modules in `<root>/__mocks__` are not loaded unless `vi.mock()` is called. If you need them to be mocked in every test, like in Jest, you can mock them inside [`setupFiles`](/config/setupfiles).
+W przeciwieństwie do Jest, mockowane moduły w `<root>/__mocks__` nie są ładowane, chyba że wywołane zostanie `vi.mock()`. Jeśli potrzebujesz, aby były mockowane w każdym teście, jak w Jest, możesz je mockować wewnątrz [`setupFiles`](/config/setupfiles).
 
-### Importing the Original of a Mocked Package
+### Importowanie oryginału mockowanego pakietu
 
-If you are only partially mocking a package, you might have previously used Jest's function `requireActual`. In Vitest, you should replace these calls with `vi.importActual`.
+Jeśli tylko częściowo mockujesz pakiet, mogłeś wcześniej używać funkcji Jesta `requireActual`. W Vitest powinieneś zastąpić te wywołania `vi.importActual`.
 
 ```ts
 const { cloneDeep } = jest.requireActual('lodash/cloneDeep') // [!code --]
 const { cloneDeep } = await vi.importActual('lodash/cloneDeep') // [!code ++]
 ```
 
-### Extends mocking to external libraries
+### Rozszerzanie mockowania na zewnętrzne biblioteki
 
-Where Jest does it by default, when mocking a module and wanting this mocking to be extended to other external libraries that use the same module, you should explicitly tell which 3rd-party library you want to be mocked, so the external library would be part of your source code, by using [server.deps.inline](/config/#server-deps-inline).
+Tam gdzie Jest robi to domyślnie, podczas mockowania modułu i chęci rozszerzenia tego mockowania na inne zewnętrzne biblioteki używające tego samego modułu, powinieneś jawnie powiedzieć, którą bibliotekę 3rd-party chcesz mockować, aby zewnętrzna biblioteka była częścią twojego kodu źródłowego, używając [server.deps.inline](/config/#server-deps-inline).
 
 ```
 server.deps.inline: ["lib-name"]
@@ -560,37 +558,37 @@ server.deps.inline: ["lib-name"]
 
 ### expect.getState().currentTestName
 
-Vitest's `test` names are joined with a `>` symbol to make it easier to distinguish tests from suites, while Jest uses an empty space (` `).
+Nazwy `test` Vitest są łączone symbolem `>`, aby ułatwić rozróżnienie testów od suite'ów, podczas gdy Jest używa pustej spacji (` `).
 
 ```diff
 - `${describeTitle} ${testTitle}`
 + `${describeTitle} > ${testTitle}`
 ```
 
-### Envs
+### Zmienne środowiskowe
 
-Just like Jest, Vitest sets `NODE_ENV` to `test`, if it wasn't set before. Vitest also has a counterpart for `JEST_WORKER_ID` called `VITEST_POOL_ID` (always less than or equal to `maxWorkers`), so if you rely on it, don't forget to rename it. Vitest also exposes `VITEST_WORKER_ID` which is a unique ID of a running worker - this number is not affected by `maxWorkers`, and will increase with each created worker.
+Tak jak Jest, Vitest ustawia `NODE_ENV` na `test`, jeśli nie było ustawione wcześniej. Vitest ma również odpowiednik dla `JEST_WORKER_ID` o nazwie `VITEST_POOL_ID` (zawsze mniejszy lub równy `maxWorkers`), więc jeśli na nim polegasz, nie zapomnij go przemianować. Vitest eksponuje również `VITEST_WORKER_ID`, który jest unikalnym ID działającego workera - ta liczba nie jest dotknięta przez `maxWorkers` i będzie rosła z każdym utworzonym workerem.
 
-### Replace property
+### Zastępowanie właściwości
 
-If you want to modify the object, you will use [replaceProperty API](https://jestjs.io/docs/jest-object#jestreplacepropertyobject-propertykey-value) in Jest, you can use [`vi.stubEnv`](/api/#vi-stubenv) or [`vi.spyOn`](/api/vi#vi-spyon) to do the same also in Vitest.
+Jeśli chcesz zmodyfikować obiekt, użyjesz [API replaceProperty](https://jestjs.io/docs/jest-object#jestreplacepropertyobject-propertykey-value) w Jest, możesz użyć [`vi.stubEnv`](/api/#vi-stubenv) lub [`vi.spyOn`](/api/vi#vi-spyon), aby zrobić to samo również w Vitest.
 
-### Done Callback
+### Callback done
 
-Vitest does not support the callback style of declaring tests. You can rewrite them to use `async`/`await` functions, or use Promise to mimic the callback style.
+Vitest nie wspiera stylu callback'owego deklarowania testów. Możesz przepisać je, aby używać funkcji `async`/`await`, lub użyć Promise, aby naśladować styl callback'owy.
 
 <!--@include: ./examples/promise-done.md-->
 
-### Hooks
+### Hooki
 
-`beforeAll`/`beforeEach` hooks may return [teardown function](/api/#setup-and-teardown) in Vitest. Because of that you may need to rewrite your hooks declarations, if they return something other than `undefined` or `null`:
+Hooki `beforeAll`/`beforeEach` mogą zwracać [funkcję teardown](/api/#setup-and-teardown) w Vitest. Z tego powodu możesz potrzebować przepisać deklaracje swoich hooków, jeśli zwracają coś innego niż `undefined` lub `null`:
 
 ```ts
 beforeEach(() => setActivePinia(createTestingPinia())) // [!code --]
 beforeEach(() => { setActivePinia(createTestingPinia()) }) // [!code ++]
 ```
 
-In Jest hooks are called sequentially (one after another). By default, Vitest runs hooks in a stack. To use Jest's behavior, update [`sequence.hooks`](/config/#sequence-hooks) option:
+W Jest hooki są wywoływane sekwencyjnie (jeden po drugim). Domyślnie Vitest uruchamia hooki na stosie. Aby użyć zachowania Jesta, zaktualizuj opcję [`sequence.hooks`](/config/#sequence-hooks):
 
 ```ts
 export default defineConfig({
@@ -602,9 +600,9 @@ export default defineConfig({
 })
 ```
 
-### Types
+### Typy
 
-Vitest doesn't have an equivalent to `jest` namespace, so you will need to import types directly from `vitest`:
+Vitest nie ma odpowiednika przestrzeni nazw `jest`, więc musisz importować typy bezpośrednio z `vitest`:
 
 ```ts
 let fn: jest.Mock<(name: string) => number> // [!code --]
@@ -612,22 +610,22 @@ import type { Mock } from 'vitest' // [!code ++]
 let fn: Mock<(name: string) => number> // [!code ++]
 ```
 
-### Timers
+### Timery
 
-Vitest doesn't support Jest's legacy timers.
+Vitest nie wspiera starszych timerów Jesta.
 
 ### Timeout
 
-If you used `jest.setTimeout`, you would need to migrate to `vi.setConfig`:
+Jeśli używałeś `jest.setTimeout`, musisz migrować do `vi.setConfig`:
 
 ```ts
 jest.setTimeout(5_000) // [!code --]
 vi.setConfig({ testTimeout: 5_000 }) // [!code ++]
 ```
 
-### Vue Snapshots
+### Snapshoty Vue
 
-This is not a Jest-specific feature, but if you previously were using Jest with vue-cli preset, you will need to install [`jest-serializer-vue`](https://github.com/eddyerburgh/jest-serializer-vue) package, and specify it in [`snapshotSerializers`](/config/#snapshotserializers):
+To nie jest funkcja specyficzna dla Jesta, ale jeśli wcześniej używałeś Jesta z presetem vue-cli, musisz zainstalować pakiet [`jest-serializer-vue`](https://github.com/eddyerburgh/jest-serializer-vue) i określić go w [`snapshotSerializers`](/config/#snapshotserializers):
 
 ```js [vitest.config.js]
 import { defineConfig } from 'vitest/config'
@@ -639,4 +637,4 @@ export default defineConfig({
 })
 ```
 
-Otherwise your snapshots will have a lot of escaped `"` characters.
+W przeciwnym razie twoje snapshoty będą miały wiele escapowanych znaków `"`.
