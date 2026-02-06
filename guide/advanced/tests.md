@@ -1,13 +1,13 @@
-# Running Tests <Badge type="danger">advanced</Badge> {#running-tests}
+# Uruchamianie testów <Badge type="danger">zaawansowane</Badge> {#running-tests}
 
 ::: warning
-This guide explains how to use the advanced API to run tests via a Node.js script. If you just want to [run tests](/guide/), you probably don't need this. It is primarily used by library authors.
+Ten przewodnik wyjaśnia, jak używać zaawansowanego API do uruchamiania testów za pomocą skryptu Node.js. Jeśli chcesz tylko [uruchamiać testy](/guide/), prawdopodobnie tego nie potrzebujesz. Jest przeznaczony głównie dla autorów bibliotek.
 :::
 
-Vitest exposes two methods to initiate Vitest:
+Vitest udostępnia dwie metody do inicjowania Vitest:
 
-- `startVitest` initiates Vitest, validates the packages are installed and runs tests immediately
-- `createVitest` only initiates Vitest and doesn't run any tests
+- `startVitest` inicjuje Vitest, waliduje czy pakiety są zainstalowane i natychmiast uruchamia testy
+- `createVitest` tylko inicjuje Vitest i nie uruchamia żadnych testów
 
 ## `startVitest`
 
@@ -16,10 +16,10 @@ import { startVitest } from 'vitest/node'
 
 const vitest = await startVitest(
   'test',
-  [], // CLI filters
-  {}, // override test config
-  {}, // override Vite config
-  {}, // custom Vitest options
+  [], // filtry CLI
+  {}, // nadpisanie konfiguracji testu
+  {}, // nadpisanie konfiguracji Vite
+  {}, // niestandardowe opcje Vitest
 )
 const testModules = vitest.state.getTestModules()
 for (const testModule of testModules) {
@@ -28,67 +28,67 @@ for (const testModule of testModules) {
 ```
 
 ::: tip
-[`TestModule`](/api/advanced/test-module), [`TestSuite`](/api/advanced/test-suite) and [`TestCase`](/api/advanced/test-case) APIs are not experimental and follow SemVer since Vitest 2.1.
+API [`TestModule`](/api/advanced/test-module), [`TestSuite`](/api/advanced/test-suite) i [`TestCase`](/api/advanced/test-case) nie są eksperymentalne i przestrzegają SemVer od Vitest 2.1.
 :::
 
 ## `createVitest`
 
-Creates a [Vitest](/api/advanced/vitest) instances without running tests.
+Tworzy instancję [Vitest](/api/advanced/vitest) bez uruchamiania testów.
 
-`createVitest` method doesn't validate that required packages are installed. It also doesn't respect `config.standalone` or `config.mergeReports`. Vitest won't be closed automatically even if `watch` is disabled.
+Metoda `createVitest` nie waliduje czy wymagane pakiety są zainstalowane. Nie respektuje również `config.standalone` ani `config.mergeReports`. Vitest nie zostanie zamknięty automatycznie nawet jeśli `watch` jest wyłączony.
 
 ```ts
 import { createVitest } from 'vitest/node'
 
 const vitest = await createVitest(
   'test',
-  {}, // override test config
-  {}, // override Vite config
-  {}, // custom Vitest options
+  {}, // nadpisanie konfiguracji testu
+  {}, // nadpisanie konfiguracji Vite
+  {}, // niestandardowe opcje Vitest
 )
 
-// called when `vitest.cancelCurrentRun()` is invoked
+// wywoływane gdy `vitest.cancelCurrentRun()` jest wywołane
 vitest.onCancel(() => {})
-// called during `vitest.close()` call
+// wywoływane podczas wywołania `vitest.close()`
 vitest.onClose(() => {})
-// called when Vitest reruns test files
+// wywoływane gdy Vitest ponownie uruchamia pliki testowe
 vitest.onTestsRerun((files) => {})
 
 try {
-  // this will set process.exitCode to 1 if tests failed,
-  // and won't close the process automatically
+  // to ustawi process.exitCode na 1 jeśli testy nie powiodą się,
+  // i nie zamknie procesu automatycznie
   await vitest.start(['my-filter'])
 }
 catch (err) {
-  // this can throw
-  // "FilesNotFoundError" if no files were found
-  // "GitNotFoundError" with `--changed` and repository is not initialized
+  // to może rzucić
+  // "FilesNotFoundError" jeśli nie znaleziono plików
+  // "GitNotFoundError" z `--changed` i repozytorium nie jest zainicjalizowane
 }
 finally {
   await vitest.close()
 }
 ```
 
-If you intend to keep the `Vitest` instance, make sure to at least call [`init`](/api/advanced/vitest#init). This will initialise reporters and the coverage provider, but won't run any tests. It is also recommended to enable the `watch` mode even if you don't intend to use the Vitest watcher, but want to keep the instance running. Vitest relies on this flag for some of its features to work correctly in a continuous process.
+Jeśli zamierzasz zachować instancję `Vitest`, upewnij się, że przynajmniej wywołasz [`init`](/api/advanced/vitest#init). To zainicjuje reportery i dostawcę pokrycia, ale nie uruchomi żadnych testów. Zaleca się również włączenie trybu `watch` nawet jeśli nie zamierzasz używać watchera Vitest, ale chcesz zachować instancję działającą. Vitest polega na tej fladze dla prawidłowego działania niektórych funkcji w ciągłym procesie.
 
-After reporters are initialised, use [`runTestSpecifications`](/api/advanced/vitest#runtestspecifications) or [`rerunTestSpecifications`](/api/advanced/vitest#reruntestspecifications) to run tests if manual run is required:
+Po zainicjowaniu reporterów użyj [`runTestSpecifications`](/api/advanced/vitest#runtestspecifications) lub [`rerunTestSpecifications`](/api/advanced/vitest#reruntestspecifications), aby uruchomić testy, jeśli wymagane jest ręczne uruchomienie:
 
 ```ts
 watcher.on('change', async (file) => {
   const specifications = vitest.getModuleSpecifications(file)
   if (specifications.length) {
     vitest.invalidateFile(file)
-    // you can use runTestSpecifications if "reporter.onWatcher*" hooks
-    // should not be invoked
+    // możesz użyć runTestSpecifications jeśli hooki "reporter.onWatcher*"
+    // nie powinny być wywoływane
     await vitest.rerunTestSpecifications(specifications)
   }
 })
 ```
 
 ::: warning
-The example above shows a potential use-case if you disable the default watcher behaviour. By default, Vitest already reruns tests if files change.
+Powyższy przykład pokazuje potencjalny przypadek użycia jeśli wyłączysz domyślne zachowanie watchera. Domyślnie Vitest już ponownie uruchamia testy jeśli pliki się zmienią.
 
-Also note that `getModuleSpecifications` will not resolve test files unless they were already processed by `globTestSpecifications`. If the file was just created, use `project.matchesGlobPattern` instead:
+Zauważ również, że `getModuleSpecifications` nie rozwiąże plików testowych, chyba że zostały już przetworzone przez `globTestSpecifications`. Jeśli plik został właśnie utworzony, użyj zamiast tego `project.matchesGlobPattern`:
 
 ```ts
 watcher.on('add', async (file) => {
@@ -106,7 +106,7 @@ watcher.on('add', async (file) => {
 ```
 :::
 
-In cases where you need to disable the watcher, you can pass down `server.watch: null` since Vite 5.3 or `server.watch: { ignored: ['*/*'] }` to a Vite config:
+W przypadkach gdy potrzebujesz wyłączyć watcher, możesz przekazać `server.watch: null` od Vite 5.3 lub `server.watch: { ignored: ['*/*'] }` do konfiguracji Vite:
 
 ```ts
 await createVitest(
