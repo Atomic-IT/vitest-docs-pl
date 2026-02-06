@@ -1,24 +1,24 @@
-# Custom Pool <Badge type="danger">advanced</Badge> {#custom-pool}
+# Niestandardowy pool <Badge type="danger">zaawansowane</Badge> {#custom-pool}
 
 ::: warning
-This is an advanced, experimental and very low-level API. If you just want to [run tests](/guide/), you probably don't need this. It is primarily used by library authors.
+To jest zaawansowane, eksperymentalne i bardzo niskopoziomowe API. Jeśli chcesz tylko [uruchamiać testy](/guide/), prawdopodobnie tego nie potrzebujesz. Jest przeznaczony głównie dla autorów bibliotek.
 :::
 
-Vitest runs tests in a pool. By default, there are several pool runners:
+Vitest uruchamia testy w pool. Domyślnie istnieje kilka runnerów pool:
 
-- `threads` to run tests using `node:worker_threads` (isolation is provided with a new worker context)
-- `forks` to run tests using `node:child_process` (isolation is provided with a new `child_process.fork` process)
-- `vmThreads` to run tests using `node:worker_threads` (but isolation is provided with `vm` module instead of a new worker context)
-- `browser` to run tests using browser providers
-- `typescript` to run typechecking on tests
+- `threads` do uruchamiania testów używając `node:worker_threads` (izolacja jest zapewniana przez nowy kontekst workera)
+- `forks` do uruchamiania testów używając `node:child_process` (izolacja jest zapewniana przez nowy proces `child_process.fork`)
+- `vmThreads` do uruchamiania testów używając `node:worker_threads` (ale izolacja jest zapewniana przez moduł `vm` zamiast nowego kontekstu workera)
+- `browser` do uruchamiania testów używając dostawców przeglądarek
+- `typescript` do uruchamiania sprawdzania typów na testach
 
 ::: tip
-See [`vitest-pool-example`](https://www.npmjs.com/package/vitest-pool-example) for example of a custom pool runner implementation.
+Zobacz [`vitest-pool-example`](https://www.npmjs.com/package/vitest-pool-example) po przykład implementacji niestandardowego runnera pool.
 :::
 
-## Usage
+## Użycie
 
-You can provide your own pool runner by a function that returns `PoolRunnerInitializer`.
+Możesz dostarczyć własny runner pool za pomocą funkcji zwracającej `PoolRunnerInitializer`.
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -26,7 +26,7 @@ import customPool from './my-custom-pool.ts'
 
 export default defineConfig({
   test: {
-    // will run every file with a custom pool by default
+    // domyślnie uruchomi każdy plik z niestandardowym pool
     pool: customPool({
       customProperty: true,
     })
@@ -34,7 +34,7 @@ export default defineConfig({
 })
 ```
 
-If you need to run tests in different pools, use the [`projects`](/guide/projects) feature:
+Jeśli potrzebujesz uruchamiać testy w różnych pool, użyj funkcji [`projects`](/guide/projects):
 
 ```ts [vitest.config.ts]
 import customPool from './my-custom-pool.ts'
@@ -63,7 +63,7 @@ export default defineConfig({
 
 ## API
 
-The `pool` option accepts a `PoolRunnerInitializer` that can be used for custom pool runners. The `name` property should indicate name of the custom pool runner. It should be identical with your worker's `name` property.
+Opcja `pool` akceptuje `PoolRunnerInitializer`, który może być używany dla niestandardowych runnerów pool. Właściwość `name` powinna wskazywać nazwę niestandardowego runnera pool. Powinna być identyczna z właściwością `name` twojego workera.
 
 ```ts [my-custom-pool.ts]
 import type { PoolRunnerInitializer } from 'vitest/node'
@@ -76,7 +76,7 @@ export function customPool(customOptions: CustomOptions): PoolRunnerInitializer 
 }
 ```
 
-In your `CustomPoolWorker` you need to define all required methods:
+W swoim `CustomPoolWorker` musisz zdefiniować wszystkie wymagane metody:
 
 ```ts [my-custom-pool.ts]
 import type { PoolOptions, PoolWorker, WorkerRequest } from 'vitest/node'
@@ -90,23 +90,23 @@ class CustomPoolWorker implements PoolWorker {
   }
 
   send(message: WorkerRequest): void {
-    // Provide way to send your worker a message
+    // Zapewnij sposób wysyłania wiadomości do workera
   }
 
   on(event: string, callback: (arg: any) => void): void {
-    // Provide way to listen to your workers events, e.g. message, error, exit
+    // Zapewnij sposób nasłuchiwania zdarzeń workera, np. message, error, exit
   }
 
   off(event: string, callback: (arg: any) => void): void {
-    // Provide way to unsubscribe `on` listeners
+    // Zapewnij sposób wypisywania się z nasłuchiwaczy `on`
   }
 
   async start() {
-    // do something when the worker is started
+    // zrób coś gdy worker jest uruchomiony
   }
 
   async stop() {
-    // cleanup the state
+    // wyczyść stan
   }
 
   deserialize(data) {
@@ -115,31 +115,31 @@ class CustomPoolWorker implements PoolWorker {
 }
 ```
 
-Your `CustomPoolRunner` will be controlling how your custom test runner worker life cycles and communication channel works. For example, your `CustomPoolRunner` could launch a `node:worker_threads` `Worker`, and provide communication via `Worker.postMessage` and `parentPort`.
+Twój `CustomPoolRunner` będzie kontrolować cykle życia niestandardowego workera runnera testów i kanał komunikacji. Na przykład twój `CustomPoolRunner` mógłby uruchomić `Worker` z `node:worker_threads` i zapewnić komunikację przez `Worker.postMessage` i `parentPort`.
 
-In your worker file, you can import helper utilities from `vitest/worker`:
+W pliku workera możesz importować narzędzia pomocnicze z `vitest/worker`:
 
 ```ts [my-worker.ts]
 import { init, runBaseTests, setupEnvironment } from 'vitest/worker'
 
 init({
   post: (response) => {
-    // Provide way to send this message to CustomPoolRunner's onWorker as message event
+    // Zapewnij sposób wysyłania tej wiadomości do onWorker CustomPoolRunner jako zdarzenie message
   },
   on: (callback) => {
-    // Provide a way to listen CustomPoolRunner's "postMessage" calls
+    // Zapewnij sposób nasłuchiwania wywołań "postMessage" CustomPoolRunner
   },
   off: (callback) => {
-    // Optional, provide a way to remove listeners added by "on" calls
+    // Opcjonalnie, zapewnij sposób usuwania nasłuchiwaczy dodanych przez wywołania "on"
   },
   teardown: () => {
-    // Optional, provide a way to teardown worker, e.g. unsubscribe all the `on` listeners
+    // Opcjonalnie, zapewnij sposób zamknięcia workera, np. wypisanie wszystkich nasłuchiwaczy `on`
   },
   serialize: (value) => {
-    // Optional, provide custom serializer for `post` calls
+    // Opcjonalnie, zapewnij niestandardowy serializator dla wywołań `post`
   },
   deserialize: (value) => {
-    // Optional, provide custom deserializer for `on` callbacks
+    // Opcjonalnie, zapewnij niestandardowy deserializator dla callbacków `on`
   },
   runTests: (state, traces) => runBaseTests('run', state, traces),
   collectTests: (state, traces) => runBaseTests('collect', state, traces),
