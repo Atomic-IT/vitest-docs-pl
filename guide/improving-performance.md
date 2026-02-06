@@ -1,14 +1,14 @@
-# Improving Performance
+# Poprawa wydajności
 
-## Test Isolation
+## Izolacja testów
 
-By default Vitest runs every test file in an isolated environment based on the [pool](/config/#pool):
+Domyślnie Vitest uruchamia każdy plik testowy w izolowanym środowisku opartym na [pool](/config/#pool):
 
-- `threads` pool runs every test file in a separate [`Worker`](https://nodejs.org/api/worker_threads.html#class-worker)
-- `forks` pool runs every test file in a separate [forked child process](https://nodejs.org/api/child_process.html#child_processforkmodulepath-args-options)
-- `vmThreads` pool runs every test file in a separate [VM context](https://nodejs.org/api/vm.html#vmcreatecontextcontextobject-options), but it uses workers for parallelism
+- Pool `threads` uruchamia każdy plik testowy w osobnym [`Worker`](https://nodejs.org/api/worker_threads.html#class-worker)
+- Pool `forks` uruchamia każdy plik testowy w osobnym [forked child process](https://nodejs.org/api/child_process.html#child_processforkmodulepath-args-options)
+- Pool `vmThreads` uruchamia każdy plik testowy w osobnym [kontekście VM](https://nodejs.org/api/vm.html#vmcreatecontextcontextobject-options), ale używa workerów do równoległości
 
-This greatly increases test times, which might not be desirable for projects that don't rely on side effects and properly cleanup their state (which is usually true for projects with `node` environment). In this case disabling isolation will improve the speed of your tests. To do that, you can provide `--no-isolate` flag to the CLI or set [`test.isolate`](/config/#isolate) property in the config to `false`.
+To znacznie zwiększa czas testów, co może nie być pożądane dla projektów, które nie polegają na efektach ubocznych i prawidłowo czyszczą swój stan (co zwykle dotyczy projektów ze środowiskiem `node`). W takim przypadku wyłączenie izolacji poprawi szybkość twoich testów. Aby to zrobić, możesz podać flagę `--no-isolate` do CLI lub ustawić właściwość [`test.isolate`](/config/#isolate) w konfiguracji na `false`.
 
 ::: code-group
 ```bash [CLI]
@@ -25,7 +25,7 @@ export default defineConfig({
 ```
 :::
 
-You can also disable isolation for specific files only by using `projects`:
+Możesz również wyłączyć izolację tylko dla określonych plików używając `projects`:
 
 ```ts [vitest.config.js]
 import { defineConfig } from 'vitest/config'
@@ -35,7 +35,7 @@ export default defineConfig({
     projects: [
       {
         name: 'Isolated',
-        isolate: true, // (default value)
+        isolate: true, // (domyślna wartość)
         exclude: ['**.non-isolated.test.ts'],
       },
       {
@@ -49,10 +49,10 @@ export default defineConfig({
 ```
 
 :::tip
-If you are using `vmThreads` pool, you cannot disable isolation. Use `threads` pool instead to improve your tests performance.
+Jeśli używasz pola `vmThreads`, nie możesz wyłączyć izolacji. Użyj zamiast tego pola `threads`, aby poprawić wydajność testów.
 :::
 
-For some projects, it might also be desirable to disable parallelism to improve startup time. To do that, provide `--no-file-parallelism` flag to the CLI or set [`test.fileParallelism`](/config/#fileparallelism) property in the config to `false`.
+Dla niektórych projektów może być również pożądane wyłączenie równoległości, aby poprawić czas uruchomienia. Aby to zrobić, podaj flagę `--no-file-parallelism` do CLI lub ustaw właściwość [`test.fileParallelism`](/config/#fileparallelism) w konfiguracji na `false`.
 
 ::: code-group
 ```bash [CLI]
@@ -69,15 +69,15 @@ export default defineConfig({
 ```
 :::
 
-## Limiting Directory Search
+## Ograniczanie przeszukiwania katalogów
 
-You can limit the working directory when Vitest searches for files using [`test.dir`](/config/#test-dir) option. This should make the search faster if you have unrelated folders and files in the root directory.
+Możesz ograniczyć katalog roboczy podczas wyszukiwania plików przez Vitest używając opcji [`test.dir`](/config/#test-dir). Powinno to przyspieszyć wyszukiwanie, jeśli masz niepowiązane foldery i pliki w katalogu głównym.
 
 ## Pool
 
-By default Vitest runs tests in `pool: 'forks'`. While `'forks'` pool is better for compatibility issues ([hanging process](/guide/common-errors.html#failed-to-terminate-worker) and [segfaults](/guide/common-errors.html#segfaults-and-native-code-errors)), it may be slightly slower than `pool: 'threads'` in larger projects.
+Domyślnie Vitest uruchamia testy w `pool: 'forks'`. Chociaż pool `'forks'` jest lepszy dla problemów z kompatybilnością ([zawieszające się procesy](/guide/common-errors.html#failed-to-terminate-worker) i [segfaults](/guide/common-errors.html#segfaults-and-native-code-errors)), może być nieco wolniejszy niż `pool: 'threads'` w większych projektach.
 
-You can try to improve test run time by switching `pool` option in configuration:
+Możesz spróbować poprawić czas wykonywania testów, przełączając opcję `pool` w konfiguracji:
 
 ::: code-group
 ```bash [CLI]
@@ -96,29 +96,29 @@ export default defineConfig({
 
 ## Sharding
 
-Test sharding is a process of splitting your test suite into groups, or shards. This can be useful when you have a large test suite and multiple machines that could run subsets of that suite simultaneously.
+Sharding testów to proces dzielenia zestawu testów na grupy, czyli shardy. Może to być przydatne, gdy masz duży zestaw testów i wiele maszyn, które mogą równocześnie uruchamiać podzbiory tego zestawu.
 
-To split Vitest tests on multiple different runs, use [`--shard`](/guide/cli#shard) option with [`--reporter=blob`](/guide/reporters#blob-reporter) option:
+Aby podzielić testy Vitest na wiele różnych uruchomień, użyj opcji [`--shard`](/guide/cli#shard) z opcją [`--reporter=blob`](/guide/reporters#blob-reporter):
 
 ```sh
-vitest run --reporter=blob --shard=1/3 # 1st machine
-vitest run --reporter=blob --shard=2/3 # 2nd machine
-vitest run --reporter=blob --shard=3/3 # 3rd machine
+vitest run --reporter=blob --shard=1/3 # 1. maszyna
+vitest run --reporter=blob --shard=2/3 # 2. maszyna
+vitest run --reporter=blob --shard=3/3 # 3. maszyna
 ```
 
-> Vitest splits your _test files_, not your test cases, into shards. If you've got 1000 test files, the `--shard=1/4` option will run 250 test files, no matter how many test cases individual files have.
+> Vitest dzieli twoje _pliki testowe_, a nie przypadki testowe, na shardy. Jeśli masz 1000 plików testowych, opcja `--shard=1/4` uruchomi 250 plików testowych, niezależnie od tego, ile przypadków testowych zawierają poszczególne pliki.
 
-Collect the results stored in `.vitest-reports` directory from each machine and merge them with [`--merge-reports`](/guide/cli#merge-reports) option:
+Zbierz wyniki przechowywane w katalogu `.vitest-reports` z każdej maszyny i połącz je za pomocą opcji [`--merge-reports`](/guide/cli#merge-reports):
 
 ```sh
 vitest run --merge-reports
 ```
 
-::: details GitHub Actions example
-This setup is also used at https://github.com/vitest-tests/test-sharding.
+::: details Przykład GitHub Actions
+Ta konfiguracja jest również używana w https://github.com/vitest-tests/test-sharding.
 
 ```yaml
-# Inspired from https://playwright.dev/docs/test-sharding
+# Zainspirowane https://playwright.dev/docs/test-sharding
 name: Tests
 on:
   push:
@@ -186,17 +186,17 @@ jobs:
 :::
 
 :::tip
-Test sharding can also become useful on high CPU-count machines.
+Sharding testów może być również przydatny na maszynach z dużą liczbą CPU.
 
-Vitest will run only a single Vite server in its main thread. Rest of the threads are used to run test files.
-In a high CPU-count machine the main thread can become a bottleneck as it cannot handle all the requests coming from the threads. For example in 32 CPU machine the main thread is responsible to handle load coming from 31 test threads.
+Vitest uruchamia tylko jeden serwer Vite w swoim głównym wątku. Pozostałe wątki są używane do uruchamiania plików testowych.
+Na maszynie z dużą liczbą CPU główny wątek może stać się wąskim gardłem, ponieważ nie jest w stanie obsłużyć wszystkich żądań przychodzących z wątków. Na przykład na maszynie z 32 CPU główny wątek jest odpowiedzialny za obsługę obciążenia z 31 wątków testowych.
 
-To reduce the load from main thread's Vite server you can use test sharding. The load can be balanced on multiple Vite server.
+Aby zmniejszyć obciążenie serwera Vite w głównym wątku, możesz użyć shardingu testów. Obciążenie może być rozłożone na wiele serwerów Vite.
 
 ```sh
-# Example for splitting tests on 32 CPU to 4 shards.
-# As each process needs 1 main thread, there's 7 threads for test runners (1+7)*4 = 32
-# Use VITEST_MAX_WORKERS:
+# Przykład dzielenia testów na 32 CPU na 4 shardy.
+# Ponieważ każdy proces potrzebuje 1 głównego wątku, jest 7 wątków dla runnerów testów (1+7)*4 = 32
+# Użyj VITEST_MAX_WORKERS:
 VITEST_MAX_WORKERS=7 vitest run --reporter=blob --shard=1/4 & \
 VITEST_MAX_WORKERS=7 vitest run --reporter=blob --shard=2/4 & \
 VITEST_MAX_WORKERS=7 vitest run --reporter=blob --shard=3/4 & \
