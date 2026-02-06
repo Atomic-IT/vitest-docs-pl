@@ -1,12 +1,12 @@
 ---
-title: Recipes | Guide
+title: Przepisy | Przewodnik
 ---
 
-# Recipes
+# Przepisy
 
-## Disabling Isolation for Specific Test Files Only
+## Wyłączanie izolacji tylko dla określonych plików testowych
 
-You can speed up your test run by disabling isolation for specific set of files by specifying `isolate` per `projects` entries:
+Możesz przyspieszyć uruchamianie testów, wyłączając izolację dla określonego zestawu plików przez określenie `isolate` dla wpisów `projects`:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -15,13 +15,13 @@ export default defineConfig({
   test: {
     projects: [
       {
-        // Non-isolated unit tests
+        // Nieizolowane testy jednostkowe
         name: 'Unit tests',
         isolate: false,
         exclude: ['**.integration.test.ts'],
       },
       {
-        // Isolated integration tests
+        // Izolowane testy integracyjne
         name: 'Integration tests',
         include: ['**.integration.test.ts'],
       },
@@ -30,9 +30,9 @@ export default defineConfig({
 })
 ```
 
-## Parallel and Sequential Test Files
+## Równoległe i sekwencyjne pliki testowe
 
-You can split test files into parallel and sequential groups by using `projects` option:
+Możesz podzielić pliki testowe na grupy równoległe i sekwencyjne, używając opcji `projects`:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
