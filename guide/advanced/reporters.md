@@ -1,26 +1,26 @@
-# Extending Reporters <Badge type="danger">advanced</Badge> {#extending-reporters}
+# Rozszerzanie reporterów <Badge type="danger">zaawansowane</Badge> {#extending-reporters}
 
 ::: warning
-This is an advanced API. If you just want to configure built-in reporters, read the ["Reporters"](/guide/reporters) guide.
+To jest zaawansowane API. Jeśli chcesz tylko skonfigurować wbudowane reportery, przeczytaj przewodnik ["Reportery"](/guide/reporters).
 :::
 
-You can import reporters from `vitest/reporters` and extend them to create your custom reporters.
+Możesz importować reportery z `vitest/reporters` i rozszerzać je, aby tworzyć niestandardowe reportery.
 
-## Extending Built-in Reporters
+## Rozszerzanie wbudowanych reporterów
 
-In general, you don't need to create your reporter from scratch. `vitest` comes with several default reporting programs that you can extend.
+Ogólnie nie musisz tworzyć swojego reportera od podstaw. `vitest` zawiera kilka domyślnych programów raportujących, które możesz rozszerzyć.
 
 ```ts
 import { DefaultReporter } from 'vitest/reporters'
 
 export default class MyDefaultReporter extends DefaultReporter {
-  // do something
+  // zrób coś
 }
 ```
 
-Of course, you can create your reporter from scratch. Just extend the `BaseReporter` class and implement the methods you need.
+Oczywiście możesz stworzyć swojego reportera od podstaw. Po prostu rozszerz klasę `BaseReporter` i zaimplementuj potrzebne metody.
 
-And here is an example of a custom reporter:
+A oto przykład niestandardowego reportera:
 
 ```ts [custom-reporter.js]
 import { BaseReporter } from 'vitest/reporters'
@@ -33,19 +33,19 @@ export default class CustomReporter extends BaseReporter {
 }
 ```
 
-Or implement the `Reporter` interface:
+Lub zaimplementuj interfejs `Reporter`:
 
 ```ts [custom-reporter.js]
 import type { Reporter } from 'vitest/node'
 
 export default class CustomReporter implements Reporter {
   onTestModuleCollected() {
-    // print something
+    // wydrukuj coś
   }
 }
 ```
 
-Then you can use your custom reporter in the `vitest.config.ts` file:
+Następnie możesz użyć swojego niestandardowego reportera w pliku `vitest.config.ts`:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -58,11 +58,11 @@ export default defineConfig({
 })
 ```
 
-## Reported Tasks
+## Raportowane zadania
 
-Instead of using the tasks that reporters receive, it is recommended to use the Reported Tasks API instead.
+Zamiast używać zadań, które otrzymują reportery, zaleca się używanie API Reported Tasks.
 
-You can get access to this API by calling `vitest.state.getReportedEntity(runnerTask)`:
+Możesz uzyskać dostęp do tego API wywołując `vitest.state.getReportedEntity(runnerTask)`:
 
 ```ts twoslash
 import type { Reporter, TestModule } from 'vitest/node'
@@ -79,11 +79,11 @@ class MyReporter implements Reporter {
 }
 ```
 
-## Exported Reporters
+## Eksportowane reportery
 
-`vitest` comes with a few [built-in reporters](/guide/reporters) that you can use out of the box.
+`vitest` zawiera kilka [wbudowanych reporterów](/guide/reporters), których możesz używać od razu.
 
-### Built-in reporters:
+### Wbudowane reportery:
 
 1. `DefaultReporter`
 2. `DotReporter`
@@ -95,10 +95,10 @@ class MyReporter implements Reporter {
 8. `HangingProcessReporter`
 9. `TreeReporter`
 
-### Base Abstract reporters:
+### Bazowe abstrakcyjne reportery:
 
 1. `BaseReporter`
 
-### Interface reporters:
+### Reportery interfejsowe:
 
 1. `Reporter`
