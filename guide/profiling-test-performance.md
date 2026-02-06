@@ -1,6 +1,6 @@
-# Profiling Test Performance
+# Profilowanie wydajności testów
 
-When you run Vitest it reports multiple time metrics of your tests:
+Kiedy uruchamiasz Vitest, raportuje on wiele metryk czasowych twoich testów:
 
 > ```bash
 > RUN  v2.1.1 /x/vitest/examples/profiling
@@ -12,28 +12,28 @@ When you run Vitest it reports multiple time metrics of your tests:
 >      Tests  1 passed (1)
 >   Start at  09:32:53
 >   Duration  4.80s (transform 44ms, setup 0ms, import 35ms, tests 4.52s, environment 0ms)
->   # Time metrics ^^
+>   # Metryki czasowe ^^
 > ```
 
-- Transform: How much time was spent transforming the files. See [File Transform](#file-transform).
-- Setup: Time spent for running the [`setupFiles`](/config/setupfiles) files.
-- Import: Time it took to import your test files and their dependencies. This also includes the time spent collecting all tests. Note that this doesn't include dynamic imports inside of tests.
-- Tests: Time spent for actually running the test cases.
-- Environment: Time spent for setting up the test [`environment`](/config/#environment), for example JSDOM.
+- Transform: Ile czasu zajęła transformacja plików. Zobacz [Transformacja plików](#file-transform).
+- Setup: Czas spędzony na uruchamianiu plików [`setupFiles`](/config/setupfiles).
+- Import: Czas potrzebny na zaimportowanie plików testowych i ich zależności. Obejmuje to również czas spędzony na zbieraniu wszystkich testów. Zauważ, że nie obejmuje to dynamicznych importów wewnątrz testów.
+- Tests: Czas spędzony na faktycznym uruchamianiu przypadków testowych.
+- Environment: Czas spędzony na konfiguracji testowego [`environment`](/config/#environment), na przykład JSDOM.
 
-## Test Runner
+## Runner testów
 
-In cases where your test execution time is high, you can generate a profile of the test runner. See NodeJS documentation for following options:
+W przypadkach, gdy czas wykonania testu jest wysoki, możesz wygenerować profil runnera testów. Zobacz dokumentację NodeJS dla następujących opcji:
 
 - [`--cpu-prof`](https://nodejs.org/api/cli.html#--cpu-prof)
 - [`--heap-prof`](https://nodejs.org/api/cli.html#--heap-prof)
 - [`--prof`](https://nodejs.org/api/cli.html#--prof)
 
 :::warning
-The `--prof` option does not work with `pool: 'threads'` due to `node:worker_threads` limitations.
+Opcja `--prof` nie działa z `pool: 'threads'` z powodu ograniczeń `node:worker_threads`.
 :::
 
-To pass these options to Vitest's test runner, define `execArgv` in your Vitest configuration:
+Aby przekazać te opcje do runnera testów Vitest, zdefiniuj `execArgv` w swojej konfiguracji Vitest:
 
 ```ts
 import { defineConfig } from 'vitest/config'
@@ -51,45 +51,45 @@ export default defineConfig({
 })
 ```
 
-After the tests have run there should be a `test-runner-profile/*.cpuprofile` and `test-runner-profile/*.heapprofile` files generated. See [Inspecting profiling records](#inspecting-profiling-records) for instructions how to analyze these files.
+Po zakończeniu testów powinny zostać wygenerowane pliki `test-runner-profile/*.cpuprofile` i `test-runner-profile/*.heapprofile`. Zobacz [Inspekcja rekordów profilowania](#inspecting-profiling-records) po instrukcje analizy tych plików.
 
-See [Profiling | Examples](https://github.com/vitest-dev/vitest/tree/main/examples/profiling) for example.
+Zobacz [Profilowanie | Przykłady](https://github.com/vitest-dev/vitest/tree/main/examples/profiling) po przykład.
 
-## Main Thread
+## Wątek główny
 
-Profiling main thread is useful for debugging Vitest's Vite usage and [`globalSetup`](/config/#globalsetup) files.
-This is also where your Vite plugins are running.
+Profilowanie wątku głównego jest przydatne do debugowania użycia Vite przez Vitest i plików [`globalSetup`](/config/#globalsetup).
+To również miejsce, gdzie działają twoje pluginy Vite.
 
 :::tip
-See [Performance | Vite](https://vitejs.dev/guide/performance.html) for more tips about Vite specific profiling.
+Zobacz [Wydajność | Vite](https://vitejs.dev/guide/performance.html) po więcej wskazówek dotyczących profilowania specyficznego dla Vite.
 
-We recommend [`vite-plugin-inspect`](https://github.com/antfu-collective/vite-plugin-inspect) for profiling your Vite plugin performance.
+Zalecamy [`vite-plugin-inspect`](https://github.com/antfu-collective/vite-plugin-inspect) do profilowania wydajności twoich pluginów Vite.
 :::
 
-To do this you'll need to pass arguments to the Node process that runs Vitest.
+Aby to zrobić, musisz przekazać argumenty do procesu Node, który uruchamia Vitest.
 
 ```bash
 $ node --cpu-prof --cpu-prof-dir=main-profile ./node_modules/vitest/vitest.mjs --run
 #      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                  ^^^^^
-#               NodeJS arguments                                           Vitest arguments
+#               Argumenty NodeJS                                           Argumenty Vitest
 ```
 
-After the tests have run there should be a `main-profile/*.cpuprofile` file generated. See [Inspecting profiling records](#inspecting-profiling-records) for instructions how to analyze these files.
+Po zakończeniu testów powinien zostać wygenerowany plik `main-profile/*.cpuprofile`. Zobacz [Inspekcja rekordów profilowania](#inspecting-profiling-records) po instrukcje analizy tych plików.
 
-## File Transform
+## Transformacja plików
 
-This profiling strategy is a good way to identify unnecessary transforms caused by [barrel files](https://vitejs.dev/guide/performance.html#avoid-barrel-files).
-If these logs contain files that should not be loaded when your test is run, you might have barrel files that are importing files unnecessarily.
+Ta strategia profilowania jest dobrym sposobem na identyfikację niepotrzebnych transformacji spowodowanych [plikami barrel](https://vitejs.dev/guide/performance.html#avoid-barrel-files).
+Jeśli te logi zawierają pliki, które nie powinny być ładowane podczas uruchamiania testu, możesz mieć pliki barrel, które niepotrzebnie importują pliki.
 
-You can also use [Vitest UI](/guide/ui) to debug slowness caused by barrel file.
-The example below shows how importing files without barrel file reduces amount of transformed files by ~85%.
+Możesz również użyć [Vitest UI](/guide/ui), aby debugować spowolnienia spowodowane plikami barrel.
+Poniższy przykład pokazuje, jak importowanie plików bez pliku barrel redukuje liczbę transformowanych plików o ~85%.
 
 ::: code-group
-``` [File tree]
+``` [Drzewo plików]
 ├── src
 │   └── utils
 │       ├── currency.ts
-│       ├── formatters.ts  <-- File to test
+│       ├── formatters.ts  <-- Plik do testowania
 │       ├── index.ts
 │       ├── location.ts
 │       ├── math.ts
@@ -110,9 +110,9 @@ test('formatter works', () => {
 ```
 :::
 
-<img src="/module-graph-barrel-file.png" alt="Vitest UI demonstrating barrel file issues" />
+<img src="/module-graph-barrel-file.png" alt="Vitest UI demonstrujące problemy z plikami barrel" />
 
-To see how files are transformed, you can use `VITEST_DEBUG_DUMP` environment variable to write transformed files in the file system:
+Aby zobaczyć, jak pliki są transformowane, możesz użyć zmiennej środowiskowej `VITEST_DEBUG_DUMP`, aby zapisać transformowane pliki w systemie plików:
 
 ```bash
 $ VITEST_DEBUG_DUMP=true vitest --run
@@ -126,9 +126,9 @@ _x_examples_profiling_test_prime-number_test_ts-1413378098.js
 _src_prime-number_ts-525172412.js
 ```
 
-## Code Coverage
+## Pokrycie kodu
 
-If code coverage generation is slow on your project you can use `DEBUG=vitest:coverage` environment variable to enable performance logging.
+Jeśli generowanie pokrycia kodu jest wolne w twoim projekcie, możesz użyć zmiennej środowiskowej `DEBUG=vitest:coverage`, aby włączyć logowanie wydajności.
 
 ```bash
 $ DEBUG=vitest:coverage vitest --run --coverage
@@ -148,15 +148,15 @@ $ DEBUG=vitest:coverage vitest --run --coverage
   vitest:coverage Generate coverage total time 3521 ms
 ```
 
-This profiling approach is great for detecting large files that are accidentally picked by coverage providers.
-For example if your configuration is accidentally including large built minified Javascript files in code coverage, they should appear in logs.
-In these cases you might want to adjust your [`coverage.include`](/config/#coverage-include) and [`coverage.exclude`](/config/#coverage-exclude) options.
+To podejście do profilowania jest świetne do wykrywania dużych plików, które są przypadkowo wybierane przez dostawców pokrycia.
+Na przykład, jeśli twoja konfiguracja przypadkowo uwzględnia duże zbudowane zminifikowane pliki Javascript w pokryciu kodu, powinny pojawić się w logach.
+W takich przypadkach możesz chcieć dostosować opcje [`coverage.include`](/config/#coverage-include) i [`coverage.exclude`](/config/#coverage-exclude).
 
-## Inspecting Profiling Records
+## Inspekcja rekordów profilowania
 
-You can inspect the contents of `*.cpuprofile` and `*.heapprofile` with various tools. See list below for examples.
+Możesz sprawdzić zawartość plików `*.cpuprofile` i `*.heapprofile` za pomocą różnych narzędzi. Zobacz listę poniżej po przykłady.
 
 - [Speedscope](https://www.speedscope.app/)
-- [Performance Profiling JavaScript in Visual Studio Code](https://code.visualstudio.com/docs/nodejs/profiling#_analyzing-a-profile)
-- [Profile Node.js performance with the Performance panel | developer.chrome.com](https://developer.chrome.com/docs/devtools/performance/nodejs#analyze)
-- [Memory panel overview | developer.chrome.com](https://developer.chrome.com/docs/devtools/memory-problems/heap-snapshots#view_snapshots)
+- [Profilowanie wydajności JavaScript w Visual Studio Code](https://code.visualstudio.com/docs/nodejs/profiling#_analyzing-a-profile)
+- [Profiluj wydajność Node.js za pomocą panelu Performance | developer.chrome.com](https://developer.chrome.com/docs/devtools/performance/nodejs#analyze)
+- [Przegląd panelu Memory | developer.chrome.com](https://developer.chrome.com/docs/devtools/memory-problems/heap-snapshots#view_snapshots)
