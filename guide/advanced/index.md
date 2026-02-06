@@ -1,14 +1,14 @@
 ---
-title: Advanced API
+title: Zaawansowane API
 ---
 
-# Getting Started <Badge type="danger">advanced</Badge> {#getting-started}
+# Rozpoczęcie pracy <Badge type="danger">zaawansowane</Badge> {#getting-started}
 
 ::: warning
-This guide lists advanced APIs to run tests via a Node.js script. If you just want to [run tests](/guide/), you probably don't need this. It is primarily used by library authors.
+Ten przewodnik zawiera listę zaawansowanych API do uruchamiania testów za pomocą skryptu Node.js. Jeśli chcesz tylko [uruchamiać testy](/guide/), prawdopodobnie tego nie potrzebujesz. Jest przeznaczony głównie dla autorów bibliotek.
 :::
 
-You can import any method from the `vitest/node` entry-point.
+Możesz importować dowolną metodę z punktu wejścia `vitest/node`.
 
 ## startVitest
 
@@ -22,7 +22,7 @@ function startVitest(
 ): Promise<Vitest>
 ```
 
-You can start running Vitest tests using its Node API:
+Możesz zacząć uruchamiać testy Vitest używając jego Node API:
 
 ```js
 import { startVitest } from 'vitest/node'
@@ -32,17 +32,17 @@ const vitest = await startVitest('test')
 await vitest.close()
 ```
 
-`startVitest` function returns [`Vitest`](/api/advanced/vitest) instance if tests can be started.
+Funkcja `startVitest` zwraca instancję [`Vitest`](/api/advanced/vitest), jeśli testy mogą być uruchomione.
 
-If watch mode is not enabled, Vitest will call `close` method automatically.
+Jeśli tryb watch nie jest włączony, Vitest automatycznie wywoła metodę `close`.
 
-If watch mode is enabled and the terminal supports TTY, Vitest will register console shortcuts.
+Jeśli tryb watch jest włączony i terminal wspiera TTY, Vitest zarejestruje skróty konsolowe.
 
-You can pass down a list of filters as a second argument. Vitest will run only tests that contain at least one of the passed-down strings in their file path.
+Możesz przekazać listę filtrów jako drugi argument. Vitest uruchomi tylko testy, które zawierają co najmniej jeden z przekazanych ciągów znaków w ścieżce pliku.
 
-Additionally, you can use the third argument to pass in CLI arguments, which will override any test config options. Alternatively, you can pass in the complete Vite config as the fourth argument, which will take precedence over any other user-defined options.
+Dodatkowo możesz użyć trzeciego argumentu do przekazania argumentów CLI, które nadpiszą wszelkie opcje konfiguracji testu. Alternatywnie możesz przekazać pełną konfigurację Vite jako czwarty argument, która będzie miała pierwszeństwo przed innymi opcjami zdefiniowanymi przez użytkownika.
 
-After running the tests, you can get the results from the [`state.getTestModules`](/api/advanced/test-module) API:
+Po uruchomieniu testów możesz uzyskać wyniki z API [`state.getTestModules`](/api/advanced/test-module):
 
 ```ts
 import type { TestModule } from 'vitest/node'
@@ -53,7 +53,7 @@ console.log(vitest.state.getTestModules()) // [TestModule]
 ```
 
 ::: tip
-The ["Running Tests"](/guide/advanced/tests#startvitest) guide has a usage example.
+Przewodnik ["Uruchamianie testów"](/guide/advanced/tests#startvitest) zawiera przykład użycia.
 :::
 
 ## createVitest
@@ -67,7 +67,7 @@ function createVitest(
 ): Promise<Vitest>
 ```
 
-You can create Vitest instance by using `createVitest` function. It returns the same [`Vitest`](/api/advanced/vitest) instance as `startVitest`, but it doesn't start tests and doesn't validate installed packages.
+Możesz utworzyć instancję Vitest używając funkcji `createVitest`. Zwraca tę samą instancję [`Vitest`](/api/advanced/vitest) co `startVitest`, ale nie uruchamia testów i nie waliduje zainstalowanych pakietów.
 
 ```js
 import { createVitest } from 'vitest/node'
@@ -78,7 +78,7 @@ const vitest = await createVitest('test', {
 ```
 
 ::: tip
-The ["Running Tests"](/guide/advanced/tests#createvitest) guide has a usage example.
+Przewodnik ["Uruchamianie testów"](/guide/advanced/tests#createvitest) zawiera przykład użycia.
 :::
 
 ## resolveConfig
@@ -93,12 +93,12 @@ function resolveConfig(
 }>
 ```
 
-This method resolves the config with custom parameters. If no parameters are given, the `root` will be `process.cwd()`.
+Ta metoda rozwiązuje konfigurację z niestandardowymi parametrami. Jeśli nie podano parametrów, `root` będzie `process.cwd()`.
 
 ```ts
 import { resolveConfig } from 'vitest/node'
 
-// vitestConfig only has resolved "test" properties
+// vitestConfig zawiera tylko rozwiązane właściwości "test"
 const { vitestConfig, viteConfig } = await resolveConfig({
   mode: 'custom',
   configFile: false,
@@ -113,15 +113,15 @@ const { vitestConfig, viteConfig } = await resolveConfig({
 ```
 
 ::: info
-Due to how Vite's `createServer` works, Vitest has to resolve the config during the plugin's `configResolve` hook. Therefore, this method is not actually used internally and is exposed exclusively as a public API.
+Ze względu na sposób działania `createServer` w Vite, Vitest musi rozwiązać konfigurację podczas hooka `configResolve` pluginu. Dlatego ta metoda nie jest faktycznie używana wewnętrznie i jest udostępniona wyłącznie jako publiczne API.
 
-If you pass down the config to the `startVitest` or `createVitest` APIs, Vitest will still resolve the config again.
+Jeśli przekażesz konfigurację do API `startVitest` lub `createVitest`, Vitest nadal rozwiąże konfigurację ponownie.
 :::
 
 ::: warning
-The `resolveConfig` doesn't resolve `projects`. To resolve projects configs, Vitest needs an established Vite server.
+`resolveConfig` nie rozwiązuje `projects`. Aby rozwiązać konfiguracje projektów, Vitest potrzebuje ustanowionego serwera Vite.
 
-Also note that `viteConfig.test` will not be fully resolved. If you need Vitest config, use `vitestConfig` instead.
+Zauważ również, że `viteConfig.test` nie będzie w pełni rozwiązane. Jeśli potrzebujesz konfiguracji Vitest, użyj zamiast tego `vitestConfig`.
 :::
 
 ## parseCLI
@@ -133,7 +133,7 @@ function parseCLI(argv: string | string[], config: CliParseOptions = {}): {
 }
 ```
 
-You can use this method to parse CLI arguments. It accepts a string (where arguments are split by a single space) or a strings array of CLI arguments in the same format that Vitest CLI uses. It returns a filter and `options` that you can later pass down to `createVitest` or `startVitest` methods.
+Możesz użyć tej metody do parsowania argumentów CLI. Akceptuje ciąg znaków (gdzie argumenty są rozdzielone pojedynczą spacją) lub tablicę ciągów znaków argumentów CLI w tym samym formacie, którego używa CLI Vitest. Zwraca filtr i `options`, które możesz później przekazać do metod `createVitest` lub `startVitest`.
 
 ```ts
 import { parseCLI } from 'vitest/node'
