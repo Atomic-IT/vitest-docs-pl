@@ -1,84 +1,84 @@
 ---
-title: Comparisons with Other Test Runners | Guide
+title: Porównania z innymi runnerami testów | Przewodnik
 ---
 
-# Comparisons with Other Test Runners
+# Porównania z innymi runnerami testów
 
 ## Jest
 
-[Jest](https://jestjs.io/) took over the Testing Framework space by providing out-of-the-box support for most JavaScript projects, a comfortable API (`it` and `expect`), and the full pack of testing features that most setups would require (snapshots, mocks, coverage). We are thankful to the Jest team and community for creating a delightful testing API and pushing forward a lot of the testing patterns that are now a standard in the web ecosystem.
+[Jest](https://jestjs.io/) przejął przestrzeń frameworków testowych, zapewniając gotowe wsparcie dla większości projektów JavaScript, wygodne API (`it` i `expect`) oraz pełen pakiet funkcji testowych, których wymaga większość konfiguracji (snapshoty, mocki, pokrycie). Jesteśmy wdzięczni zespołowi Jest i społeczności za stworzenie przyjemnego API testowego i promowanie wielu wzorców testowych, które są teraz standardem w ekosystemie webowym.
 
-It is possible to use Jest in Vite setups. [@sodatea](https://bsky.app/profile/haoqun.dev) built [vite-jest](https://github.com/sodatea/vite-jest#readme), which aims to provide first-class Vite integration for [Jest](https://jestjs.io/). The last [blockers in Jest](https://github.com/sodatea/vite-jest/blob/main/packages/vite-jest/README.md#vite-jest) have been solved, so this is a valid option for your unit tests.
+Możliwe jest używanie Jest w konfiguracjach Vite. [@sodatea](https://bsky.app/profile/haoqun.dev) zbudował [vite-jest](https://github.com/sodatea/vite-jest#readme), który ma na celu zapewnienie pierwszorzędnej integracji Vite dla [Jest](https://jestjs.io/). Ostatnie [blokady w Jest](https://github.com/sodatea/vite-jest/blob/main/packages/vite-jest/README.md#vite-jest) zostały rozwiązane, więc jest to prawidłowa opcja dla twoich testów jednostkowych.
 
-However, in a world where we have [Vite](https://vitejs.dev) providing support for the most common web tooling (TypeScript, JSX, most popular UI Frameworks), Jest represents a duplication of complexity. If your app is powered by Vite, having two different pipelines to configure and maintain is not justifiable. With Vitest you get to define the configuration for your dev, build and test environments as a single pipeline, sharing the same plugins and the same vite.config.js.
+Jednak w świecie, gdzie [Vite](https://vitejs.dev) zapewnia wsparcie dla najpopularniejszych narzędzi webowych (TypeScript, JSX, najpopularniejsze frameworki UI), Jest reprezentuje duplikację złożoności. Jeśli twoja aplikacja jest napędzana przez Vite, posiadanie dwóch różnych pipeline'ów do konfiguracji i utrzymania nie jest uzasadnione. Z Vitest możesz zdefiniować konfigurację dla swoich środowisk dev, build i test jako jeden pipeline, dzieląc te same pluginy i ten sam vite.config.js.
 
-Even if your library is not using Vite (for example, if it is built with esbuild or Rollup), Vitest is an interesting option as it gives you a faster run for your unit tests and a jump in DX thanks to the default watch mode using Vite instant Hot Module Reload (HMR). Vitest offers compatibility with most of the Jest API and ecosystem libraries, so in most projects, it should be a drop-in replacement for Jest.
+Nawet jeśli twoja biblioteka nie używa Vite (na przykład, jeśli jest budowana z esbuild lub Rollup), Vitest jest interesującą opcją, ponieważ daje ci szybsze uruchamianie testów jednostkowych i skok w DX dzięki domyślnemu trybowi watch używającemu natychmiastowego Hot Module Reload (HMR) Vite. Vitest oferuje kompatybilność z większością API Jest i bibliotek ekosystemu, więc w większości projektów powinien być zamiennikiem drop-in dla Jest.
 
 ## Cypress
 
-[Cypress](https://www.cypress.io/) is a browser-based test runner and a complementary tool to Vitest. If you'd like to use Cypress, we suggest using Vitest for all headless logic in your application and Cypress for all browser-based logic.
+[Cypress](https://www.cypress.io/) jest runnerem testów opartym na przeglądarce i narzędziem uzupełniającym do Vitest. Jeśli chciałbyś używać Cypress, sugerujemy używanie Vitest dla całej logiki headless w twojej aplikacji i Cypress dla całej logiki opartej na przeglądarce.
 
-Cypress is known as an end-to-end testing tool, but their [new component test runner](https://on.cypress.io/component) has great support for testing Vite components and is an ideal choice to test anything that renders in a browser.
+Cypress jest znany jako narzędzie do testów end-to-end, ale ich [nowy runner testów komponentów](https://on.cypress.io/component) ma świetne wsparcie dla testowania komponentów Vite i jest idealnym wyborem do testowania czegokolwiek, co renderuje się w przeglądarce.
 
-Browser-based runners, like Cypress, WebdriverIO and Web Test Runner, will catch issues that Vitest cannot because they use the real browser and real browser APIs.
+Runnery oparte na przeglądarce, takie jak Cypress, WebdriverIO i Web Test Runner, wyłapią problemy, których Vitest nie może, ponieważ używają prawdziwej przeglądarki i prawdziwych API przeglądarki.
 
-Cypress's test driver is focused on determining if elements are visible, accessible, and interactive. Cypress is purpose-built for UI development and testing and its DX is centered around test driving your visual components. You see your component rendered alongside the test reporter. Once the test is complete, the component remains interactive and you can debug any failures that occur using your browser devtools.
+Driver testowy Cypress jest skupiony na określaniu, czy elementy są widoczne, dostępne i interaktywne. Cypress jest celowo zbudowany do rozwoju i testowania UI, a jego DX jest skoncentrowane wokół testowego prowadzenia twoich wizualnych komponentów. Widzisz swój komponent wyrenderowany obok reportera testów. Po zakończeniu testu komponent pozostaje interaktywny i możesz debugować wszelkie błędy, które wystąpią, używając devtools przeglądarki.
 
-In contrast, Vitest is focused on delivering the best DX possible for lightning fast, *headless* testing. Node-based runners like Vitest support various partially-implemented browser environments, like `jsdom`, which implement enough for you to quickly unit test any code that references browser APIs. The tradeoff is that these browser environments have limitations in what they can implement. For example, [jsdom is missing a number of features](https://github.com/jsdom/jsdom/issues?q=is%3Aissue+is%3Aopen+sort%3Acomments-desc) like `window.navigation` or a layout engine (`offsetTop`, etc).
+W przeciwieństwie do tego, Vitest jest skupiony na dostarczaniu najlepszego możliwego DX dla błyskawicznego, *headless* testowania. Runnery oparte na Node, takie jak Vitest, wspierają różne częściowo zaimplementowane środowiska przeglądarki, takie jak `jsdom`, które implementują wystarczająco dużo, aby szybko testować jednostkowo dowolny kod, który odwołuje się do API przeglądarki. Kompromisem jest to, że te środowiska przeglądarki mają ograniczenia w tym, co mogą zaimplementować. Na przykład [jsdom brakuje wielu funkcji](https://github.com/jsdom/jsdom/issues?q=is%3Aissue+is%3Aopen+sort%3Acomments-desc) takich jak `window.navigation` lub silnik layoutu (`offsetTop`, itp).
 
-Lastly, in contrast to the Web Test Runner, the Cypress test runner is more like an IDE than a test runner because you also see the real rendered component in the browser, along with its test results and logs.
+Na koniec, w przeciwieństwie do Web Test Runner, runner testowy Cypress jest bardziej jak IDE niż runner testowy, ponieważ widzisz również prawdziwy wyrenderowany komponent w przeglądarce, wraz z wynikami testów i logami.
 
-Cypress has also been [integrating Vite in their products](https://www.youtube.com/watch?v=7S5cbY8iYLk): re-building their App's UI using [Vitesse](https://github.com/antfu/vitesse) and using Vite to test drive their project's development.
+Cypress również [integruje Vite w swoich produktach](https://www.youtube.com/watch?v=7S5cbY8iYLk): przebudowując UI swojej aplikacji używając [Vitesse](https://github.com/antfu/vitesse) i używając Vite do testowego prowadzenia rozwoju swojego projektu.
 
-We believe that Cypress isn't a good option for unit testing headless code, but that using Cypress (for E2E and Component Testing) and Vitest (for unit tests) would cover your app's testing needs.
+Uważamy, że Cypress nie jest dobrą opcją do testowania jednostkowego kodu headless, ale że używanie Cypress (do E2E i testów komponentów) i Vitest (do testów jednostkowych) pokryje potrzeby testowe twojej aplikacji.
 
 ## WebdriverIO
 
-[WebdriverIO](https://webdriver.io/) is, similar to Cypress, a browser-based alternative test runner and a complementary tool to Vitest. It can be used as an end-to-end testing tool as well as for testing [web components](https://webdriver.io/docs/component-testing). It even uses components of Vitest under the hood, e.g. for [mocking and stubbing](https://webdriver.io/docs/mocksandspies/) within component tests.
+[WebdriverIO](https://webdriver.io/) jest, podobnie jak Cypress, alternatywnym runnerem testów opartym na przeglądarce i narzędziem uzupełniającym do Vitest. Może być używany jako narzędzie do testów end-to-end, jak również do testowania [komponentów webowych](https://webdriver.io/docs/component-testing). Używa nawet komponentów Vitest pod spodem, np. do [mockowania i stubbowania](https://webdriver.io/docs/mocksandspies/) w testach komponentów.
 
-WebdriverIO comes with the same advantages as Cypress allowing you to test your logic in real browser. However, it uses actual [web standards](https://w3c.github.io/webdriver/) for automation, which overcomes some of the tradeoffs and limitation when running tests in Cypress. Furthermore, it allows you to run tests on mobile as well, giving you access to test your application in even more environments.
+WebdriverIO ma te same zalety co Cypress, pozwalając ci testować twoją logikę w prawdziwej przeglądarce. Jednak używa rzeczywistych [standardów webowych](https://w3c.github.io/webdriver/) do automatyzacji, co przezwycięża niektóre kompromisy i ograniczenia podczas uruchamiania testów w Cypress. Ponadto pozwala ci uruchamiać testy na urządzeniach mobilnych, dając dostęp do testowania twojej aplikacji w jeszcze większej liczbie środowisk.
 
 ## Web Test Runner
 
-[@web/test-runner](https://modern-web.dev/docs/test-runner/overview/) runs tests inside a headless browser, providing the same execution environment as your web application without the need for mocking out browser APIs or the DOM. This also makes it possible to debug inside a real browser using the devtools, although there is no UI shown for stepping through the test, as there is in Cypress tests.
+[@web/test-runner](https://modern-web.dev/docs/test-runner/overview/) uruchamia testy wewnątrz headless przeglądarki, zapewniając to samo środowisko wykonawcze co twoja aplikacja webowa bez potrzeby mockowania API przeglądarki lub DOM. To również umożliwia debugowanie wewnątrz prawdziwej przeglądarki używając devtools, chociaż nie ma wyświetlanego UI do krokowego przechodzenia przez test, jak w testach Cypress.
 
-To use @web/test-runner with a Vite project, use [@remcovaes/web-test-runner-vite-plugin](https://github.com/remcovaes/web-test-runner-vite-plugin). @web/test-runner does not include assertion or mocking libraries, so it is up to you to add them.
+Aby użyć @web/test-runner z projektem Vite, użyj [@remcovaes/web-test-runner-vite-plugin](https://github.com/remcovaes/web-test-runner-vite-plugin). @web/test-runner nie zawiera bibliotek asercji ani mockowania, więc to od ciebie zależy, czy je dodasz.
 
 ## uvu
 
-[uvu](https://github.com/lukeed/uvu) is a test runner for Node.js and the browser. It runs tests in a single thread, so tests are not isolated and can leak across files. Vitest, however, uses worker threads to isolate tests and run them in parallel.
+[uvu](https://github.com/lukeed/uvu) jest runnerem testów dla Node.js i przeglądarki. Uruchamia testy w jednym wątku, więc testy nie są izolowane i mogą przeciekać między plikami. Vitest jednak używa wątków workerów do izolowania testów i uruchamiania ich równolegle.
 
-For transforming your code, uvu relies on require and loader hooks. Vitest uses [Vite](https://vitejs.dev), so files are transformed with the full power of Vite's plugin system. In a world where we have Vite providing support for the most common web tooling (TypeScript, JSX, most popular UI Frameworks), uvu represents a duplication of complexity. If your app is powered by Vite, having two different pipelines to configure and maintain is not justifiable. With Vitest you get to define the configuration for your dev, build and test environments as a single pipeline, sharing the same plugins and the same configuration.
+Do transformacji kodu uvu polega na hookach require i loader. Vitest używa [Vite](https://vitejs.dev), więc pliki są transformowane z pełną mocą systemu pluginów Vite. W świecie, gdzie Vite zapewnia wsparcie dla najpopularniejszych narzędzi webowych (TypeScript, JSX, najpopularniejsze frameworki UI), uvu reprezentuje duplikację złożoności. Jeśli twoja aplikacja jest napędzana przez Vite, posiadanie dwóch różnych pipeline'ów do konfiguracji i utrzymania nie jest uzasadnione. Z Vitest możesz zdefiniować konfigurację dla swoich środowisk dev, build i test jako jeden pipeline, dzieląc te same pluginy i tę samą konfigurację.
 
-uvu does not provide an intelligent watch mode to rerun the changed tests, while Vitest gives you amazing DX thanks to the default watch mode using Vite instant Hot Module Reload (HMR).
+uvu nie zapewnia inteligentnego trybu watch do ponownego uruchamiania zmienionych testów, podczas gdy Vitest daje niesamowite DX dzięki domyślnemu trybowi watch używającemu natychmiastowego Hot Module Reload (HMR) Vite.
 
-uvu is a fast option for running simple tests, but Vitest can be faster and more reliable for more complex tests and projects.
+uvu jest szybką opcją do uruchamiania prostych testów, ale Vitest może być szybszy i bardziej niezawodny dla bardziej złożonych testów i projektów.
 
 ## Mocha
 
-[Mocha](https://mochajs.org) is a test framework running on Node.js and in the browser. Mocha is a popular choice for server-side testing. Mocha is highly configurable and does not include certain features by default. For example, it does not come with an assertion library, with the idea being that Node's built-in assertion runner is good enough for most use cases. Another popular choice for assertions with Mocha is [Chai](https://www.chaijs.com).
+[Mocha](https://mochajs.org) jest frameworkiem testowym działającym na Node.js i w przeglądarce. Mocha jest popularnym wyborem do testowania po stronie serwera. Mocha jest wysoce konfigurowalna i domyślnie nie zawiera pewnych funkcji. Na przykład nie zawiera biblioteki asercji, z założeniem, że wbudowany runner asercji Node jest wystarczająco dobry dla większości przypadków użycia. Innym popularnym wyborem do asercji z Mocha jest [Chai](https://www.chaijs.com).
 
-Vitest also provides out-of-the-box setup for a few other features, which take additional configuration or the addition of other libraries in Mocha, for example:
+Vitest również zapewnia gotową konfigurację dla kilku innych funkcji, które wymagają dodatkowej konfiguracji lub dodania innych bibliotek w Mocha, na przykład:
 
-- Snapshot testing
+- Testowanie snapshotów
 - TypeScript
-- JSX support
-- Code Coverage
-- Mocking
-- Smart watch mode (only re-runs affected tests)
+- Wsparcie JSX
+- Pokrycie kodu
+- Mockowanie
+- Inteligentny tryb watch (ponownie uruchamia tylko dotknięte testy)
 
-While Mocha supports Native ESM, it has limitations and configuration constraints. Watch mode does not work with ES Module files, for example.
+Chociaż Mocha wspiera natywne ESM, ma ograniczenia i ograniczenia konfiguracyjne. Tryb watch nie działa z plikami ES Module, na przykład.
 
-Performance-wise, Mocha runs tests serially by default but supports parallel execution with the `--parallel` flag (though some reporters and features don't work in parallel mode).
+Pod względem wydajności, Mocha domyślnie uruchamia testy szeregowo, ale wspiera wykonywanie równoległe z flagą `--parallel` (chociaż niektóre reportery i funkcje nie działają w trybie równoległym).
 
-If you're already using Vite in your build pipeline, Vitest allows you to reuse the same configuration and plugins for testing, whereas Mocha would require a separate test setup. Vitest provides a Jest-compatible API while also supporting Mocha's familiar `describe`, `it`, and hook syntax, making migration straightforward for most test suites.
+Jeśli już używasz Vite w swoim pipeline'ie budowania, Vitest pozwala ci ponownie użyć tej samej konfiguracji i pluginów do testowania, podczas gdy Mocha wymagałaby osobnej konfiguracji testów. Vitest zapewnia API kompatybilne z Jest, jednocześnie wspierając znaną składnię `describe`, `it` i hooków Mocha, co sprawia, że migracja jest prosta dla większości zestawów testów.
 
-Mocha remains a solid choice for projects that need a minimal, flexible test runner with complete control over their testing stack. However, if you want a modern testing experience with everything included out of the box - especially for Vite-powered applications - Vitest has you covered.
+Mocha pozostaje solidnym wyborem dla projektów, które potrzebują minimalnego, elastycznego runnera testów z pełną kontrolą nad swoim stosem testowym. Jednak jeśli chcesz nowoczesnego doświadczenia testowania ze wszystkim zawartym od razu - szczególnie dla aplikacji napędzanych Vite - Vitest cię obsłuży.
 
 ## Playwright
 
-[Playwright](https://playwright.dev) is a testing framework from Microsoft that excels at end-to-end testing across multiple browsers (Chromium, Firefox, and WebKit). It controls real browsers to test complete user workflows—from logging in and navigating your app to submitting forms and verifying results. Vitest, on the other hand, is optimised for fast, isolated unit and component tests in a headless environment. These differences make it an ideal complement to Vitest.
+[Playwright](https://playwright.dev) jest frameworkiem testowym od Microsoft, który wyróżnia się w testach end-to-end w wielu przeglądarkach (Chromium, Firefox i WebKit). Kontroluje prawdziwe przeglądarki do testowania kompletnych przepływów użytkownika - od logowania i nawigacji po twojej aplikacji do wysyłania formularzy i weryfikowania wyników. Vitest natomiast jest zoptymalizowany do szybkich, izolowanych testów jednostkowych i komponentów w środowisku headless. Te różnice czynią go idealnym uzupełnieniem dla Vitest.
 
-A standard setup is to use Vitest for all unit and component tests (business logic, utilities, hooks, and UI component tests), and Playwright for end-to-end tests that verify critical user paths and cross-browser compatibility. This combination gives you fast feedback during development with Vitest while ensuring your complete application works correctly in real browsers with Playwright.
+Standardową konfiguracją jest używanie Vitest do wszystkich testów jednostkowych i komponentów (logika biznesowa, narzędzia, hooki i testy komponentów UI), a Playwright do testów end-to-end, które weryfikują krytyczne ścieżki użytkownika i kompatybilność między przeglądarkami. Ta kombinacja daje ci szybki feedback podczas rozwoju z Vitest, jednocześnie zapewniając, że twoja kompletna aplikacja działa poprawnie w prawdziwych przeglądarkach z Playwright.
 
-Vitest recently introduced [browser mode](https://vitest.dev/guide/browser), which runs tests in real browsers. However, there are key architectural differences: Playwright component tests run in a Node.js process and control the browser remotely. Vitest's browser mode runs tests natively in the browser, maintaining consistency with Vitest's test runner and developer experience, but it does have some [limitations](https://vitest.dev/guide/browser/#limitations).
+Vitest niedawno wprowadził [tryb przeglądarki](https://vitest.dev/guide/browser), który uruchamia testy w prawdziwych przeglądarkach. Jednak istnieją kluczowe różnice architektoniczne: testy komponentów Playwright działają w procesie Node.js i kontrolują przeglądarkę zdalnie. Tryb przeglądarki Vitest uruchamia testy natywnie w przeglądarce, utrzymując spójność z runnerem testów Vitest i doświadczeniem programisty, ale ma pewne [ograniczenia](https://vitest.dev/guide/browser/#limitations).
