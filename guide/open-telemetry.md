@@ -8,9 +8,9 @@ Proszę, zostaw opinię na temat tej funkcji w [GitHub Discussion](https://githu
 [GitHub](https://github.com/vitest-dev/vitest/tree/main/examples/opentelemetry)
 :::
 
-Ślady [OpenTelemetry](https://opentelemetry.io/) mogą być przydatnym narzędziem do debugowania wydajności i zachowania twojej aplikacji wewnątrz testów.
+Ślady [OpenTelemetry](https://opentelemetry.io/) mogą być przydatnym narzędziem do debugowania wydajności i zachowania aplikacji wewnątrz testów.
 
-Jeśli jest włączona, integracja Vitest generuje spany, które są ograniczone do workera twojego testu.
+Jeśli jest włączona, integracja Vitest generuje spany, które są ograniczone do workera testu.
 
 ::: warning
 Inicjalizacja OpenTelemetry zwiększa czas uruchomienia każdego testu, chyba że Vitest działa bez [izolacji](/config/isolate). Możesz to zobaczyć jako span `vitest.runtime.traces` wewnątrz `vitest.worker.start`.
@@ -22,7 +22,7 @@ Upewnij się, że eksportujesz SDK jako domyślny eksport, aby Vitest mógł opr
 
 ## Szybki start
 
-Przed podglądem śladów twojej aplikacji zainstaluj wymagane pakiety i określ ścieżkę do pliku instrumentacji w konfiguracji.
+Przed podglądem śladów aplikacji zainstaluj wymagane pakiety i określ ścieżkę do pliku instrumentacji w konfiguracji.
 
 ```shell
 npm i @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node @opentelemetry/exporter-trace-otlp-proto
@@ -63,7 +63,7 @@ export default defineConfig({
 Jeśli używasz fałszywych timerów, ważne jest, aby zresetować je przed zakończeniem testu, w przeciwnym razie ślady mogą nie być prawidłowo śledzone.
 :::
 
-Vitest nie przetwarza modułu `sdkPath`, więc ważne jest, aby SDK mogło być importowane w twoim środowisku Node.js. Idealne jest użycie rozszerzenia `.js` dla tego pliku. Użycie innego rozszerzenia spowolni twoje testy i może wymagać podania dodatkowych argumentów Node.js.
+Vitest nie przetwarza modułu `sdkPath`, więc ważne jest, aby SDK mogło być importowane w środowisku Node.js. Idealne jest użycie rozszerzenia `.js` dla tego pliku. Użycie innego rozszerzenia spowolni testy i może wymagać podania dodatkowych argumentów Node.js.
 
 Jeśli chcesz podać plik TypeScript, upewnij się, że zapoznałeś się ze stroną [TypeScript](https://nodejs.org/api/typescript.html#type-stripping) w dokumentacji Node.js.
 

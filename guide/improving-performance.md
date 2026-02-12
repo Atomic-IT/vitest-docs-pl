@@ -8,7 +8,7 @@ Domyślnie Vitest uruchamia każdy plik testowy w izolowanym środowisku opartym
 - Pool `forks` uruchamia każdy plik testowy w osobnym [forked child process](https://nodejs.org/api/child_process.html#child_processforkmodulepath-args-options)
 - Pool `vmThreads` uruchamia każdy plik testowy w osobnym [kontekście VM](https://nodejs.org/api/vm.html#vmcreatecontextcontextobject-options), ale używa workerów do równoległości
 
-To znacznie zwiększa czas testów, co może nie być pożądane dla projektów, które nie polegają na efektach ubocznych i prawidłowo czyszczą swój stan (co zwykle dotyczy projektów ze środowiskiem `node`). W takim przypadku wyłączenie izolacji poprawi szybkość twoich testów. Aby to zrobić, możesz podać flagę `--no-isolate` do CLI lub ustawić właściwość [`test.isolate`](/config/#isolate) w konfiguracji na `false`.
+To znacznie zwiększa czas testów, co może nie być pożądane dla projektów, które nie polegają na efektach ubocznych i prawidłowo czyszczą swój stan (co zwykle dotyczy projektów ze środowiskiem `node`). W takim przypadku wyłączenie izolacji poprawi szybkość testów. Można podać flagę `--no-isolate` do CLI lub ustawić właściwość [`test.isolate`](/config/#isolate) w konfiguracji na `false`.
 
 ::: code-group
 ```bash [CLI]
@@ -106,7 +106,7 @@ vitest run --reporter=blob --shard=2/3 # 2. maszyna
 vitest run --reporter=blob --shard=3/3 # 3. maszyna
 ```
 
-> Vitest dzieli twoje _pliki testowe_, a nie przypadki testowe, na shardy. Jeśli masz 1000 plików testowych, opcja `--shard=1/4` uruchomi 250 plików testowych, niezależnie od tego, ile przypadków testowych zawierają poszczególne pliki.
+> Vitest dzieli _pliki testowe_, a nie przypadki testowe, na shardy. Przy 1000 plikach testowych opcja `--shard=1/4` uruchomi 250 plików testowych, niezależnie od tego, ile przypadków testowych zawierają poszczególne pliki.
 
 Zbierz wyniki przechowywane w katalogu `.vitest-reports` z każdej maszyny i połącz je za pomocą opcji [`--merge-reports`](/guide/cli#merge-reports):
 

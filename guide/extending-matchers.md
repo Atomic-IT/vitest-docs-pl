@@ -8,14 +8,14 @@ Ponieważ Vitest jest kompatybilny zarówno z Chai, jak i Jest, możesz użyć A
 
 Ten przewodnik omówi rozszerzanie matcherów za pomocą `expect.extend`. Jeśli interesuje cię API Chai, sprawdź [ich przewodnik](https://www.chaijs.com/guide/plugins/).
 
-Aby rozszerzyć domyślne matchery, wywołaj `expect.extend` z obiektem zawierającym twoje matchery.
+Aby rozszerzyć domyślne matchery, wywołaj `expect.extend` z obiektem zawierającym niestandardowe matchery.
 
 ```ts
 expect.extend({
   toBeFoo(received, expected) {
     const { isNot } = this
     return {
-      // nie zmieniaj swojego "pass" na podstawie isNot. Vitest robi to za ciebie
+      // nie zmieniaj "pass" na podstawie isNot. Vitest robi to automatycznie
       pass: received === 'foo',
       message: () => `${received} ${isNot ? 'nie ' : ''}jest foo`
     }
@@ -56,7 +56,7 @@ Od Vitest 3.2 możesz rozszerzyć interfejs `Matchers`, aby mieć asercje bezpie
 :::
 
 ::: warning
-Nie zapomnij dołączyć pliku deklaracji ambient do twojego `tsconfig.json`.
+Nie zapomnij dołączyć pliku deklaracji ambient do `tsconfig.json`.
 :::
 
 Wartość zwracana przez matcher powinna być kompatybilna z następującym interfejsem:

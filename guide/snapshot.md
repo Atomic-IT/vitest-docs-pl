@@ -6,7 +6,7 @@ title: Snapshot | Przewodnik
 
 <CourseLink href="https://vueschool.io/lessons/snapshots-in-vitest?friend=vueuse">Naucz się Snapshot przez wideo od Vue School</CourseLink>
 
-Testy snapshotowe są bardzo przydatnym narzędziem, gdy chcesz upewnić się, że wyjście twoich funkcji nie zmienia się niespodziewanie.
+Testy snapshotowe są bardzo przydatnym narzędziem, gdy trzeba upewnić się, że wyjście funkcji nie zmienia się niespodziewanie.
 
 Podczas używania snapshotów, Vitest wykonuje snapshot podanej wartości, a następnie porównuje go z referencyjnym plikiem snapshot przechowywanym obok testu. Test nie powiedzie się, jeśli dwa snapshoty się nie zgadzają: albo zmiana jest niespodziewana, albo referencyjny snapshot musi zostać zaktualizowany do nowej wersji wyniku.
 
@@ -31,7 +31,7 @@ Przy pierwszym uruchomieniu tego testu, Vitest tworzy plik snapshot, który wygl
 exports['toUpperCase 1'] = '"FOOBAR"'
 ```
 
-Artefakt snapshot powinien być commitowany wraz ze zmianami w kodzie i przeglądany jako część procesu code review. Przy kolejnych uruchomieniach testów, Vitest porówna wyrenderowane wyjście z poprzednim snapshotem. Jeśli się zgadzają, test przejdzie. Jeśli się nie zgadzają, albo runner testów znalazł błąd w twoim kodzie, który powinien zostać naprawiony, albo implementacja się zmieniła i snapshot musi zostać zaktualizowany.
+Artefakt snapshot powinien być commitowany wraz ze zmianami w kodzie i przeglądany jako część procesu code review. Przy kolejnych uruchomieniach testów Vitest porówna wyrenderowane wyjście z poprzednim snapshotem. Jeśli się zgadzają, test przejdzie. Jeśli się nie zgadzają, albo runner testów znalazł błąd w kodzie, który powinien zostać naprawiony, albo implementacja się zmieniła i snapshot musi zostać zaktualizowany.
 
 ::: warning
 Podczas używania snapshotów z asynchronicznymi testami współbieżnymi, `expect` z lokalnego [kontekstu testu](/guide/test-context) musi być użyty, aby zapewnić wykrycie właściwego testu.
@@ -205,7 +205,7 @@ Vitest zapewnia niemal kompatybilną funkcjonalność snapshotów z [Jest](https
 + // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 ```
 
-To tak naprawdę nie wpływa na funkcjonalność, ale może wpłynąć na twój diff przy commitach podczas migracji z Jest.
+To tak naprawdę nie wpływa na funkcjonalność, ale może wpłynąć na diff przy commitach podczas migracji z Jest.
 
 #### 2. `printBasicPrototype` jest domyślnie `false`
 

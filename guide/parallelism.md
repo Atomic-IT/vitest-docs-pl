@@ -22,7 +22,7 @@ W przeciwieństwie do _plików testowych_, Vitest uruchamia _testy_ sekwencyjnie
 
 Vitest wspiera opcję [`concurrent`](/api/#test-concurrent) do uruchamiania testów razem. Jeśli ta opcja jest ustawiona, Vitest zgrupuje współbieżne testy w tym samym _pliku_ (liczba jednocześnie uruchomionych testów zależy od opcji [`maxConcurrency`](/config/#maxconcurrency)) i uruchomi je za pomocą [`Promise.all`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all).
 
-Vitest nie wykonuje żadnej inteligentnej analizy i nie tworzy dodatkowych workerów do uruchamiania tych testów. Oznacza to, że wydajność twoich testów poprawi się tylko wtedy, gdy polegasz mocno na operacjach asynchronicznych. Na przykład te testy nadal będą uruchamiane jeden po drugim, mimo że opcja `concurrent` jest określona. Dzieje się tak, ponieważ są synchroniczne:
+Vitest nie wykonuje żadnej inteligentnej analizy i nie tworzy dodatkowych workerów do uruchamiania tych testów. Oznacza to, że wydajność testów poprawi się tylko przy intensywnym wykorzystaniu operacji asynchronicznych. Na przykład te testy nadal będą uruchamiane jeden po drugim, mimo że opcja `concurrent` jest określona. Dzieje się tak, ponieważ są synchroniczne:
 
 ```ts
 test.concurrent('pierwszy test', () => {

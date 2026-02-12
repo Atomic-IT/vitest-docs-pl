@@ -4,17 +4,17 @@ title: Testowanie w źródle | Przewodnik
 
 # Testowanie w źródle
 
-Vitest zapewnia sposób na uruchamianie testów wewnątrz twojego kodu źródłowego obok implementacji, podobnie do [testów modułowych Rust](https://doc.rust-lang.org/book/ch11-03-test-organization.html#the-tests-module-and-cfgtest).
+Vitest zapewnia sposób na uruchamianie testów wewnątrz kodu źródłowego obok implementacji, podobnie do [testów modułowych Rust](https://doc.rust-lang.org/book/ch11-03-test-organization.html#the-tests-module-and-cfgtest).
 
 To sprawia, że testy współdzielą ten sam closure co implementacje i mogą testować prywatne stany bez eksportowania. Jednocześnie przynosi to bliższą pętlę feedbacku dla rozwoju.
 
 ::: warning
-Ten przewodnik wyjaśnia, jak pisać testy wewnątrz twojego kodu źródłowego. Jeśli musisz pisać testy w oddzielnych plikach testowych, postępuj zgodnie z [przewodnikiem "Pisanie testów"](/guide/#writing-tests).
+Ten przewodnik wyjaśnia, jak pisać testy wewnątrz kodu źródłowego. Jeśli chcesz pisać testy w oddzielnych plikach testowych, postępuj zgodnie z [przewodnikiem "Pisanie testów"](/guide/#writing-tests).
 :::
 
 ## Konfiguracja
 
-Aby zacząć, umieść blok `if (import.meta.vitest)` na końcu twojego pliku źródłowego i napisz wewnątrz kilka testów. Na przykład:
+Aby zacząć, umieść blok `if (import.meta.vitest)` na końcu pliku źródłowego i napisz wewnątrz kilka testów. Na przykład:
 
 ```ts [src/index.ts]
 // implementacja
@@ -138,7 +138,7 @@ Dowiedz się więcej: [webpack](https://webpack.js.org/plugins/define-plugin/)
 
 ## TypeScript
 
-Aby uzyskać wsparcie TypeScript dla `import.meta.vitest`, dodaj `vitest/importMeta` do twojego `tsconfig.json`:
+Aby uzyskać wsparcie TypeScript dla `import.meta.vitest`, dodaj `vitest/importMeta` do `tsconfig.json`:
 
 ```json [tsconfig.json]
 {

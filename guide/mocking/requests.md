@@ -2,7 +2,7 @@
 
 Ponieważ Vitest działa w Node, mockowanie żądań sieciowych jest trudne; API webowe nie są dostępne, więc potrzebujemy czegoś, co będzie naśladować zachowanie sieci za nas. Zalecamy [Mock Service Worker](https://mswjs.io/), aby to osiągnąć. Pozwala mockować żądania sieciowe `http`, `WebSocket` i `GraphQL`, i jest niezależny od frameworka.
 
-Mock Service Worker (MSW) działa poprzez przechwytywanie żądań wykonywanych przez twoje testy, pozwalając ci używać go bez zmieniania kodu aplikacji. W przeglądarce wykorzystuje [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API). W Node.js i dla Vitest używa biblioteki [`@mswjs/interceptors`](https://github.com/mswjs/interceptors). Aby dowiedzieć się więcej o MSW, przeczytaj ich [wprowadzenie](https://mswjs.io/docs/)
+Mock Service Worker (MSW) działa poprzez przechwytywanie żądań wykonywanych przez testy, pozwalając używać go bez zmieniania kodu aplikacji. W przeglądarce wykorzystuje [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API). W Node.js i dla Vitest używa biblioteki [`@mswjs/interceptors`](https://github.com/mswjs/interceptors). Aby dowiedzieć się więcej o MSW, przeczytaj ich [wprowadzenie](https://mswjs.io/docs/)
 
 ## Konfiguracja
 

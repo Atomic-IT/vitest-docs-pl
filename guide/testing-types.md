@@ -10,16 +10,16 @@ title: Testowanie typów | Przewodnik
 
 :::
 
-Vitest pozwala pisać testy dla twoich typów, używając składni `expectTypeOf` lub `assertType`. Domyślnie wszystkie testy wewnątrz plików `*.test-d.ts` są uważane za testy typów, ale możesz to zmienić za pomocą opcji konfiguracji [`typecheck.include`](/config/#typecheck-include).
+Vitest pozwala pisać testy dla typów, używając składni `expectTypeOf` lub `assertType`. Domyślnie wszystkie testy wewnątrz plików `*.test-d.ts` są uważane za testy typów, ale można to zmienić za pomocą opcji konfiguracji [`typecheck.include`](/config/#typecheck-include).
 
-Pod spodem Vitest wywołuje `tsc` lub `vue-tsc`, w zależności od twojej konfiguracji, i parsuje wyniki. Vitest wydrukuje również błędy typów w twoim kodzie źródłowym, jeśli jakieś znajdzie. Możesz to wyłączyć za pomocą opcji konfiguracji [`typecheck.ignoreSourceErrors`](/config/#typecheck-ignoresourceerrors).
+Pod spodem Vitest wywołuje `tsc` lub `vue-tsc`, w zależności od konfiguracji, i parsuje wyniki. Vitest wydrukuje również błędy typów w kodzie źródłowym, jeśli jakieś znajdzie. Można to wyłączyć za pomocą opcji konfiguracji [`typecheck.ignoreSourceErrors`](/config/#typecheck-ignoresourceerrors).
 
 Pamiętaj, że Vitest nie uruchamia tych plików, są one tylko statycznie analizowane przez kompilator. Oznacza to, że jeśli użyjesz dynamicznej nazwy lub `test.each` lub `test.for`, nazwa testu nie zostanie ewaluowana - zostanie wyświetlona tak jak jest.
 
 ::: warning
-Przed Vitest 2.1 twój `typecheck.include` nadpisywał wzorzec `include`, więc twoje testy runtime nie były faktycznie uruchamiane; były tylko sprawdzane pod względem typów.
+Przed Vitest 2.1 `typecheck.include` nadpisywał wzorzec `include`, więc testy runtime nie były faktycznie uruchamiane; były tylko sprawdzane pod względem typów.
 
-Od Vitest 2.1, jeśli twoje `include` i `typecheck.include` się nakładają, Vitest zgłosi testy typów i testy runtime jako oddzielne wpisy.
+Od Vitest 2.1, jeśli `include` i `typecheck.include` się nakładają, Vitest zgłosi testy typów i testy runtime jako oddzielne wpisy.
 :::
 
 Używanie flag CLI, takich jak `--allowOnly` i `-t`, jest również wspierane dla sprawdzania typów.
@@ -150,4 +150,4 @@ bun test
 ```
 :::
 
-Vitest używa `tsc --noEmit` lub `vue-tsc --noEmit`, w zależności od twojej konfiguracji, więc możesz usunąć te skrypty ze swojego pipeline.
+Vitest używa `tsc --noEmit` lub `vue-tsc --noEmit`, w zależności od konfiguracji, więc można usunąć te skrypty z pipeline.

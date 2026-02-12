@@ -30,7 +30,7 @@ export default defineConfig({
 })
 ```
 
-Konfiguracje projektów to konfiguracje inline, pliki lub wzorce glob odnoszące się do twoich projektów. Na przykład, jeśli masz folder o nazwie `packages`, który zawiera twoje projekty, możesz zdefiniować tablicę w swojej głównej konfiguracji Vitest:
+Konfiguracje projektów to konfiguracje inline, pliki lub wzorce glob odnoszące się do projektów. Na przykład, jeśli istnieje folder o nazwie `packages` zawierający projekty, można zdefiniować tablicę w głównej konfiguracji Vitest:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'

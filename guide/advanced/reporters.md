@@ -8,7 +8,7 @@ Możesz importować reportery z `vitest/reporters` i rozszerzać je, aby tworzy�
 
 ## Rozszerzanie wbudowanych reporterów
 
-Ogólnie nie musisz tworzyć swojego reportera od podstaw. `vitest` zawiera kilka domyślnych programów raportujących, które możesz rozszerzyć.
+Ogólnie nie trzeba tworzyć reportera od podstaw. `vitest` zawiera kilka domyślnych reporterów, które można rozszerzyć.
 
 ```ts
 import { DefaultReporter } from 'vitest/reporters'

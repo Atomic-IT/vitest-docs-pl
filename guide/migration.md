@@ -79,7 +79,7 @@ Domyślnie Vitest teraz wyklucza testy tylko z folderów `node_modules` i `.git`
 - folderów `.idea`, `.cache`, `.output`, `.temp`
 - plików konfiguracyjnych jak `rollup.config.js`, `prettier.config.js`, `ava.config.js` itd.
 
-Jeśli musisz ograniczyć katalog, w którym znajdują się twoje pliki testowe, użyj zamiast tego opcji [`test.dir`](/config/dir), ponieważ jest bardziej wydajna niż wykluczanie plików:
+Aby ograniczyć katalog z plikami testowymi, użyj opcji [`test.dir`](/config/dir), ponieważ jest bardziej wydajna niż wykluczanie plików:
 
 ```ts
 import { configDefaults, defineConfig } from 'vitest/config'
@@ -318,7 +318,7 @@ Nowa architektura pool pozwala Vitest uprościć wiele wcześniej złożonych op
 
 - `maxThreads` i `maxForks` to teraz `maxWorkers`.
 - Zmienne środowiskowe `VITEST_MAX_THREADS` i `VITEST_MAX_FORKS` to teraz `VITEST_MAX_WORKERS`.
-- `singleThread` i `singleFork` to teraz `maxWorkers: 1, isolate: false`. Jeśli twoje testy polegały na resecie modułów między testami, musisz dodać [setupFile](/config/setupfiles), który wywołuje [`vi.resetModules()`](/api/vi.html#vi-resetmodules) w [hooku `beforeAll`](/api/#beforeall).
+- `singleThread` i `singleFork` to teraz `maxWorkers: 1, isolate: false`. Jeśli testy polegały na resecie modułów między testami, trzeba dodać [setupFile](/config/setupfiles), który wywołuje [`vi.resetModules()`](/api/vi.html#vi-resetmodules) w [hooku `beforeAll`](/api/#beforeall).
 - `poolOptions` zostało usunięte. Wszystkie poprzednie `poolOptions` są teraz opcjami najwyższego poziomu. `memoryLimit` pool VM zostało przemianowane na `vmMemoryLimit`.
 - `threads.useAtomics` zostało usunięte. Jeśli masz przypadek użycia dla tego, otwórz nowe żądanie funkcji.
 - Interfejs niestandardowego pool został przepisany, zobacz [Niestandardowy pool](/guide/advanced/pool#custom-pool)
@@ -550,7 +550,7 @@ const { cloneDeep } = await vi.importActual('lodash/cloneDeep') // [!code ++]
 
 ### Rozszerzanie mockowania na zewnętrzne biblioteki
 
-Tam gdzie Jest robi to domyślnie, podczas mockowania modułu i chęci rozszerzenia tego mockowania na inne zewnętrzne biblioteki używające tego samego modułu, powinieneś jawnie powiedzieć, którą bibliotekę 3rd-party chcesz mockować, aby zewnętrzna biblioteka była częścią twojego kodu źródłowego, używając [server.deps.inline](/config/#server-deps-inline).
+Tam gdzie Jest robi to domyślnie, podczas mockowania modułu i chęci rozszerzenia tego mockowania na inne zewnętrzne biblioteki używające tego samego modułu, należy jawnie określić, którą bibliotekę 3rd-party ma być mockowana, aby zewnętrzna biblioteka była częścią kodu źródłowego, używając [server.deps.inline](/config/#server-deps-inline).
 
 ```
 server.deps.inline: ["lib-name"]
@@ -637,4 +637,4 @@ export default defineConfig({
 })
 ```
 
-W przeciwnym razie twoje snapshoty będą miały wiele escapowanych znaków `"`.
+W przeciwnym razie snapshoty będą miały wiele escapowanych znaków `"`.

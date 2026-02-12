@@ -63,7 +63,7 @@ export default defineConfig({
 
 ## API
 
-Opcja `pool` akceptuje `PoolRunnerInitializer`, który może być używany dla niestandardowych runnerów pool. Właściwość `name` powinna wskazywać nazwę niestandardowego runnera pool. Powinna być identyczna z właściwością `name` twojego workera.
+Opcja `pool` akceptuje `PoolRunnerInitializer`, który może być używany dla niestandardowych runnerów pool. Właściwość `name` powinna wskazywać nazwę niestandardowego runnera pool. Powinna być identyczna z właściwością `name` workera.
 
 ```ts [my-custom-pool.ts]
 import type { PoolRunnerInitializer } from 'vitest/node'
@@ -115,7 +115,7 @@ class CustomPoolWorker implements PoolWorker {
 }
 ```
 
-Twój `CustomPoolRunner` będzie kontrolować cykle życia niestandardowego workera runnera testów i kanał komunikacji. Na przykład twój `CustomPoolRunner` mógłby uruchomić `Worker` z `node:worker_threads` i zapewnić komunikację przez `Worker.postMessage` i `parentPort`.
+`CustomPoolRunner` kontroluje cykle życia niestandardowego workera runnera testów i kanał komunikacji. Na przykład `CustomPoolRunner` może uruchomić `Worker` z `node:worker_threads` i zapewnić komunikację przez `Worker.postMessage` i `parentPort`.
 
 W pliku workera możesz importować narzędzia pomocnicze z `vitest/worker`:
 

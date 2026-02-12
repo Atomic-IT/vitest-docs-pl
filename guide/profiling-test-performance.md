@@ -1,6 +1,6 @@
 # Profilowanie wydajności testów
 
-Kiedy uruchamiasz Vitest, raportuje on wiele metryk czasowych twoich testów:
+Podczas uruchamiania Vitest raportuje wiele metryk czasowych testów:
 
 > ```bash
 > RUN  v2.1.1 /x/vitest/examples/profiling
@@ -58,12 +58,12 @@ Zobacz [Profilowanie | Przykłady](https://github.com/vitest-dev/vitest/tree/mai
 ## Wątek główny
 
 Profilowanie wątku głównego jest przydatne do debugowania użycia Vite przez Vitest i plików [`globalSetup`](/config/#globalsetup).
-To również miejsce, gdzie działają twoje pluginy Vite.
+To również miejsce, gdzie działają pluginy Vite.
 
 :::tip
 Zobacz [Wydajność | Vite](https://vitejs.dev/guide/performance.html) po więcej wskazówek dotyczących profilowania specyficznego dla Vite.
 
-Zalecamy [`vite-plugin-inspect`](https://github.com/antfu-collective/vite-plugin-inspect) do profilowania wydajności twoich pluginów Vite.
+Zalecamy [`vite-plugin-inspect`](https://github.com/antfu-collective/vite-plugin-inspect) do profilowania wydajności pluginów Vite.
 :::
 
 Aby to zrobić, musisz przekazać argumenty do procesu Node, który uruchamia Vitest.
@@ -128,7 +128,7 @@ _src_prime-number_ts-525172412.js
 
 ## Pokrycie kodu
 
-Jeśli generowanie pokrycia kodu jest wolne w twoim projekcie, możesz użyć zmiennej środowiskowej `DEBUG=vitest:coverage`, aby włączyć logowanie wydajności.
+Jeśli generowanie pokrycia kodu jest wolne w projekcie, można użyć zmiennej środowiskowej `DEBUG=vitest:coverage`, aby włączyć logowanie wydajności.
 
 ```bash
 $ DEBUG=vitest:coverage vitest --run --coverage
@@ -149,7 +149,7 @@ $ DEBUG=vitest:coverage vitest --run --coverage
 ```
 
 To podejście do profilowania jest świetne do wykrywania dużych plików, które są przypadkowo wybierane przez dostawców pokrycia.
-Na przykład, jeśli twoja konfiguracja przypadkowo uwzględnia duże zbudowane zminifikowane pliki Javascript w pokryciu kodu, powinny pojawić się w logach.
+Na przykład, jeśli konfiguracja przypadkowo uwzględnia duże zbudowane zminifikowane pliki Javascript w pokryciu kodu, powinny pojawić się w logach.
 W takich przypadkach możesz chcieć dostosować opcje [`coverage.include`](/config/#coverage-include) i [`coverage.exclude`](/config/#coverage-exclude).
 
 ## Inspekcja rekordów profilowania

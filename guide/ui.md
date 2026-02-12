@@ -4,7 +4,7 @@ title: Vitest UI | Przewodnik
 
 # Vitest UI
 
-Napędzany przez Vite, Vitest ma również serwer deweloperski pod spodem podczas uruchamiania testów. To pozwala Vitest dostarczyć piękne UI do przeglądania i interakcji z twoimi testami. Vitest UI jest opcjonalne, więc musisz je zainstalować:
+Napędzany przez Vite, Vitest ma również serwer deweloperski pod spodem podczas uruchamiania testów. To pozwala Vitest dostarczyć piękne UI do przeglądania i interakcji z testami. Vitest UI jest opcjonalne, więc trzeba je zainstalować:
 
 ```bash
 npm i -D @vitest/ui
@@ -25,7 +25,7 @@ UI jest interaktywne i wymaga działającego serwera Vite, więc upewnij się, �
 <img alt="Vitest UI" img-light src="/ui-1-light.png">
 <img alt="Vitest UI" img-dark src="/ui-1-dark.png">
 
-UI może być również używane jako reporter. Użyj reportera `'html'` w swojej konfiguracji Vitest, aby wygenerować wyjście HTML i podejrzeć wyniki twoich testów:
+UI może być również używane jako reporter. Użyj reportera `'html'` w konfiguracji Vitest, aby wygenerować wyjście HTML i podejrzeć wyniki testów:
 
 ```ts [vitest.config.ts]
 import { defineConfig } from 'vitest/config'
@@ -40,7 +40,7 @@ export default defineConfig({
 Możesz sprawdzić swój raport pokrycia w Vitest UI: zobacz [Vitest UI Coverage](/guide/coverage#vitest-ui) po więcej szczegółów.
 
 ::: warning
-Jeśli nadal chcesz widzieć, jak twoje testy działają w czasie rzeczywistym w terminalu, nie zapomnij dodać reportera `default` do opcji `reporters`: `['default', 'html']`.
+Aby nadal widzieć, jak testy działają w czasie rzeczywistym w terminalu, dodaj reporter `default` do opcji `reporters`: `['default', 'html']`.
 :::
 
 ::: tip
@@ -72,7 +72,7 @@ Jeśli jest więcej niż 50 modułów, graf modułów wyświetla tylko pierwsze 
 </center>
 
 ::: warning
-Zauważ, że jeśli twój graf jest zbyt duży, może zająć trochę czasu, zanim pozycje węzłów się ustabilizują.
+Zauważ, że jeśli graf jest zbyt duży, może zająć trochę czasu, zanim pozycje węzłów się ustabilizują.
 :::
 
 Zawsze możesz przywrócić wejściowy graf modułów, klikając "Reset". Aby rozwinąć graf modułów, kliknij prawym przyciskiem myszy lub przytrzymaj <kbd>Shift</kbd> podczas klikania węzła, który cię interesuje. Wyświetli wszystkie węzły związane z wybranym.

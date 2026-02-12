@@ -2,7 +2,7 @@
 
 Mockowanie systemu plików zapewnia, że testy nie zależą od rzeczywistego systemu plików, czyniąc testy bardziej niezawodnymi i przewidywalnymi. Ta izolacja pomaga unikać efektów ubocznych z poprzednich testów. Pozwala testować warunki błędów i przypadki brzegowe, które mogłyby być trudne lub niemożliwe do odtworzenia z rzeczywistym systemem plików, takie jak problemy z uprawnieniami, scenariusze pełnego dysku czy błędy odczytu/zapisu.
 
-Vitest nie dostarcza żadnego API do mockowania systemu plików od razu. Możesz użyć `vi.mock`, aby ręcznie mockować moduł `fs`, ale jest to trudne do utrzymania. Zamiast tego zalecamy użycie [`memfs`](https://www.npmjs.com/package/memfs), aby zrobił to za ciebie. `memfs` tworzy system plików w pamięci, który symuluje operacje na systemie plików bez dotykania rzeczywistego dysku. To podejście jest szybkie i bezpieczne, unikając potencjalnych efektów ubocznych na prawdziwym systemie plików.
+Vitest nie dostarcza żadnego API do mockowania systemu plików od razu. Można użyć `vi.mock`, aby ręcznie mockować moduł `fs`, ale jest to trudne do utrzymania. Zamiast tego zalecamy użycie [`memfs`](https://www.npmjs.com/package/memfs). `memfs` tworzy system plików w pamięci, który symuluje operacje na systemie plików bez dotykania rzeczywistego dysku. To podejście jest szybkie i bezpieczne, unikając potencjalnych efektów ubocznych na prawdziwym systemie plików.
 
 ## Przykład
 

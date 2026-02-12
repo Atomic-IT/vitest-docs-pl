@@ -30,7 +30,7 @@ WebStorm, PhpStorm, IntelliJ IDEA Ultimate i inne IDE JetBrains mają wbudowane 
 
 Stworzone przez [The Wallaby Team](https://wallabyjs.com)
 
-[Wallaby.js](https://wallabyjs.com) uruchamia twoje testy Vitest natychmiast podczas pisania, podświetlając wyniki w twoim IDE tuż obok twojego kodu.
+[Wallaby.js](https://wallabyjs.com) uruchamia testy Vitest natychmiast podczas pisania, podświetlając wyniki w IDE tuż obok kodu.
 
 <p text-left>
 <img src="https://wallabyjs.com/assets/img/vitest_cover.png" w-142 />

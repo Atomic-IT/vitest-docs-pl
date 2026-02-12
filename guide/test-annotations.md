@@ -5,7 +5,7 @@ outline: deep
 
 # Adnotacje testów
 
-Vitest wspiera adnotowanie twoich testów niestandardowymi wiadomościami i plikami przez API [`context.annotate`](/guide/test-context#annotate). Te adnotacje będą dołączone do przypadku testowego i przekazane do reporterów w hooku [`onTestAnnotate`](/api/advanced/reporters#ontestannotate).
+Vitest wspiera adnotowanie testów niestandardowymi wiadomościami i plikami przez API [`context.annotate`](/guide/test-context#annotate). Te adnotacje będą dołączone do przypadku testowego i przekazane do reporterów w hooku [`onTestAnnotate`](/api/advanced/reporters#ontestannotate).
 
 ```ts
 test('hello world', async ({ annotate }) => {
@@ -24,7 +24,7 @@ test('hello world', async ({ annotate }) => {
 Funkcja `annotate` zwraca Promise, więc musi być oczekiwana, jeśli w jakiś sposób na niej polegasz. Jednak Vitest automatycznie oczekuje również na każdą nieoczekiwaną adnotację przed zakończeniem testu.
 :::
 
-W zależności od twojego reportera, zobaczysz te adnotacje inaczej.
+W zależności od reportera adnotacje będą wyświetlane inaczej.
 
 ## Wbudowane reportery
 ### default

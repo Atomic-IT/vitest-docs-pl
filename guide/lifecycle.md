@@ -47,7 +47,7 @@ Jeśli skonfigurowałeś pliki [`globalSetup`](/config/globalsetup), są one uru
 **Zakres:** Główny proces (oddzielony od workerów testowych)
 
 **Ważne uwagi:**
-- Globalne przygotowanie działa w **innym zakresie globalnym** niż twoje testy
+- Globalne przygotowanie działa w **innym zakresie globalnym** niż testy
 - Testy nie mają dostępu do zmiennych zdefiniowanych w globalnym przygotowaniu (użyj zamiast tego [`provide`/`inject`](/config/provide))
 - Globalne przygotowanie uruchamia się tylko wtedy, gdy co najmniej jeden test jest w kolejce
 
@@ -84,12 +84,12 @@ Po zakończeniu globalnego przygotowania, Vitest tworzy workery testowe na podst
 Przed uruchomieniem każdego pliku testowego, wykonywane są [pliki setup](/config/setupfiles).
 
 **Co się dzieje:**
-- Pliki setup uruchamiają się w tym samym procesie co twoje testy
+- Pliki setup uruchamiają się w tym samym procesie co testy
 - Domyślnie pliki setup uruchamiają się **równolegle** (konfigurowalne przez [`sequence.setupFiles`](/config/sequence#sequence-setupfiles))
 - Pliki setup wykonują się przed **każdym plikiem testowym**
 - Tutaj można zainicjalizować dowolny globalny _stan_ lub konfigurację
 
-**Zakres:** Proces workera (taki sam jak twoje testy)
+**Zakres:** Proces workera (taki sam jak testy)
 
 **Ważne uwagi:**
 - Jeśli [izolacja](/config/isolate) jest wyłączona, pliki setup nadal uruchamiają się ponownie przed każdym plikiem testowym, aby wywołać efekty uboczne, ale zaimportowane moduły są cachowane
@@ -109,11 +109,11 @@ afterEach(() => {
 
 ### 5. Faza zbierania i wykonywania testów
 
-To jest główna faza, w której twoje testy faktycznie się uruchamiają.
+To jest główna faza, w której testy faktycznie się uruchamiają.
 
 #### Kolejność wykonywania plików testowych
 
-Pliki testowe są wykonywane na podstawie twojej konfiguracji:
+Pliki testowe są wykonywane na podstawie konfiguracji:
 
 - **Domyślnie sekwencyjnie** w ramach jednego workera
 - Pliki będą uruchamiane **równolegle** w różnych workerach, konfigurowanych przez [`maxWorkers`](/config/maxworkers)

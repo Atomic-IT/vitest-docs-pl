@@ -9,7 +9,7 @@ outline: deep
 
 ### `vitest`
 
-Uruchom Vitest w bieżącym katalogu. Automatycznie wejdzie w tryb obserwacji w środowisku deweloperskim i tryb uruchomienia w CI (lub nieinteraktywnym terminalu).
+Uruchom Vitest w bieżącym katalogu. Automatycznie wejdzie w tryb watch w środowisku deweloperskim i tryb uruchomienia w CI (lub nieinteraktywnym terminalu).
 
 Możesz przekazać dodatkowy argument jako filtr plików testowych do uruchomienia. Na przykład:
 
@@ -17,7 +17,7 @@ Możesz przekazać dodatkowy argument jako filtr plików testowych do uruchomien
 vitest foobar
 ```
 
-Uruchomi tylko plik testowy, który zawiera `foobar` w ścieżce. Ten filtr sprawdza tylko zawieranie i nie obsługuje wzorców regexp ani glob (chyba że Twój terminal przetworzy je przed przekazaniem filtru do Vitest).
+Uruchomi tylko plik testowy, który zawiera `foobar` w ścieżce. Ten filtr sprawdza tylko zawieranie i nie obsługuje wzorców regexp ani glob (chyba że terminal przetworzy je przed przekazaniem filtru do Vitest).
 
 Od Vitest 3 możesz również określić test według nazwy pliku i numeru linii:
 

@@ -170,7 +170,7 @@ export default defineConfig({
 Możesz zdefiniować, jakie pliki są pokazywane w raporcie pokrycia, konfigurując [`coverage.include`](/config/#coverage-include) i [`coverage.exclude`](/config/#coverage-exclude).
 
 Domyślnie Vitest pokaże tylko pliki, które zostały zaimportowane podczas uruchomienia testu.
-Aby uwzględnić niepokryte pliki w raporcie, musisz skonfigurować [`coverage.include`](/config/#coverage-include) z wzorcem, który wybierze twoje pliki źródłowe:
+Aby uwzględnić niepokryte pliki w raporcie, należy skonfigurować [`coverage.include`](/config/#coverage-include) z wzorcem, który wybierze pliki źródłowe:
 
 ::: code-group
 ```ts [vitest.config.ts] {6}
@@ -467,7 +467,7 @@ export function ignored() { // [!code error]
 
 ## Wydajność pokrycia
 
-Jeśli generowanie pokrycia kodu jest wolne w twoim projekcie, zobacz [Profilowanie wydajności testów | Pokrycie kodu](/guide/profiling-test-performance.html#code-coverage).
+Jeśli generowanie pokrycia kodu jest wolne w projekcie, zobacz [Profilowanie wydajności testów | Pokrycie kodu](/guide/profiling-test-performance.html#code-coverage).
 
 ## Vitest UI
 

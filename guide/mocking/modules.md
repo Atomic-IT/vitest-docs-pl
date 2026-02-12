@@ -60,10 +60,10 @@ Pamiętaj, że możesz wywołać `vi.mock` w [pliku setup](/config/setupfiles), 
 :::
 
 ::: tip
-Zwróć uwagę na użycie dynamicznego importu: `import('./example.ts')`. Vitest usunie go przed wykonaniem kodu, ale pozwala TypeScriptowi prawidłowo walidować string i typować metodę `importOriginal` w twoim IDE lub CLI.
+Zwróć uwagę na użycie dynamicznego importu: `import('./example.ts')`. Vitest usunie go przed wykonaniem kodu, ale pozwala TypeScriptowi prawidłowo walidować string i typować metodę `importOriginal` w IDE lub CLI.
 :::
 
-Jeśli twój kod próbuje uzyskać dostęp do metody, która nie została zwrócona z tej fabryki, Vitest wyrzuci błąd z pomocnym komunikatem. Zauważ, że `answer` nie jest mockowany, tj. nie może być śledzony. Aby uczynić go śledzonym, użyj zamiast tego `vi.fn()`:
+Jeśli kod próbuje uzyskać dostęp do metody, która nie została zwrócona z tej fabryki, Vitest wyrzuci błąd z pomocnym komunikatem. Zauważ, że `answer` nie jest mockowany, tj. nie może być śledzony. Aby uczynić go śledzonym, użyj `vi.fn()`:
 
 ```ts
 import { vi } from 'vitest'
@@ -97,7 +97,7 @@ expect(answer).toHaveReturned(42)
 ```
 
 ::: warning
-Zauważ, że `importOriginal` jest asynchroniczny i musi być oczekiwany.
+Zauważ, że `importOriginal` jest asynchroniczny i wymaga użycia `await`.
 :::
 
 W powyższym przykładzie dostarczyliśmy oryginalne `answer` do wywołania `vi.fn()`, więc może nadal je wywoływać, będąc jednocześnie śledzonym.
@@ -232,7 +232,7 @@ To może być bardzo przydatne do śledzenia wywołań do instancji, które nigd
 
 ## Mockowanie nieistniejącego modułu
 
-Vitest wspiera mockowanie modułów wirtualnych. Te moduły nie istnieją w systemie plików, ale twój kod je importuje. Na przykład, może się to zdarzyć, gdy twoje środowisko deweloperskie różni się od produkcyjnego. Jednym częstym przykładem jest mockowanie API `vscode` w testach jednostkowych.
+Vitest wspiera mockowanie modułów wirtualnych. Te moduły nie istnieją w systemie plików, ale kod je importuje. Na przykład, może się to zdarzyć, gdy środowisko deweloperskie różni się od produkcyjnego. Częstym przykładem jest mockowanie API `vscode` w testach jednostkowych.
 
 Domyślnie Vitest nie uda się transformować plików, jeśli nie może znaleźć źródła importu. Aby to obejść, musisz określić to w swojej konfiguracji. Możesz albo zawsze przekierować import do pliku, albo po prostu zasygnalizować Vite, aby go zignorował i użył fabryki `vi.mock` do zdefiniowania jego eksportów.
 
@@ -315,7 +315,7 @@ Pluginy mockowania modułów są dostępne w [pakiecie `@vitest/mocker`](https:/
 
 ### JSDOM, happy-dom, Node
 
-Gdy uruchamiasz testy w emulowanym środowisku, Vitest tworzy [runner modułu](https://vite.dev/guide/api-environment-runtimes.html#modulerunner), który może konsumować kod Vite. Runner modułu jest zaprojektowany w taki sposób, że Vitest może podłączyć się do ewaluacji modułu i zastąpić go mockiem, jeśli został zarejestrowany. To oznacza, że Vitest uruchamia twój kod w środowisku podobnym do ESM, ale nie używa bezpośrednio natywnego mechanizmu ESM. To pozwala runnerowi testów naginać zasady dotyczące niezmienności ES Modules, pozwalając użytkownikom wywoływać `vi.spyOn` na pozornie ES Module.
+Gdy testy są uruchamiane w emulowanym środowisku, Vitest tworzy [runner modułu](https://vite.dev/guide/api-environment-runtimes.html#modulerunner), który może konsumować kod Vite. Runner modułu jest zaprojektowany w taki sposób, że Vitest może podłączyć się do ewaluacji modułu i zastąpić go mockiem, jeśli został zarejestrowany. To oznacza, że Vitest uruchamia kod w środowisku podobnym do ESM, ale nie używa bezpośrednio natywnego mechanizmu ESM. To pozwala runnerowi testów naginać zasady dotyczące niezmienności ES Modules, pozwalając użytkownikom wywoływać `vi.spyOn` na pozornie ES Module.
 
 ### Tryb przeglądarki
 
